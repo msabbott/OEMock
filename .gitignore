@@ -1,0 +1,10 @@
+# .gitignore file for OEMock library.
+
+# OpenEdge files
+*.r
+protrace.*
+
+# OpenEdge Architect files
+.project
+.propath
+.dbconnection
