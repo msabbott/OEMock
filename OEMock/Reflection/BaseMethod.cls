@@ -18,11 +18,11 @@ CLASS OEMock.Reflection.BaseMethod:
     PROTECTED SET.
     
     CONSTRUCTOR PUBLIC BaseMethod():
-        SUPER().
+        THIS-OBJECT(?).
     END CONSTRUCTOR.
 
 	CONSTRUCTOR PUBLIC BaseMethod (INPUT nam AS CHARACTER):
-	    THIS-OBJECT().
+	    SUPER().
 	    NAME = nam.
 	END CONSTRUCTOR.
 
