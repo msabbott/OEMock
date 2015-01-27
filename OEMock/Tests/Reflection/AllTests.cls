@@ -8,6 +8,7 @@ CLASS OEMock.Tests.Reflection.AllTests INHERITS TestSuite:
   
   CONSTRUCTOR AllTests():
     AddTest(NEW BaseMethodTester()).
+    AddTest(NEW ReturningMethodTester()).
   END CONSTRUCTOR.
 
 END CLASS.
