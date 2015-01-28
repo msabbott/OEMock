@@ -121,5 +121,39 @@ CLASS OEMock.Tests.Reflection.MethodTester:
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
         
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SettingStaticSetsAbstractToFalse():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('Method Name').
+        
+        /* Set Abstract to True, then Static to True. Abstract
+         * should then be set to False
+         */
+        meth:Abstract = TRUE.
+        meth:Static   = TRUE.
+        
+        Assert:IsFalse(meth:Abstract).
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SettingAbstractSetsStaticToFalse():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('Method Name').
+        
+        /* Set Static to True, then Abstract to True. Static
+         * should then be set to False
+         */
+        meth:Static   = TRUE.
+        meth:Abstract = TRUE.
+        
+        Assert:IsFalse(meth:Static).
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
 
 END CLASS.
