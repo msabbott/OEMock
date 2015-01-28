@@ -10,6 +10,7 @@ CLASS OEMock.Tests.Reflection.AllTests INHERITS TestSuite:
     AddTest(NEW BaseMethodTester()).
     AddTest(NEW ReturningMethodTester()).
     AddTest(NEW FunctionTester()).
+    AddTest(NEW MethodTester()).
   END CONSTRUCTOR.
 
 END CLASS.
