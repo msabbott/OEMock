@@ -54,5 +54,20 @@ CLASS OEMock.Tests.Reflection.BaseMethodTester:
         
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AddParameterIncrementsCount():
+        DEFINE VARIABLE meth AS BaseMethod    NO-UNDO.
+        DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
+        
+        meth = NEW BaseMethod('Method Name').
+        parm = NEW BaseParameter('Parameter').
+        
+        meth:AddParameter(parm).
+        
+        Assert:AreEqual(meth:ParameterCount, 1).
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
 
 END CLASS.
