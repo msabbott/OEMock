@@ -71,4 +71,8 @@ CLASS OEMock.Reflection.BaseMethod:
                ttParameter.Item  = parm.
 	END METHOD.
 	
+	METHOD PROTECTED LONGCHAR GenerateParameters():
+	    RETURN "".
+	END METHOD. 
+	
 END CLASS.
