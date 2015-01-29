@@ -1,13 +1,13 @@
 USING Progress.Lang.*.
 USING OEUnit.Runner.TestSuite.
+USING OEMock.Tests.Util.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
-CLASS OEMock.Tests.AllTests INHERITS TestSuite:
+CLASS OEMock.Tests.Util.AllTests INHERITS TestSuite:
   
   CONSTRUCTOR AllTests():
-    AddTest(NEW OEMock.Tests.Reflection.AllTests()).
-    AddTest(NEW OEMock.Tests.Util.AllTests()).
+    AddTest(NEW BaseListTester()).
   END CONSTRUCTOR.
 
 END CLASS.
