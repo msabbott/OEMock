@@ -52,7 +52,8 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
         DO:
             ASSIGN meth = SUBSTITUTE("METHOD PUBLIC &1 &2 (&3):",
                                      ReturnType,
-                                     Name).
+                                     Name,
+                                     GenerateParameters()).
                                      
             ASSIGN meth = SUBSTITUTE("&1&2&3END METHOD.",
                                      meth,

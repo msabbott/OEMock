@@ -62,7 +62,8 @@ CLASS OEMock.Reflection.Function INHERITS ReturningMethod:
         DO:
             ASSIGN declaration = SUBSTITUTE("FUNCTION &1 RETURNS &2 (&3)",
                                             Name,
-                                            ReturnType).
+                                            ReturnType,
+                                            GenerateParameters()).
         END.
         
         RETURN declaration.
