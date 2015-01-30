@@ -59,6 +59,23 @@ CLASS OEMock.Tests.Util.ListTester:
         Assert:AreEqual(list:Count,1).
         list:EmptyList().
         Assert:AreEqual(list:Count,0).
+        Assert:IsFalse(VALID-OBJECT(obj)).
+        IF VALID-OBJECT(obj) THEN DELETE OBJECT obj.
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID EmptyListClearsListWhenNotDestroying():
+        DEFINE VARIABLE list AS List NO-UNDO.
+        DEFINE VARIABLE obj  AS ListObject NO-UNDO.
+        list = NEW List().
+        list:DestroyOnDestruct = FALSE.
+        obj  = NEW ListObject("Test Object").
+        list:AddItem(obj).
+        Assert:AreEqual(list:Count,1).
+        list:EmptyList().
+        Assert:AreEqual(list:Count,0).
+        Assert:IsTrue(VALID-OBJECT(obj)).
         IF VALID-OBJECT(obj) THEN DELETE OBJECT obj.
         IF VALID-OBJECT(list) THEN DELETE OBJECT list.
     END METHOD.
