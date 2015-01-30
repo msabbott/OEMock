@@ -181,5 +181,32 @@ CLASS OEMock.Tests.Util.ListTester:
         IF VALID-OBJECT(obj) THEN DELETE OBJECT obj.
         IF VALID-OBJECT(list) THEN DELETE OBJECT list.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GetPrevReturnsValidObjectsWithMultipleItemList():
+        DEFINE VARIABLE list AS List NO-UNDO.
+        DEFINE VARIABLE obj  AS ListObject NO-UNDO.
+        
+        list = NEW List().
+        list:AddItem(NEW ListObject("Object 1")).
+        list:AddItem(NEW ListObject("Object 2")).
+        list:AddItem(NEW ListObject("Object 3")).
+        
+        Assert:AreEqual(list:Count, 3).
+        
+        obj = CAST(list:GetLast(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 3").
+        
+        obj = CAST(list:GetPrev(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 2").
+        
+        obj = CAST(list:GetPrev(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 1").
+
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
 
 END CLASS.
