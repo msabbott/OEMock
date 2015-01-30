@@ -5,6 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEUnit.Assertion.*.
+USING OEMock.Tests.Util.ListObject.
 USING OEMock.Util.List.
 USING OEMock.Reflection.BaseParameter.
 
@@ -129,6 +130,33 @@ CLASS OEMock.Tests.Util.ListTester:
         parm = NEW BaseParameter().
         Assert:IsNull(list:GetNext()).
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GetNextReturnsValidObjectsWithMultipleItemList():
+        DEFINE VARIABLE list AS List NO-UNDO.
+        DEFINE VARIABLE obj  AS ListObject NO-UNDO.
+        
+        list = NEW List().
+        list:AddItem(NEW ListObject("Object 1")).
+        list:AddItem(NEW ListObject("Object 2")).
+        list:AddItem(NEW ListObject("Object 3")).
+        
+        Assert:AreEqual(list:Count, 3).
+        
+        obj = CAST(list:GetFirst(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 1").
+        
+        obj = CAST(list:GetNext(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 2").
+        
+        obj = CAST(list:GetNext(), "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(obj)).
+        Assert:AreEqual(obj:Name, "Object 3").
+
         IF VALID-OBJECT(list) THEN DELETE OBJECT list.
     END METHOD.
     
