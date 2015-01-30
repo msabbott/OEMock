@@ -189,6 +189,34 @@ CLASS OEMock.Tests.Reflection.ParameterListTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID MoveNextReturnsValidObjectsWithMultipleItemList():
+        DEFINE VARIABLE list AS OEMock.Reflection.ParameterList NO-UNDO.
+        DEFINE VARIABLE res  AS BaseParameter NO-UNDO.
+        
+        list = NEW OEMock.Reflection.ParameterList().
+        list:AddParameter(NEW PrimitiveParameter('Param1', 'CHARACTER')).
+        list:AddParameter(NEW PrimitiveParameter('Param2', 'CHARACTER')).
+        list:AddParameter(NEW PrimitiveParameter('Param3', 'CHARACTER')).
+
+        res = list:MoveFirst().
+        AssertString:Contains(res:GetClass():TypeName, 'PrimitiveParameter').
+        Assert:IsTrue(res:GetClass():IsA('OEMock.Reflection.PrimitiveParameter')).
+        Assert:AreEqual(res:Name, "Param1").
+
+        res = list:MoveNext().
+        AssertString:Contains(res:GetClass():TypeName, 'PrimitiveParameter').
+        Assert:IsTrue(res:GetClass():IsA('OEMock.Reflection.PrimitiveParameter')).
+        Assert:AreEqual(res:Name, "Param2").
+
+        res = list:MoveNext().
+        AssertString:Contains(res:GetClass():TypeName, 'PrimitiveParameter').
+        Assert:IsTrue(res:GetClass():IsA('OEMock.Reflection.PrimitiveParameter')).
+        Assert:AreEqual(res:Name, "Param3").
+        
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID MovePrevIsNotNull():
         DEFINE VARIABLE list AS OEMock.Reflection.ParameterList NO-UNDO.
         DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
