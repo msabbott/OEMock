@@ -56,13 +56,10 @@ CLASS OEMock.Util.BaseList:
 	END METHOD.
 	
 	METHOD PROTECTED VOID EmptyList():
-        IF DestroyOnDestruct THEN
-        DO:
-            FOR EACH ttItem EXCLUSIVE-LOCK:
-                IF VALID-OBJECT(ttItem.Item) THEN
-                    DELETE OBJECT ttItem.Item.
-                DELETE ttItem.
-            END.
+        FOR EACH ttItem EXCLUSIVE-LOCK:
+            IF DestroyOnDestruct AND VALID-OBJECT(ttItem.Item) THEN
+                DELETE OBJECT ttItem.Item.
+            DELETE ttItem.
         END.
 	END METHOD.
 	
