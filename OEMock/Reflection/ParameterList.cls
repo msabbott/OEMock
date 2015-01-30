@@ -16,7 +16,7 @@ CLASS OEMock.Reflection.ParameterList INHERITS BaseList:
 	END CONSTRUCTOR.
 	
 	METHOD PUBLIC LOGICAL AddParameter(INPUT parm AS BaseParameter):
-	    SUPER:AddItem(parm).
+	    RETURN SUPER:AddItem(parm).
 	END METHOD.
 	
 	METHOD OVERRIDE PUBLIC VOID EmptyList():
