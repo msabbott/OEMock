@@ -56,7 +56,7 @@ CLASS OEMock.Tests.Reflection.ProcedureTester:
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenereateIncludesParameters():
+    METHOD PUBLIC VOID GenerateIncludesParameters():
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
         DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
