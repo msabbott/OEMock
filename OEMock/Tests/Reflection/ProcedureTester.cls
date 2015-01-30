@@ -54,5 +54,27 @@ CLASS OEMock.Tests.Reflection.ProcedureTester:
         
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenereateIncludesParameters():
+        DEFINE VARIABLE meth AS Procedure NO-UNDO.
+        DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        
+        meth  = NEW Procedure('ProcName').
+        parm1 = NEW PrimitiveParameter('Param1', 'CHARACTER').
+        parm2 = NEW PrimitiveParameter('Param2', 'CHARACTER').
+        
+        meth:Parameters:AddParameter(parm1).
+        meth:Parameters:AddParameter(parm2).
+        Assert:AreEqual(meth:Parameters:Count, 2).
+        
+        Assert:AreEqual(meth:Generate(), 'PROCEDURE ProcName :'
+                                         + CHR(10) + CHR(13) + "DEFINE INPUT PARAMETER Param1 AS CHARACTER NO-UNDO."
+                                         + CHR(10) + CHR(13) + "DEFINE INPUT PARAMETER Param2 AS CHARACTER NO-UNDO."
+                                         + CHR(10) + CHR(13) + "END PROCEDURE.").
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
 
 END CLASS.
