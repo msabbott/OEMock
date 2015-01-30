@@ -10,8 +10,12 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Util.BaseList:
     
+    DEFINE PROTECTED VARIABLE NextOrd AS INTEGER NO-UNDO INITIAL 1.
+    
     DEFINE PROTECTED TEMP-TABLE ttItem NO-UNDO
-        FIELD Item AS Progress.Lang.Object.
+        FIELD ord  AS INTEGER
+        FIELD Item AS Progress.Lang.Object
+            INDEX PriKey IS PRIMARY UNIQUE ord ASCENDING.
     
     DEFINE PUBLIC PROPERTY Count AS INTEGER NO-UNDO 
     GET():
@@ -40,7 +44,9 @@ CLASS OEMock.Util.BaseList:
 	    IF VALID-OBJECT(pItem) THEN
 	    DO:
             CREATE ttItem.
-	        ASSIGN ttItem.Item = pItem.
+	        ASSIGN ttItem.Item = pItem
+	               ttItem.Ord  = NextOrd
+	               NextOrd     = NextOrd + 1.
 	        
 	        RETURN TRUE.
 	    END.
