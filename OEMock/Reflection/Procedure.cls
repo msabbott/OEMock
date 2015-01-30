@@ -44,5 +44,22 @@ CLASS OEMock.Reflection.Procedure INHERITS BaseMethod:
         
         RETURN proc.
 	END METHOD.
+	
+	METHOD OVERRIDE PROTECTED LONGCHAR GenerateParameters():
+	    DEFINE VARIABLE params AS LONGCHAR NO-UNDO.
+	    DEFINE VARIABLE parm   AS OEMock.Reflection.BaseParameter NO-UNDO.
+	    
+	    params = SUPER:GenerateParameters().
+
+        /* Loop through parameters */
+	    parm = Parameters:MoveFirst().
+	    DO WHILE VALID-OBJECT(parm):
+	       ASSIGN params = params + parm:GenerateDefinition().
+	              parm   = Parameters:MoveNext().
+	    END.
+	    
+	    RETURN params.
+	    
+	END METHOD.
 
 END CLASS.
