@@ -18,5 +18,14 @@ CLASS OEMock.Tests.Reflection.BaseFileTester:
         
         Assert:AreEqual(fil:FileName, 'filename').
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsBlank():
+        DEFINE VARIABLE fil AS BaseFile NO-UNDO.
+        fil = NEW BaseFile('filename').
+        
+        Assert:AreEqual(fil:Generate(), '').
+        
+    END METHOD.
 
 END CLASS.

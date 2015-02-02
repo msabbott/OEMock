@@ -24,5 +24,9 @@ CLASS OEMock.Reflection.BaseFile:
     
     DESTRUCTOR BaseFile():
     END DESTRUCTOR.
+    
+    METHOD PUBLIC LONGCHAR Generate():
+        RETURN "".
+    END METHOD.
 
 END CLASS.
