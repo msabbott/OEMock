@@ -166,5 +166,48 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
         
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateIncludesParameters():
+        DEFINE VARIABLE meth AS Function NO-UNDO.
+        DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        
+        meth  = NEW Function('TestFunction', "CHARACTER").
+        parm1 = NEW PrimitiveParameter('Param1', 'CHARACTER').
+        parm2 = NEW PrimitiveParameter('Param2', 'CHARACTER').
+        
+        meth:Parameters:AddParameter(parm1).
+        meth:Parameters:AddParameter(parm2).
+        Assert:AreEqual(meth:Parameters:Count, 2).
+        
+        Assert:AreEqual(meth:Generate(), 'FUNCTION TestFunction RETURNS CHARACTER ('
+                                         + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                         + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):"
+                                         + CHR(10) + CHR(13) + "END FUNCTION.").
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateForwardIncludesParameters():
+        DEFINE VARIABLE meth AS Function NO-UNDO.
+        DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        
+        meth  = NEW Function('TestFunction', "CHARACTER").
+        parm1 = NEW PrimitiveParameter('Param1', 'CHARACTER').
+        parm2 = NEW PrimitiveParameter('Param2', 'CHARACTER').
+        
+        meth:Parameters:AddParameter(parm1).
+        meth:Parameters:AddParameter(parm2).
+        Assert:AreEqual(meth:Parameters:Count, 2).
+        
+        Assert:AreEqual(meth:GenerateForward(), 'FUNCTION TestFunction RETURNS CHARACTER ('
+                                                + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                                + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER) FORWARD.").
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
 
 END CLASS.
