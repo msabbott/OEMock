@@ -23,5 +23,26 @@ CLASS OEMock.Reflection.ReturningMethod INHERITS BaseMethod:
         SUPER(nam).
         ReturnType = dType.
     END CONSTRUCTOR.
+    
+    
+    METHOD OVERRIDE PROTECTED LONGCHAR GenerateParameters():
+        DEFINE VARIABLE params AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE parm   AS OEMock.Reflection.BaseParameter NO-UNDO.
+        
+        params = SUPER:GenerateParameters().
+  
+        /* Loop through parameters */
+        parm = Parameters:MoveFirst().
+        DO WHILE VALID-OBJECT(parm):
+           ASSIGN params = params + parm:Generate().
+                  parm   = Parameters:MoveNext().
+        END.
+        
+        /* Trim trailing comma from end of last parameter */
+        ASSIGN params = TRIM(params, " ,").
+
+        RETURN params.
+        
+    END METHOD.
 
 END CLASS.
