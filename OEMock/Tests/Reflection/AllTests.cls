@@ -17,6 +17,7 @@ CLASS OEMock.Tests.Reflection.AllTests INHERITS TestSuite:
     AddTest(NEW ParameterListTester()).
     AddTest(NEW BaseFileTester()).
     AddTest(NEW ProcedureFileTester()).
+    AddTest(NEW ClassFileTester()).
   END CONSTRUCTOR.
 
 END CLASS.
