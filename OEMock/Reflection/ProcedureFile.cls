@@ -28,7 +28,8 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC ProcedureFile():
-
+	    IF VALID-OBJECT(Functions)  THEN DELETE OBJECT Functions.
+	    IF VALID-OBJECT(Procedures) THEN DELETE OBJECT Procedures.
 	END DESTRUCTOR.
 	
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
