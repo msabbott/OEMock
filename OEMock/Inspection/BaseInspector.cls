@@ -88,5 +88,49 @@ CLASS OEMock.Inspection.BaseInspector:
 	METHOD PROTECTED VOID ProcessRefNode(INPUT hRefNode AS HANDLE):
 	    /* Do nothing in parent class */
 	END METHOD.
+	
+	METHOD PROTECTED BaseParameter CreateParameter (INPUT hParamNode AS HANDLE):
+	    
+	    DEFINE VARIABLE ParamMode AS CHARACTER NO-UNDO.
+	    DEFINE VARIABLE ParamName AS CHARACTER NO-UNDO.
+	    DEFINE VARIABLE ParamType AS CHARACTER NO-UNDO.
+	    
+	    DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
+	    
+	    /* Factory method. Based on the information passed through hParamNode,
+	     * build the appropriate child class of BaseParameter
+	     */
+	     
+	    /* Pull information from Node */
+	    ASSIGN ParamMode = hParamNode:GET-ATTRIBUTE("Parameter-mode")
+	           ParamName = hParamNode:GET-ATTRIBUTE("Parameter-name")
+	           ParamType = hParamNode:GET-ATTRIBUTE("Parameter-type").
+	    
+	    /* Determine appropriate class */
+	    IF ParamMode = "INPUT" OR ParamMode = "OUTPUT" OR ParamMode = "INPUT-OUTPUT" THEN
+	    DO:
+	        IF LOOKUP(ParamType, "CHARACTER,INTEGER,HANDLE,ROWID,MEMPTR,DECIMAL,DATE,DATETIME,DATETIME-TZ") > 0 THEN
+	        DO:
+	            parm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType). 
+	        END.
+	    END.
+	    
+	    RETURN parm.
+	END METHOD.
+	
+	METHOD PROTECTED LONGCHAR ExtractTextValue(INPUT hNodeRef AS HANDLE):
+	    DEFINE VARIABLE res       AS LONGCHAR NO-UNDO.
+	    DEFINE VARIABLE hTextNode AS HANDLE NO-UNDO.
+	    DEFINE VARIABLE child     AS INTEGER NO-UNDO.
+	    
+	    CREATE X-NODEREF hTextNode.
+	    
+	    DO child = 1 TO hNodeRef:NUM-CHILDREN:
+	        hNodeRef:GET-CHILD(hTextNode, child).
+	        ASSIGN res = res + hTextNode:NODE-VALUE.
+	    END.
+	    
+	    RETURN res.
+	END METHOD.
 
 END CLASS.
