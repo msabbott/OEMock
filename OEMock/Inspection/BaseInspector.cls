@@ -114,6 +114,10 @@ CLASS OEMock.Inspection.BaseInspector:
 	            parm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType). 
 	        END.
 	    END.
+	    ELSE IF ParamMode = "BUFFER" THEN
+	    DO:
+	        parm = NEW OEMock.Reflection.BufferParameter(ParamName, ParamType).
+	    END.
 	    
 	    RETURN parm.
 	END METHOD.
