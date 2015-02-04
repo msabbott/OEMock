@@ -46,6 +46,10 @@ CLASS OEMock.Inspection.BaseInspector:
         IF VALID-HANDLE(hDocRoot) THEN DELETE OBJECT hDocRoot.
         CREATE X-NODEREF hDocRoot.
 	    
+        IF VALID-HANDLE(hSrcElement) THEN DELETE OBJECT hSrcElement.
+        CREATE X-NODEREF hSrcElement.
+        
+        CREATE X-NODEREF hRefNode.
 	    /* Initialise and start parsing */
 	    hDocument:SUPPRESS-NAMESPACE-PROCESSING = TRUE.
         hDocument:LOAD("FILE", XrefFile, FALSE).
@@ -67,8 +71,10 @@ CLASS OEMock.Inspection.BaseInspector:
         RETURN ?.
         
         FINALLY:
-            IF VALID-HANDLE(hDocument) THEN DELETE OBJECT hDocument.
-            IF VALID-HANDLE(hDocRoot)  THEN DELETE OBJECT hDocRoot.
+            OS-DELETE VALUE(XrefFile).
+            IF VALID-HANDLE(hDocument)   THEN DELETE OBJECT hDocument.
+            IF VALID-HANDLE(hDocRoot)    THEN DELETE OBJECT hDocRoot.
+            IF VALID-HANDLE(hSrcElement) THEN DELETE OBJECT hSrcElement.
         END FINALLY.
 	    
 	END METHOD.
@@ -77,10 +83,6 @@ CLASS OEMock.Inspection.BaseInspector:
 	    
 	    COMPILE VALUE(FileName)
 	       XREF-XML VALUE(XrefFile).
-	       
-	    FINALLY:
-	        OS-DELETE VALUE(XrefFile).
-	    END FINALLY.
 	END.
 	
 	METHOD PROTECTED VOID ProcessRefNode(INPUT hRefNode AS HANDLE):
