@@ -9,6 +9,7 @@ CLASS OEMock.Tests.Inspection.AllTests INHERITS TestSuite:
   CONSTRUCTOR AllTests():
     AddTest(NEW BaseInspectorTester()).
     AddTest(NEW ClassInspectorTester()).
+    AddTest(NEW ProcedureInspectorTester()).
   END CONSTRUCTOR.
 
 END CLASS.
