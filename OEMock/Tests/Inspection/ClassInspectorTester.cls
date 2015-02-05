@@ -63,5 +63,31 @@ CLASS OEMock.Tests.Inspection.ClassInspectorTester:
         IF VALID-OBJECT(base) THEN DELETE OBJECT base.
         IF VALID-OBJECT(cls)  THEN DELETE OBJECT cls.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID InspectReturnsClassWithConstructors():
+        DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
+        DEFINE VARIABLE base AS BaseFile       NO-UNDO.
+        DEFINE VARIABLE cls  AS ClassFile      NO-UNDO.
+        
+        insp = NEW ClassInspector("OEMock/Inspection/ClassInspector.cls").
+        base = insp:Inspect().
+        
+        Assert:IsTrue(VALID-OBJECT(base), "Invalid object returned").
+        
+        IF base:GetClass():IsA("OEMock.Reflection.ClassFile") THEN
+        DO:
+            cls = DYNAMIC-CAST(base, base:GetClass():TypeName).
+            Assert:IsTrue(cls:Constructors:Count > 0).
+        END.
+        ELSE
+        DO:
+            Assert:Fail("Incompatible object type returned").
+        END.
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT insp.
+        IF VALID-OBJECT(base) THEN DELETE OBJECT base.
+        IF VALID-OBJECT(cls)  THEN DELETE OBJECT cls.
+    END METHOD.
 
 END CLASS.

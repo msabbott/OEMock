@@ -27,8 +27,9 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
         DEFINE VARIABLE iNode AS INTEGER   NO-UNDO.
         DEFINE VARIABLE hNode AS HANDLE    NO-UNDO.
         
-        DEFINE VARIABLE AccessMode AS CHARACTER NO-UNDO.
-        DEFINE VARIABLE Meth       AS Method NO-UNDO.
+        DEFINE VARIABLE AccessMode AS CHARACTER   NO-UNDO.
+        DEFINE VARIABLE Meth       AS Method      NO-UNDO.
+        DEFINE VARIABLE Const      AS CONSTRUCTOR NO-UNDO.
         
         CREATE X-NODEREF hNode.
 
@@ -43,6 +44,23 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                 IF VALID-OBJECT(BuiltClass) THEN
                     DELETE OBJECT BuiltClass.
                 BuiltClass = NEW ClassFile(FileName, objId).
+            END.
+            
+            WHEN "CONSTRUCTOR" THEN
+            DO:
+                Const = NEW Constructor(objId).
+                DO iNode = 1 TO hRefNode:NUM-CHILDREN:
+                    hRefNode:GET-CHILD(hNode, iNode).
+                    IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+                    CASE hNode:NAME:
+                        WHEN "Parameter-ref" THEN
+                        DO:
+                            Const:Parameters:AddParameter(CreateParameter(hNode)).
+                        END.
+                    END CASE.
+                END.
+                
+                BuiltClass:Constructors:AddMethod(Const).
             END.
             
             WHEN "METHOD" THEN
