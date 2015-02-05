@@ -15,6 +15,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     GET.
     SET. 
 
+    DEFINE PUBLIC PROPERTY Constructors AS OEMock.Reflection.MethodList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
     DEFINE PUBLIC PROPERTY Methods AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
     PROTECTED SET. 
@@ -42,12 +46,14 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         ClassRef = Progress.Lang.Class:GetClass(cname).
         
         /* Create objects */
-        Methods  = NEW MethodList().
+        Constructors = NEW MethodList().
+        Methods      = NEW MethodList().
     END CONSTRUCTOR.
 
     DESTRUCTOR PUBLIC ClassFile():
-        IF VALID-OBJECT(Methods)  THEN DELETE OBJECT Methods.
-        IF VALID-OBJECT(ClassRef) THEN DELETE OBJECT ClassRef.
+        IF VALID-OBJECT(Constructors) THEN DELETE OBJECT Constructors.
+        IF VALID-OBJECT(Methods)      THEN DELETE OBJECT Methods.
+        IF VALID-OBJECT(ClassRef)     THEN DELETE OBJECT ClassRef.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateUsing():
@@ -61,10 +67,29 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("CLASS &1:&2&3&2END CLASS.&2",
+        ASSIGN res = SUBSTITUTE("CLASS &1:&2&3&2&4&2END CLASS.&2",
                                 TypeName,
                                 CHR(10) + CHR(13),
+                                GenerateConstructors(),
                                 GenerateMethods()).
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateConstructors():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE meth AS OEMock.Reflection.BaseMethod NO-UNDO.
+        
+        /* Loop through Procedures */
+        meth = Constructors:MoveFirst().
+        DO WHILE VALID-OBJECT(meth):
+            ASSIGN res  = res + meth:Generate()
+                        + CHR(10) + CHR(13)
+                   meth = Constructors:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
         RETURN res.
     END METHOD.
     
