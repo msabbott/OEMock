@@ -5,6 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEMock.Reflection.*.
+USING OEMock.Util.Warnings.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -81,8 +82,12 @@ CLASS OEMock.Inspection.BaseInspector:
 	
 	METHOD PROTECTED VOID CompileFile():
 	    
+	    Warnings:Suppress().
+	    
 	    COMPILE VALUE(FileName)
 	       XREF-XML VALUE(XrefFile).
+	       
+	    Warnings:Restore().
 	END.
 	
 	METHOD PROTECTED VOID ProcessRefNode(INPUT hRefNode AS HANDLE):
