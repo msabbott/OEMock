@@ -116,12 +116,16 @@ CLASS OEMock.Inspection.BaseInspector:
 	    DO:
 	        IF LOOKUP(ParamType, "CHARACTER,INTEGER,HANDLE,ROWID,MEMPTR,DECIMAL,DATE,DATETIME,DATETIME-TZ") > 0 THEN
 	        DO:
-	            parm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType). 
+	            parm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
 	        END.
 	    END.
 	    ELSE IF ParamMode = "BUFFER" THEN
 	    DO:
 	        parm = NEW OEMock.Reflection.BufferParameter(ParamName, ParamType).
+	    END.
+	    ELSE IF ParamType = "TABLE" THEN
+	    DO:
+	        parm = NEW OEMock.Reflection.TableParameter(ParamType).
 	    END.
 	    
 	    RETURN parm.
