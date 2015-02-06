@@ -55,6 +55,17 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
     
+    @Test.
+    METHOD PUBLIC VOID ConstructorSetsBlankInheritsFrom():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        
+        Assert:AreEqual(clsfile:InheritsFrom, "").
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
     @Test(Expected='Progress.Lang.SysError').
     METHOD PUBLIC VOID ConstructorRaisesErrorWithInvalidClassName():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
@@ -85,7 +96,7 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         clsCode = clsFile:Generate().
 
         AssertString:Contains(clsCode, 
-                              "CLASS " + clsFile:TypeName + ":").
+                              "CLASS " + clsFile:TypeName + " :").
 
         AssertString:Contains(clsCode, 
                               "END CLASS.").
@@ -102,6 +113,19 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         
         AssertString:Contains(clsfile:Generate(), 
                               'METHOD PUBLIC CHARACTER MethName ():' + CHR(10) + CHR(13) + "END METHOD.").
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesInheritsFroms():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:InheritsFrom = "OEMock.DummyObject".
+
+        AssertString:Contains(clsfile:Generate(), 
+                              "CLASS " + clsFile:TypeName + " INHERITS " + clsFile:InheritsFrom + " :").
         
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.

@@ -18,6 +18,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     DEFINE PUBLIC PROPERTY Constructors AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
     PROTECTED SET. 
+    
+    DEFINE PUBLIC PROPERTY InheritsFrom AS CHARACTER NO-UNDO INITIAL ""
+    GET.
+    SET.
 
     DEFINE PUBLIC PROPERTY Methods AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
@@ -67,8 +71,9 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("CLASS &1:&2&3&2&4&2END CLASS.&2",
+        ASSIGN res = SUBSTITUTE("CLASS &1 &2:&3&4&3&5&3END CLASS.&3",
                                 TypeName,
+                                (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 CHR(10) + CHR(13),
                                 GenerateConstructors(),
                                 GenerateMethods()).
