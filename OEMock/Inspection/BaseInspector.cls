@@ -101,6 +101,8 @@ CLASS OEMock.Inspection.BaseInspector:
 	    DEFINE VARIABLE ParamType AS CHARACTER NO-UNDO.
 	    
 	    DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
+	    DEFINE VARIABLE primparm AS PrimitiveParameter NO-UNDO.
+	    DEFINE VARIABLE tableparm AS TableParameter NO-UNDO.
 	    
 	    /* Factory method. Based on the information passed through hParamNode,
 	     * build the appropriate child class of BaseParameter
@@ -116,7 +118,9 @@ CLASS OEMock.Inspection.BaseInspector:
 	    DO:
 	        IF LOOKUP(ParamType, "CHARACTER,INTEGER,HANDLE,ROWID,MEMPTR,DECIMAL,DATE,DATETIME,DATETIME-TZ") > 0 THEN
 	        DO:
-	            parm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
+	            primparm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
+	            primparm:ParameterType = ParamMode.
+	            parm = primparm.
 	        END.
 	    END.
 	    ELSE IF ParamMode = "BUFFER" THEN
@@ -125,7 +129,9 @@ CLASS OEMock.Inspection.BaseInspector:
 	    END.
 	    ELSE IF ParamType = "TABLE" THEN
 	    DO:
-	        parm = NEW OEMock.Reflection.TableParameter(ParamType).
+	        tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
+	        tableparm:ParameterType = ParamMode.
+	        parm = tableparm.
 	    END.
 	    
 	    RETURN parm.
