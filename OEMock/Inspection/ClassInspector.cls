@@ -23,15 +23,18 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
 	END METHOD.
     
     METHOD OVERRIDE PROTECTED VOID ProcessRefNode(INPUT hRefNode AS HANDLE):
-        DEFINE VARIABLE objId AS CHARACTER NO-UNDO.
-        DEFINE VARIABLE iNode AS INTEGER   NO-UNDO.
-        DEFINE VARIABLE hNode AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE objId      AS CHARACTER NO-UNDO.
+        DEFINE VARIABLE iNode      AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE iChildNode AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE hNode      AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE hChildNode AS HANDLE    NO-UNDO.
         
         DEFINE VARIABLE AccessMode AS CHARACTER   NO-UNDO.
         DEFINE VARIABLE Meth       AS Method      NO-UNDO.
         DEFINE VARIABLE Const      AS CONSTRUCTOR NO-UNDO.
         
         CREATE X-NODEREF hNode.
+        CREATE X-NODEREF hChildNode.
 
         /* Fetch object-identifer */
         ASSIGN objId = hRefNode:GET-ATTRIBUTE("Object-identifier").
@@ -44,6 +47,29 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                 IF VALID-OBJECT(BuiltClass) THEN
                     DELETE OBJECT BuiltClass.
                 BuiltClass = NEW ClassFile(FileName, objId).
+
+                DO iNode = 1 TO hRefNode:NUM-CHILDREN:
+                    hRefNode:GET-CHILD(hNode, iNode).
+                    IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+                    CASE hNode:NAME:
+                        WHEN "Class-Ref" THEN
+                        DO:
+                            /* Class-Ref holds useful information about the class
+                             * e.g. inheritance and interface lists
+                             */
+                            DO iChildNode = 1 TO hNode:NUM-CHILDREN:
+                                hNode:GET-CHILD(hChildNode, iChildNode).
+                                IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+                                CASE hChildNode:NAME:
+                                    WHEN "Inherited-list" THEN
+                                    DO:
+                                        BuiltClass:InheritsFrom = ExtractTextValue(hChildNode).
+                                    END.
+                                END CASE.
+                            END.
+                        END.
+                    END CASE.
+                END.
             END.
             
             WHEN "CONSTRUCTOR" THEN
