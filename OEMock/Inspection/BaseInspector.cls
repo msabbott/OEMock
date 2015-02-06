@@ -122,16 +122,16 @@ CLASS OEMock.Inspection.BaseInspector:
 	            primparm:ParameterType = ParamMode.
 	            parm = primparm.
 	        END.
+            ELSE IF ParamType = "TABLE" THEN
+            DO:
+                tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
+                tableparm:ParameterType = ParamMode.
+                parm = tableparm.
+            END.
 	    END.
 	    ELSE IF ParamMode = "BUFFER" THEN
 	    DO:
 	        parm = NEW OEMock.Reflection.BufferParameter(ParamName, ParamType).
-	    END.
-	    ELSE IF ParamType = "TABLE" THEN
-	    DO:
-	        tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
-	        tableparm:ParameterType = ParamMode.
-	        parm = tableparm.
 	    END.
 	    
 	    RETURN parm.
