@@ -106,6 +106,16 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                             hNode:NORMALIZE().
                             ASSIGN Meth:ReturnType = ExtractTextValue(hNode).
                         END.
+                        WHEN "Is-static" THEN
+                        DO:
+                            hNode:NORMALIZE().
+                            ASSIGN Meth:Static = (ExtractTextValue(hNode) = "true").
+                        END.
+                        WHEN "Is-abstract" THEN
+                        DO:
+                            hNode:NORMALIZE().
+                            ASSIGN Meth:Abstract = (ExtractTextValue(hNode) = "true").
+                        END.
                         WHEN "Parameter-ref" THEN
                         DO:
                             Meth:Parameters:AddParameter(CreateParameter(hNode)).
