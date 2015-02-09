@@ -145,6 +145,32 @@ CLASS OEMock.Tests.Reflection.MethodTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateObservesStaticMarker():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('TestMethod', "CHARACTER").
+        meth:Static = TRUE.
+        
+        Assert:AreEqual(meth:Generate(), 'METHOD PUBLIC STATIC CHARACTER TestMethod ():'
+                                         + CHR(10) + CHR(13) + "END METHOD.").
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesAbstractMarker():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('TestMethod', "CHARACTER").
+        meth:Abstract = TRUE.
+        
+        Assert:AreEqual(meth:Generate(), 'METHOD PUBLIC ABSTRACT CHARACTER TestMethod ():'
+                                         + CHR(10) + CHR(13) + "END METHOD.").
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID SettingStaticSetsAbstractToFalse():
         DEFINE VARIABLE meth AS Method NO-UNDO.
         

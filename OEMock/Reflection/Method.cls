@@ -17,6 +17,7 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
 	SET(INPUT arg AS LOGICAL):
         IF arg = TRUE THEN
             THIS-OBJECT:Static = FALSE.
+        THIS-OBJECT:Abstract = arg.
 	END SET.
 	
 	DEFINE PUBLIC PROPERTY Final AS LOGICAL NO-UNDO INITIAL FALSE
@@ -32,6 +33,7 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
     SET(INPUT arg AS LOGICAL):
         IF arg = TRUE THEN
             THIS-OBJECT:Abstract = FALSE.
+        THIS-OBJECT:Static = arg.
     END SET.
 	 
     CONSTRUCTOR PUBLIC Method(INPUT nam AS CHARACTER):
@@ -50,7 +52,8 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
         IF TRIM(Name)        NE "" AND Name       NE ?   
         AND TRIM(ReturnType) NE "" AND ReturnType NE ? THEN
         DO:
-            ASSIGN meth = SUBSTITUTE("METHOD PUBLIC &1 &2 (&3):",
+            ASSIGN meth = SUBSTITUTE("METHOD PUBLIC &1&2 &3 (&4):",
+                                     (IF THIS-OBJECT:Abstract THEN "ABSTRACT " ELSE IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
                                      ReturnType,
                                      Name,
                                      GenerateParameters()).
