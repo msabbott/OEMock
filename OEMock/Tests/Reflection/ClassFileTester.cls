@@ -23,6 +23,17 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesGeneratorsList():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        
+        Assert:IsTrue(VALID-OBJECT(clsfile:Generators)).
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesMethodList():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
         

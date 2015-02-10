@@ -6,6 +6,7 @@
 USING Progress.Lang.*.
 USING OEMock.Reflection.BaseFile.
 USING OEMock.Reflection.MethodList.
+USING OEMock.Generation.GeneratorList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -16,6 +17,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     SET. 
 
     DEFINE PUBLIC PROPERTY Constructors AS OEMock.Reflection.MethodList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
+    DEFINE PUBLIC PROPERTY Generators AS OEMock.Generation.GeneratorList NO-UNDO 
     GET.
     PROTECTED SET. 
     
@@ -52,12 +57,14 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         /* Create objects */
         Constructors = NEW MethodList().
         Methods      = NEW MethodList().
+        Generators   = NEW GeneratorList().
     END CONSTRUCTOR.
 
     DESTRUCTOR PUBLIC ClassFile():
         IF VALID-OBJECT(Constructors) THEN DELETE OBJECT Constructors.
         IF VALID-OBJECT(Methods)      THEN DELETE OBJECT Methods.
         IF VALID-OBJECT(ClassRef)     THEN DELETE OBJECT ClassRef.
+        IF VALID-OBJECT(Generators)   THEN DELETE OBJECT Generators.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateUsing():
