@@ -47,5 +47,41 @@ CLASS OEMock.Generation.GeneratorList INHERITS BaseList:
     METHOD PUBLIC BaseGenerator MovePrev():
         RETURN CastToBaseGenerator(GetPrev()).
     END METHOD.
+    
+    METHOD PUBLIC LONGCHAR Generate():
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO INITIAL "".
+        DEFINE VARIABLE gen AS BaseGenerator NO-UNDO.
+        
+        /* Loop through Procedures */
+        gen = MoveFirst().
+        DO WHILE VALID-OBJECT(gen):
+            ASSIGN res  = res + gen:Generate()
+                        + CHR(10) + CHR(13)
+                   gen = MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
+    
+    METHOD PUBLIC LONGCHAR GenerateProcedural():
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO INITIAL "".
+        DEFINE VARIABLE gen AS BaseGenerator NO-UNDO.
+        
+        /* Loop through Procedures */
+        gen = MoveFirst().
+        DO WHILE VALID-OBJECT(gen):
+            ASSIGN res  = res + gen:GenerateProcedural()
+                        + CHR(10) + CHR(13)
+                   gen = MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
 
 END CLASS.

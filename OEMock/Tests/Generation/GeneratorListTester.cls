@@ -254,5 +254,29 @@ CLASS OEMock.Tests.Generation.GeneratorListTester:
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
         IF VALID-OBJECT(list) THEN DELETE OBJECT list.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsBlankWithEmptyList():
+        DEFINE VARIABLE list AS OEMock.Generation.GeneratorList NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        
+        list = NEW OEMock.Generation.GeneratorList().
+        
+        Assert:AreEqual(list:Generate(), "").
+        
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralReturnsBlankWithEmptyList():
+        DEFINE VARIABLE list AS OEMock.Generation.GeneratorList NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        
+        list = NEW OEMock.Generation.GeneratorList().
+        
+        Assert:AreEqual(list:GenerateProcedural(), "").
+        
+        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
+    END METHOD.
 
 END CLASS.
