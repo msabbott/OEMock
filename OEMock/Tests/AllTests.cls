@@ -9,6 +9,7 @@ CLASS OEMock.Tests.AllTests INHERITS TestSuite:
     AddTest(NEW OEMock.Tests.Reflection.AllTests()).
     AddTest(NEW OEMock.Tests.Util.AllTests()).
     AddTest(NEW OEMock.Tests.Inspection.AllTests()).
+    AddTest(NEW OEMock.Tests.Generation.AllTests()).
   END CONSTRUCTOR.
 
 END CLASS.
