@@ -23,6 +23,17 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesGeneratorList():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        
+        Assert:IsTrue(VALID-OBJECT(procfile:Generators)).
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesProcedureList():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
         
