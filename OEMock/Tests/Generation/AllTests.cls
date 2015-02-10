@@ -8,6 +8,7 @@ CLASS OEMock.Tests.Generation.AllTests INHERITS TestSuite:
   
   CONSTRUCTOR AllTests():
     AddTest(NEW BaseGeneratorTester()).
+    AddTest(NEW GeneratorListTester()).
   END CONSTRUCTOR.
 
 END CLASS.
