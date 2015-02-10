@@ -21,5 +21,16 @@ CLASS OEMock.Tests.Generation.BaseGeneratorTester:
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralReturnsBlank():
+        DEFINE VARIABLE gen AS BaseGenerator NO-UNDO.
+        
+        gen = NEW BaseGenerator().
+        
+        Assert:AreEqual(gen:GenerateProcedural(), "").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
 
 END CLASS.

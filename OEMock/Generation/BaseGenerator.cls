@@ -15,5 +15,9 @@ CLASS OEMock.Generation.BaseGenerator:
     METHOD PUBLIC LONGCHAR Generate():
         RETURN "".
     END METHOD.
+    
+    METHOD PUBLIC LONGCHAR GenerateProcedural():
+        RETURN "".
+    END METHOD.
 
 END CLASS.
