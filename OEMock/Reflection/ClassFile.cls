@@ -78,12 +78,13 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("CLASS &1 &2:&3&4&3&5&3END CLASS.&3",
+        ASSIGN res = SUBSTITUTE("CLASS &1 &2:&3&4&3&5&3&6&3END CLASS.&3",
                                 TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 CHR(10) + CHR(13),
                                 GenerateConstructors(),
-                                GenerateMethods()).
+                                GenerateMethods(),
+                                Generators:Generate()).
         RETURN res.
     END METHOD.
     
