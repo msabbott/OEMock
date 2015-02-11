@@ -56,6 +56,17 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesUsingList():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        
+        Assert:IsTrue(VALID-OBJECT(clsfile:UsingList)).
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsTypeName():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
         
@@ -106,6 +117,43 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         AssertString:Contains(clsfile:Generate(), 
                               "USING Progress.Lang.*").
         
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsFromList():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:UsingList:Add("OEMock.Tests.*").
+
+        AssertString:Contains(clsfile:Generate(), 
+                              "USING Progress.Lang.*",
+                              STRING(clsfile:Generate())).
+                              
+        AssertString:Contains(clsfile:Generate(), 
+                              "USING OEMock.Tests.*",
+                              STRING(clsfile:Generate())).
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsNoDuplicateProgressLangStar():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        DEFINE VARIABLE txt     AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ind     AS INTEGER   NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:UsingList:Add("Progress.Lang.*").
+        
+        txt = clsfile:Generate().
+        ind = INDEX(txt, "USING Progress.Lang.*").
+        
+        /* Verify it is not found after first instance */
+        Assert:AreEqual(INDEX(txt,"USING Progress.Lang.*", ind + 1),
+                        0).
+
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
     
