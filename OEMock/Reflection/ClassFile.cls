@@ -170,7 +170,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         DEFINE VARIABLE res  AS LONGCHAR  NO-UNDO.
         DEFINE VARIABLE intf AS CHARACTER NO-UNDO.
         
-        IF Interfaces:COUNT > 1 THEN
+        IF Interfaces:COUNT > 0 THEN
         DO:
             /* Loop through Procedures */
             intf = Interfaces:MoveFirst().
@@ -182,7 +182,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
             END.
             
             ASSIGN res = SUBSTITUTE(" IMPLEMENTS &1",
-                                    TRIM(res, ",")).
+                                    TRIM(res, ", ")).
         END.
         
         /* Sanity check output */

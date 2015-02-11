@@ -199,5 +199,19 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesInterfaces():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:Interfaces:Add("DummyInterface").
+        clsfile:Interfaces:Add("DummyInterface2").
+
+        AssertString:Contains(clsfile:Generate(), 
+                              "CLASS " + clsFile:TypeName + "  IMPLEMENTS DummyInterface, DummyInterface2").
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
 
 END CLASS.
