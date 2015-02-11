@@ -28,6 +28,8 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
         DEFINE VARIABLE iChildNode AS INTEGER   NO-UNDO.
         DEFINE VARIABLE hNode      AS HANDLE    NO-UNDO.
         DEFINE VARIABLE hChildNode AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE i          AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE list       AS CHARACTER NO-UNDO.
         
         DEFINE VARIABLE AccessMode AS CHARACTER   NO-UNDO.
         DEFINE VARIABLE Meth       AS Method      NO-UNDO.
@@ -64,6 +66,13 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                                     WHEN "Inherited-list" THEN
                                     DO:
                                         BuiltClass:InheritsFrom = ExtractTextValue(hChildNode).
+                                    END.
+                                    WHEN "Implements-list" THEN
+                                    DO:
+                                        list = ExtractTextValue(hChildNode).
+                                        DO i = 1 TO NUM-ENTRIES(list, " "):
+                                            BuiltClass:Interfaces:Add(TRIM(ENTRY(i, list, " "))).
+                                        END.
                                     END.
                                 END CASE.
                             END.
