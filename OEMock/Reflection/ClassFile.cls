@@ -7,6 +7,7 @@ USING Progress.Lang.*.
 USING OEMock.Reflection.BaseFile.
 USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
+USING OEMock.Util.StringList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -27,6 +28,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     DEFINE PUBLIC PROPERTY InheritsFrom AS CHARACTER NO-UNDO INITIAL ""
     GET.
     SET.
+
+	DEFINE PUBLIC PROPERTY Interfaces AS OEMock.Util.StringList NO-UNDO 
+	GET.
+	PROTECTED SET. 
 
     DEFINE PUBLIC PROPERTY Methods AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
@@ -58,6 +63,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         Constructors = NEW MethodList().
         Methods      = NEW MethodList().
         Generators   = NEW GeneratorList().
+        Interfaces   = NEW StringList().
     END CONSTRUCTOR.
 
     DESTRUCTOR PUBLIC ClassFile():
@@ -65,6 +71,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         IF VALID-OBJECT(Methods)      THEN DELETE OBJECT Methods.
         IF VALID-OBJECT(ClassRef)     THEN DELETE OBJECT ClassRef.
         IF VALID-OBJECT(Generators)   THEN DELETE OBJECT Generators.
+        IF VALID-OBJECT(Interfaces)   THEN DELETE OBJECT Interfaces.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateUsing():
@@ -78,10 +85,15 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("CLASS &1 &2:&3&4&3&5&3&6&3END CLASS.&3",
+        ASSIGN res = SUBSTITUTE("CLASS &2 &3&4:"
+                              + "&1&5"
+                              + "&1&6"
+                              + "&1&7"
+                              + "&1END CLASS.&1",
+                                CHR(10) + CHR(13),
                                 TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
-                                CHR(10) + CHR(13),
+                                GenerateInterfaces(),
                                 GenerateConstructors(),
                                 GenerateMethods(),
                                 Generators:Generate()).
@@ -116,6 +128,31 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
             ASSIGN res  = res + meth:Generate()
                         + CHR(10) + CHR(13)
                    meth = Methods:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateInterfaces():
+        DEFINE VARIABLE res  AS LONGCHAR  NO-UNDO.
+        DEFINE VARIABLE intf AS CHARACTER NO-UNDO.
+        
+        IF Interfaces:COUNT > 1 THEN
+        DO:
+            /* Loop through Procedures */
+            intf = Interfaces:MoveFirst().
+            DO WHILE (intf NE ? AND intf NE ""):
+                ASSIGN res  = SUBSTITUTE("&1, &2",
+                                         res,
+                                         intf).
+                       intf = Interfaces:MoveNext().
+            END.
+            
+            ASSIGN res = SUBSTITUTE(" IMPLEMENTS &1",
+                                    TRIM(res, ",")).
         END.
         
         /* Sanity check output */
