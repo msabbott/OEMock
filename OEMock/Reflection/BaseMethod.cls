@@ -11,6 +11,10 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Reflection.BaseMethod:
     
+	DEFINE PUBLIC PROPERTY Generators AS OEMock.Generation.GeneratorList NO-UNDO 
+	GET.
+	PROTECTED SET. 
+
 	DEFINE PUBLIC PROPERTY Name AS CHARACTER INITIAL ? NO-UNDO 
 	GET.
 	SET.
@@ -31,10 +35,12 @@ CLASS OEMock.Reflection.BaseMethod:
 	    SUPER().
 	    NAME = nam.
 	    Parameters = NEW OEMock.Reflection.ParameterList().
+	    Generators = NEW OEMock.Generation.GeneratorList().
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC BaseMethod():
 	    IF VALID-OBJECT(Parameters) THEN DELETE OBJECT Parameters.
+	    IF VALID-OBJECT(Generators) THEN DELETE OBJECT Generators.
 	END DESTRUCTOR.
 	
 	METHOD PUBLIC LONGCHAR Generate():

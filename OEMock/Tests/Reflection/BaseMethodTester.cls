@@ -23,6 +23,17 @@ CLASS OEMock.Tests.Reflection.BaseMethodTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesGeneratorList():
+        DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
+        
+        meth = NEW BaseMethod('Method Name').
+        
+        Assert:IsTrue(VALID-OBJECT(meth:Generators)).
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesParameterList():
         DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
         
