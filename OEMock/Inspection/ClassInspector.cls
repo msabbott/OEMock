@@ -65,7 +65,7 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                                 CASE hChildNode:NAME:
                                     WHEN "Inherited-list" THEN
                                     DO:
-                                        BuiltClass:InheritsFrom = ExtractTextValue(hChildNode).
+                                        BuiltClass:InheritsFrom = TRIM(ENTRY(1,ExtractTextValue(hChildNode), " ")).
                                     END.
                                     WHEN "Implements-list" THEN
                                     DO:
