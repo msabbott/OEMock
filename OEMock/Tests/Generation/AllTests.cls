@@ -9,6 +9,7 @@ CLASS OEMock.Tests.Generation.AllTests INHERITS TestSuite:
   CONSTRUCTOR AllTests():
     AddTest(NEW BaseGeneratorTester()).
     AddTest(NEW StubInterfaceGeneratorTester()).
+    AddTest(NEW MockInterfaceGeneratorTester()).
     AddTest(NEW GeneratorListTester()).
   END CONSTRUCTOR.
 
