@@ -10,6 +10,7 @@ CLASS OEMock.Tests.Util.AllTests INHERITS TestSuite:
     AddTest(NEW BaseListTester()).
     AddTest(NEW ListTester()).
     AddTest(NEW StringListTester()).
+    AddTest(NEW BaseNamedListTester()).
     AddTest(NEW WarningsTester()).
   END CONSTRUCTOR.
 
