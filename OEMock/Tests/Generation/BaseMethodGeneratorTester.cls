@@ -92,5 +92,79 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
         
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsParameterAssignment():
+        DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        
+        meth = NEW BaseMethod().
+        parm = NEW PrimitiveParameter("Param1", "INTEGER").
+        meth:Parameters:AddParameter(parm).
+        
+        gen = NEW BaseMethodGenerator().
+        gen:AttachTo(meth).
+        gen:SetParameterOutputValue("Param1", "1234").
+        
+        AssertString:Contains(gen:Generate(), "Param1 = 1234").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsMultipleParameterAssignment():
+        DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+
+        meth  = NEW BaseMethod().
+        parm  = NEW PrimitiveParameter("Param1", "INTEGER").
+        parm2 = NEW PrimitiveParameter("Param2", "INTEGER").
+        meth:Parameters:AddParameter(parm).
+        meth:Parameters:AddParameter(parm2).
+        
+        gen = NEW BaseMethodGenerator().
+        gen:AttachTo(meth).
+        gen:SetParameterOutputValue("Param1", "1234").
+        gen:SetParameterOutputValue("Param2", "5678").
+        
+        res = gen:Generate().        
+        AssertString:Contains(res, "Param1 = 1234").
+        AssertString:Contains(res, "Param2 = 5678").
+        
+        IF VALID-OBJECT(gen)   THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth)  THEN DELETE OBJECT meth.
+        IF VALID-OBJECT(parm)  THEN DELETE OBJECT parm.
+        IF VALID-OBJECT(parm ) THEN DELETE OBJECT parm2.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsNullParameterAssignment():
+        DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        
+        meth = NEW BaseMethod().
+        parm = NEW PrimitiveParameter("Param1", "INTEGER").
+        meth:Parameters:AddParameter(parm).
+        
+        gen = NEW BaseMethodGenerator().
+        gen:AttachTo(meth).
+        gen:SetParameterOutputValue("Param1", ?).
+        
+        AssertString:Contains(gen:Generate(), "Param1 = ?").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+        
+    END METHOD.
 
 END CLASS.

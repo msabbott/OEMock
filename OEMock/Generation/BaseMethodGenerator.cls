@@ -41,6 +41,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
         DO:        
             /* Find parameter */
             parm = THIS-OBJECT:BaseMethod:Parameters:MoveFirst().
+            paramLoop:
             DO WHILE VALID-OBJECT(parm):
                 IF parm:Name = paramName THEN
                 DO:
@@ -88,7 +89,6 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             DO WHILE VALID-OBJECT(parm):
                 IF ParameterOutputValues:HasValue(parm:Name) THEN
                 DO:
-                    MESSAGE parm:NAME parm:NAME parm:NAME = ? VIEW-AS ALERT-BOX. 
                     res = SUBSTITUTE("&1&2&3 = &4",
                                      res,
                                      CHR(10) + CHR(13),
