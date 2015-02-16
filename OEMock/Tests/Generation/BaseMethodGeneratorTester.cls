@@ -46,6 +46,25 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID AttachToAddsToGeneratorList():
+        DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
+        DEFINE VARIABLE genCount AS INTEGER NO-UNDO.
+        
+        meth = NEW BaseMethod().
+        genCount = meth:Generators:Count.
+        
+        gen = NEW BaseMethodGenerator().
+        gen:AttachTo(meth).
+        
+        Assert:AreEqual(meth:Generators:Count, genCount + 1).
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID SetParameterOutputValueSetsItemInList():
         DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
         DEFINE VARIABLE meth AS BaseMethod NO-UNDO.

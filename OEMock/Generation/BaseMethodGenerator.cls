@@ -74,6 +74,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     
     METHOD PUBLIC VOID AttachTo(INPUT meth AS OEMock.Reflection.BaseMethod):
         THIS-OBJECT:BaseMethod = meth.
+        meth:Generators:AddGenerator(THIS-OBJECT).
     END METHOD.
     
     METHOD PROTECTED LONGCHAR GenerateParameterAssignment():
