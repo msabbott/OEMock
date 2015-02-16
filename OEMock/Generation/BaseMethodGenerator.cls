@@ -61,14 +61,64 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             
                     /* Assign into list of output values */
                     ParameterOutputValues:AddValue(paramName, paramValue).
+                    
+                    /* Parameter found, break from loop */
+                    LEAVE paramLoop.
                 END.
+                parm = THIS-OBJECT:BaseMethod:Parameters:MoveNext().
             END.
         END.
         
     END METHOD.
     
-    METHOD PROTECTED VOID AttachTo(INPUT meth AS OEMock.Reflection.BaseMethod):
+    METHOD PUBLIC VOID AttachTo(INPUT meth AS OEMock.Reflection.BaseMethod):
         THIS-OBJECT:BaseMethod = meth.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateParameterAssignment():
+        
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO INITIAL "".
+        DEFINE VARIABLE parm AS OEMock.Reflection.BaseParameter NO-UNDO.
+        
+        IF VALID-OBJECT(THIS-OBJECT:BaseMethod) THEN
+        DO:        
+            /* Find parameter */
+            parm = THIS-OBJECT:BaseMethod:Parameters:MoveFirst().
+            paramLoop:
+            DO WHILE VALID-OBJECT(parm):
+                IF ParameterOutputValues:HasValue(parm:Name) THEN
+                DO:
+                    MESSAGE parm:NAME parm:NAME parm:NAME = ? VIEW-AS ALERT-BOX. 
+                    res = SUBSTITUTE("&1&2&3 = &4",
+                                     res,
+                                     CHR(10) + CHR(13),
+                                     parm:Name,
+                                     ParameterOutputValues:GetValue(parm:Name)).
+                END.
+                parm = THIS-OBJECT:BaseMethod:Parameters:MoveNext().
+            END.
+            
+            ASSIGN res = TRIM(res).
+            
+            IF res NE ? AND res NE "" THEN
+                ASSIGN res = SUBSTITUTE("ASSIGN &1.&2",
+                                        res,
+                                        CHR(10) + CHR(13)).
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+        
+        RETURN res.
+        
+    END METHOD.
+    
+    METHOD OVERRIDE PUBLIC LONGCHAR Generate():
+        RETURN GenerateParameterAssignment().
+    END METHOD.
+    
+    METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
+        RETURN Generate().
     END METHOD.
 
 END CLASS.

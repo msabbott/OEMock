@@ -56,7 +56,7 @@ CLASS OEMock.Util.NamedStringList:
     
     METHOD PUBLIC VOID AddValue(INPUT nam AS CHARACTER, INPUT txt AS CHARACTER):
         ASSIGN nam = TRIM(nam).
-        IF nam NE ? AND nam NE "" AND txt NE ? THEN
+        IF nam NE ? AND nam NE "" THEN
         DO: 
             FIND FIRST ttItem
                  WHERE ttItem.Name = nam

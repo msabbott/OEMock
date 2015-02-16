@@ -29,15 +29,6 @@ CLASS OEMock.Tests.Util.NamedStringListTester:
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID AddValueDoesNotIncrementCounterWhenValueNull():
-        DEFINE VARIABLE list AS NamedStringList NO-UNDO.
-        list = NEW NamedStringList().
-        list:AddValue("Name 1", ?).
-        Assert:AreEqual(list:Count,0).
-        IF VALID-OBJECT(list) THEN DELETE OBJECT list.
-    END METHOD.
-    
-    @Test.
     METHOD PUBLIC VOID AddValueIgnoresBlankName():
         DEFINE VARIABLE list AS NamedStringList NO-UNDO.
         list = NEW NamedStringList().
