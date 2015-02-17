@@ -77,6 +77,10 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
         meth:Generators:AddGenerator(THIS-OBJECT).
     END METHOD.
     
+    METHOD PROTECTED LONGCHAR GenerateVariableDefinitions():
+        RETURN "".
+    END METHOD.
+    
     METHOD PROTECTED LONGCHAR GenerateParameterAssignment():
         
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO INITIAL "".
@@ -115,7 +119,10 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
-        RETURN GenerateParameterAssignment().
+        RETURN TRIM(SUBSTITUTE("&2&1&3",
+                               CHR(10) + CHR(13),
+                               GenerateVariableDefinitions(),
+                               GenerateParameterAssignment())).
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
