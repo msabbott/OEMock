@@ -46,7 +46,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID AttachToAddsToGeneratorList():
+    METHOD PUBLIC VOID AttachToBaseMethodAddsToGeneratorList():
         DEFINE VARIABLE gen AS BaseMethodGenerator NO-UNDO.
         DEFINE VARIABLE meth AS BaseMethod NO-UNDO.
         DEFINE VARIABLE genCount AS INTEGER NO-UNDO.
@@ -55,7 +55,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         genCount = meth:Generators:Count.
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         
         Assert:AreEqual(meth:Generators:Count, genCount + 1).
         
@@ -75,7 +75,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         meth:Parameters:AddParameter(parm).
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         gen:SetParameterOutputValue("Param1", "1234").
         Assert:AreEqual(gen:ParameterOutputValues:GetValue("Param1"), "1234").
         
@@ -96,7 +96,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         meth:Parameters:AddParameter(parm).
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         gen:SetParameterOutputValue("Param1", "Value1").
         Assert:AreEqual(gen:ParameterOutputValues:GetValue("Param1"), '"Value1"').
         
@@ -123,7 +123,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         meth:Parameters:AddParameter(parm).
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         gen:SetParameterOutputValue("Param1", "1234").
         
         AssertString:Contains(gen:Generate(), "Param1 = 1234").
@@ -149,7 +149,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         meth:Parameters:AddParameter(parm2).
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         gen:SetParameterOutputValue("Param1", "1234").
         gen:SetParameterOutputValue("Param2", "5678").
         
@@ -175,7 +175,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         meth:Parameters:AddParameter(parm).
         
         gen = NEW BaseMethodGenerator().
-        gen:AttachTo(meth).
+        gen:AttachToBaseMethod(meth).
         gen:SetParameterOutputValue("Param1", ?).
         
         AssertString:Contains(gen:Generate(), "Param1 = ?").

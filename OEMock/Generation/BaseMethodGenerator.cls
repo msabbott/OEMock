@@ -72,7 +72,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
         
     END METHOD.
     
-    METHOD PUBLIC VOID AttachTo(INPUT meth AS OEMock.Reflection.BaseMethod):
+    METHOD PUBLIC VOID AttachToBaseMethod(INPUT meth AS OEMock.Reflection.BaseMethod):
         THIS-OBJECT:BaseMethod = meth.
         meth:Generators:AddGenerator(THIS-OBJECT).
     END METHOD.

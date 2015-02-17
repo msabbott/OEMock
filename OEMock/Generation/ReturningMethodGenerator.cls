@@ -25,7 +25,7 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
 	END DESTRUCTOR.
     
     METHOD PUBLIC VOID AttachToReturningMethod(INPUT meth AS OEMock.Reflection.ReturningMethod):
-        SUPER:AttachTo(meth).
+        SUPER:AttachToBaseMethod(meth).
         ReturningMethod = meth.
     END METHOD.
 	
