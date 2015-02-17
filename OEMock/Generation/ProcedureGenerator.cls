@@ -5,6 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEMock.Generation.BaseMethodGenerator.
+USING OEMock.Reflection.Procedure.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
