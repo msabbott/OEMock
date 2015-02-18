@@ -18,6 +18,7 @@ CLASS OEMock.Tests.Generation.AllTests INHERITS TestSuite:
     AddTest(NEW MethodGeneratorTester()).
     AddTest(NEW StubProcedureGeneratorTester()).
     AddTest(NEW StubFunctionGeneratorTester()).
+    AddTest(NEW StubMethodGeneratorTester()).
   END CONSTRUCTOR.
 
 END CLASS.
