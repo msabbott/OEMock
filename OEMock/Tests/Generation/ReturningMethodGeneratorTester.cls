@@ -198,8 +198,91 @@ CLASS OEMock.Tests.Generation.ReturningMethodGeneratorTester:
         gen:AttachToReturningMethod(meth).
         
         res = gen:Generate().
-        AssertString:Contains(res, "DEFINE VARIABLE res AS", STRING(res)).
-        AssertString:Contains(res, "RETURN res.", STRING(res)).
+        AssertString:Contains(res, "DEFINE VARIABLE res AS").
+        AssertString:Contains(res, "RETURN res.").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateSetsReturnValue():
+        DEFINE VARIABLE gen AS ReturningMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS ReturningMethod NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+
+        meth = NEW ReturningMethod("Method1", "CHARACTER").
+        
+        gen = NEW ReturningMethodGenerator().
+        gen:AttachToReturningMethod(meth).
+        gen:SetReturnValue("'ReturnValue'").
+        
+        res = gen:Generate().
+       
+        AssertString:Contains(res, "ASSIGN res = 'ReturnValue'.").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateDoesNotSetReturnValueWhenNotSpecified():
+        DEFINE VARIABLE gen AS ReturningMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS ReturningMethod NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+
+        meth = NEW ReturningMethod("Method1", "CHARACTER").
+        
+        gen = NEW ReturningMethodGenerator().
+        gen:AttachToReturningMethod(meth).
+        
+        res = gen:Generate().
+       
+        AssertString:DoesNotContain(res, "ASSIGN res = ").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsNullReturnValue():
+        DEFINE VARIABLE gen AS ReturningMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS ReturningMethod NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+
+        meth = NEW ReturningMethod("Method1", "CHARACTER").
+        
+        gen = NEW ReturningMethodGenerator().
+        gen:AttachToReturningMethod(meth).
+        gen:SetReturnValue(?).
+        
+        res = gen:Generate().
+       
+        AssertString:Contains(res, "ASSIGN res = ?.").
+        
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateReturnsBlankReturnValue():
+        DEFINE VARIABLE gen AS ReturningMethodGenerator NO-UNDO.
+        DEFINE VARIABLE meth AS ReturningMethod NO-UNDO.
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+
+        meth = NEW ReturningMethod("Method1", "CHARACTER").
+        
+        gen = NEW ReturningMethodGenerator().
+        gen:AttachToReturningMethod(meth).
+        gen:SetReturnValue("''").
+        
+        res = gen:Generate().
+       
+        AssertString:Contains(res, "ASSIGN res = ''.").
         
         IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
