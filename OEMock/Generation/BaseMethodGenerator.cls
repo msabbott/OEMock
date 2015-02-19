@@ -50,7 +50,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
                     DO:
                         prim = CAST(parm, "OEMock.Reflection.PrimitiveParameter").
                         CASE prim:DataType:
-                            WHEN 'CHARACTER' THEN
+                            WHEN "CHARACTER" OR WHEN "LONGCHAR" THEN
                             DO:
                                 IF NOT (paramValue MATCHES ("'*'") OR paramValue MATCHES ('"*"')) AND paramValue NE ? THEN
                                 DO:

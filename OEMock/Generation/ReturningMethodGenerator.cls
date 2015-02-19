@@ -78,7 +78,7 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
             /* Indicate ReturnValue has been set */
             CASE THIS-OBJECT:ReturningMethod:ReturnType:
                 
-                WHEN "CHARACTER" THEN
+                WHEN "CHARACTER" OR WHEN "LONGCHAR" THEN
                 DO:
                     IF NOT (retval MATCHES ("'*'") OR retval MATCHES ('"*"')) AND retval NE ? THEN
                     DO:
