@@ -84,7 +84,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         DEFINE VARIABLE res  AS LONGCHAR  NO-UNDO.
         DEFINE VARIABLE ref  AS CHARACTER NO-UNDO.
 
-        IF UsingList:COUNT > 0 THEN
+        IF UsingList:Count > 0 THEN
         DO:
             /* Loop through Procedures */
             ref = UsingList:MoveFirst().
@@ -95,6 +95,8 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                                          ref).
                        ref = UsingList:MoveNext().
             END.
+            
+            res = TRIM(res).
         END.
         
         /* Sanity check output */
@@ -108,7 +110,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                                     CHR(10) + CHR(13),
                                     res).
         END.
-
+        
         RETURN res.
     END METHOD.
     
@@ -194,7 +196,8 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("&1&2",
+        ASSIGN res = SUBSTITUTE("&2&1&3",
+                                CHR(10) + CHR(13),
                                 GenerateUsing(),
                                 GenerateClass()).
 
