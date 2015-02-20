@@ -30,7 +30,7 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 	    
 	    IF VALID-OBJECT(InterfaceGenerator) THEN
 	       DELETE OBJECT InterfaceGenerator.
-	       
+	    
 	    InterfaceGenerator = NEW StubInterfaceGenerator().
 	    
         IF File:GetClass():IsA("OEMock.Reflection.ClassFile") THEN

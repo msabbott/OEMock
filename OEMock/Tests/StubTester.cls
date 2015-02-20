@@ -18,7 +18,7 @@ CLASS OEMock.Tests.StubTester:
     @Test.
     METHOD PUBLIC VOID ConstructorSetsFile():
         DEFINE VARIABLE stb AS Stub NO-UNDO.
-        DEFINE VARIABLE fil AS ClassFile  NO-UNDO.
+        DEFINE VARIABLE fil AS ClassFile NO-UNDO.
         
         fil = NEW ClassFile('OEMock/Tests/Util/ListObject.cls', 'OEMock.Tests.Util.ListObject').
         stb = NEW Stub(fil, TestDir).
@@ -52,8 +52,7 @@ CLASS OEMock.Tests.StubTester:
         DEFINE VARIABLE stb  AS Stub NO-UNDO.
         DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
         
-        /*insp = NEW ClassInspector('OEMock/Tests/Util/ListObject.cls').*/
-        insp = NEW ClassInspector('OEMock/Util/List.cls').
+        insp = NEW ClassInspector('OEMock/Tests/Util/ListObject.cls').
         stb = NEW Stub(insp:Inspect(), TestDir).
         
         stb:Generate().
