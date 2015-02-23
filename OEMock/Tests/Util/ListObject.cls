@@ -17,5 +17,9 @@ CLASS OEMock.Tests.Util.ListObject:
 	    SUPER().
 	    NAME = nam.
 	END CONSTRUCTOR.
+	
+	METHOD PUBLIC CHARACTER ListObjectMethod(INPUT paramName AS CHARACTER):
+	    RETURN "".
+	END METHOD.
 
 END CLASS.
