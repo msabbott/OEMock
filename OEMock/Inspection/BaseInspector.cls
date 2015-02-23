@@ -112,22 +112,22 @@ CLASS OEMock.Inspection.BaseInspector:
 	    ASSIGN ParamMode = hParamNode:GET-ATTRIBUTE("Parameter-mode")
 	           ParamName = hParamNode:GET-ATTRIBUTE("Parameter-name")
 	           ParamType = hParamNode:GET-ATTRIBUTE("Parameter-type").
-	    
+	           
 	    /* Determine appropriate class */
 	    IF ParamMode = "INPUT" OR ParamMode = "OUTPUT" OR ParamMode = "INPUT-OUTPUT" THEN
 	    DO:
-	        IF LOOKUP(ParamType, "CHARACTER,INTEGER,HANDLE,ROWID,MEMPTR,DECIMAL,DATE,DATETIME,DATETIME-TZ") > 0 THEN
-	        DO:
-	            primparm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
-	            primparm:ParameterType = ParamMode.
-	            parm = primparm.
-	        END.
-            ELSE IF ParamType = "TABLE" THEN
+	        IF ParamType = "TABLE" THEN
             DO:
                 tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
                 tableparm:ParameterType = ParamMode.
                 parm = tableparm.
             END.
+            ELSE
+	        DO:
+	            primparm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
+	            primparm:ParameterType = ParamMode.
+	            parm = primparm.
+	        END.
 	    END.
 	    ELSE IF ParamMode = "BUFFER" THEN
 	    DO:
