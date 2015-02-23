@@ -83,7 +83,7 @@ CLASS OEMock.BaseDouble:
                 tmpPath = tmpPath
                         + ENTRY(loop, tmpDir, "/")
                         + "/".
-                OS-CREATE-DIR VALUE(tmpPath) no-error.
+                OS-CREATE-DIR VALUE(tmpPath).
             END.
         END.
 	END METHOD.
