@@ -6,6 +6,7 @@
 USING Progress.Lang.*.
 USING OEUnit.Assertion.*.
 USING OEMock.Reflection.*.
+USING OEMock.Generation.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -146,10 +147,13 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
     @Test.
     METHOD PUBLIC VOID GenerateCreatesValidFunction():
         DEFINE VARIABLE meth AS Function NO-UNDO.
+        DEFINE VARIABLE outp AS LONGCHAR NO-UNDO.
         
         meth = NEW Function('TestFunction', "CHARACTER").
         
-        Assert:AreEqual(meth:Generate(),'FUNCTION TestFunction RETURNS CHARACTER ():' + CHR(10) + CHR(13) + "END FUNCTION.").
+        outp = meth:Generate().
+        AssertString:Contains(outp, 'FUNCTION TestFunction RETURNS CHARACTER ():').
+        AssertString:Contains(outp, "END FUNCTION.").
         
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
         
@@ -172,6 +176,7 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
         DEFINE VARIABLE meth AS Function NO-UNDO.
         DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
         DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE outp  AS LONGCHAR NO-UNDO.
         
         meth  = NEW Function('TestFunction', "CHARACTER").
         parm1 = NEW PrimitiveParameter('Param1', 'CHARACTER').
@@ -181,10 +186,12 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
         meth:Parameters:AddParameter(parm2).
         Assert:AreEqual(meth:Parameters:Count, 2).
         
-        Assert:AreEqual(meth:Generate(), 'FUNCTION TestFunction RETURNS CHARACTER ('
-                                         + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                         + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):"
-                                         + CHR(10) + CHR(13) + "END FUNCTION.").
+        outp = meth:Generate().
+        AssertString:Contains(outp, 'FUNCTION TestFunction RETURNS CHARACTER ('
+                                    + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                    + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):").
+                                         
+        AssertString:Contains(outp, "END FUNCTION.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
@@ -208,6 +215,21 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
                                                 + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER) FORWARD.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCallsGenerators():
+        DEFINE VARIABLE meth AS Function NO-UNDO.
+        DEFINE VARIABLE gen  AS FunctionGenerator NO-UNDO.
+        
+        meth = NEW Function('TestFunction', "CHARACTER").
+        gen  = NEW FunctionGenerator().
+        gen:AttachTo(meth).
+        
+        AssertString:Contains(meth:Generate(), "RETURN res.").
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
     END METHOD.
 
 END CLASS.

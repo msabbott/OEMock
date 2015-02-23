@@ -36,6 +36,11 @@ CLASS OEMock.Reflection.Procedure INHERITS BaseMethod:
                                      proc,
                                      GenerateParameters()).
                                      
+            ASSIGN proc = SUBSTITUTE("&1&2&3&2",
+                                     proc,
+                                     CHR(10) + CHR(13),
+                                     Generators:Generate()).
+                                     
             ASSIGN proc = SUBSTITUTE("&1&2&3END PROCEDURE.",
                                      proc,
                                      CHR(10),

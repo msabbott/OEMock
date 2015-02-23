@@ -58,10 +58,14 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
                                      Name,
                                      GenerateParameters()).
                                      
-            ASSIGN meth = SUBSTITUTE("&1&2&3END METHOD.",
+            ASSIGN meth = SUBSTITUTE("&1&2&3&2",
                                      meth,
-                                     CHR(10),
-                                     CHR(13)).
+                                     CHR(10) + CHR(13),
+                                     Generators:Generate()).
+                                     
+            ASSIGN meth = SUBSTITUTE("&1&2END METHOD.",
+                                     meth,
+                                     CHR(10) + CHR(13)).
         END.
         
         RETURN meth.

@@ -6,6 +6,7 @@
 USING Progress.Lang.*.
 USING OEUnit.Assertion.*.
 USING OEMock.Reflection.*.
+USING OEMock.Generation.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -113,10 +114,13 @@ CLASS OEMock.Tests.Reflection.MethodTester:
     @Test.
     METHOD PUBLIC VOID GenerateCreatesValidMethod():
         DEFINE VARIABLE meth AS Method NO-UNDO.
+        DEFINE VARIABLE outp AS LONGCHAR NO-UNDO.
         
         meth = NEW Method('TestMethod', "CHARACTER").
         
-        Assert:AreEqual(meth:Generate(),'METHOD PUBLIC CHARACTER TestMethod ():' + CHR(10) + CHR(13) + "END METHOD.").
+        outp = meth:Generate().
+        AssertString:Contains(outp, 'METHOD PUBLIC CHARACTER TestMethod ():').
+        AssertString:Contains(outp, "END METHOD.").
         
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
         
@@ -124,9 +128,10 @@ CLASS OEMock.Tests.Reflection.MethodTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateIncludesParameters():
-        DEFINE VARIABLE meth AS Method NO-UNDO.
+        DEFINE VARIABLE meth  AS Method NO-UNDO.
         DEFINE VARIABLE parm1 AS PrimitiveParameter NO-UNDO.
         DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
+        DEFINE VARIABLE outp  AS LONGCHAR NO-UNDO.
         
         meth  = NEW Method('TestMethod', "CHARACTER").
         parm1 = NEW PrimitiveParameter('Param1', 'CHARACTER').
@@ -136,10 +141,12 @@ CLASS OEMock.Tests.Reflection.MethodTester:
         meth:Parameters:AddParameter(parm2).
         Assert:AreEqual(meth:Parameters:Count, 2).
         
-        Assert:AreEqual(meth:Generate(), 'METHOD PUBLIC CHARACTER TestMethod ('
-                                         + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                         + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):"
-                                         + CHR(10) + CHR(13) + "END METHOD.").
+        outp = meth:Generate().
+        
+        AssertString:Contains(outp, 'METHOD PUBLIC CHARACTER TestMethod ('
+                                    + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                    + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):").
+        AssertString:Contains(outp, "END METHOD.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
@@ -151,8 +158,7 @@ CLASS OEMock.Tests.Reflection.MethodTester:
         meth = NEW Method('TestMethod', "CHARACTER").
         meth:Static = TRUE.
         
-        Assert:AreEqual(meth:Generate(), 'METHOD PUBLIC STATIC CHARACTER TestMethod ():'
-                                         + CHR(10) + CHR(13) + "END METHOD.").
+        AssertString:Contains(meth:Generate(), 'METHOD PUBLIC STATIC CHARACTER TestMethod ():').
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
@@ -164,10 +170,24 @@ CLASS OEMock.Tests.Reflection.MethodTester:
         meth = NEW Method('TestMethod', "CHARACTER").
         meth:Abstract = TRUE.
         
-        Assert:AreEqual(meth:Generate(), 'METHOD PUBLIC ABSTRACT CHARACTER TestMethod ():'
-                                         + CHR(10) + CHR(13) + "END METHOD.").
+        AssertString:Contains(meth:Generate(), 'METHOD PUBLIC ABSTRACT CHARACTER TestMethod ():').
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCallsGenerators():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        DEFINE VARIABLE gen  AS MethodGenerator NO-UNDO.
+        
+        meth = NEW Method('TestMethod', "CHARACTER").
+        gen  = NEW MethodGenerator().
+        gen:AttachTo(meth).
+        
+        AssertString:Contains(meth:Generate(), "RETURN res.").
+        
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
     END METHOD.
     
     @Test.
