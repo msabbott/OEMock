@@ -125,6 +125,12 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                             hNode:NORMALIZE().
                             ASSIGN Meth:Abstract = (ExtractTextValue(hNode) = "true").
                         END.
+                        WHEN "Object-Context" THEN
+                        DO:
+                            list = ExtractTextValue(hNode).
+                            ASSIGN Meth:Override = (list MATCHES "*OVERRIDE*")
+                                   Meth:Final    = (list MATCHES "*FINAL*").
+                        END.
                         WHEN "Parameter-ref" THEN
                         DO:
                             Meth:Parameters:AddParameter(CreateParameter(hNode)).
