@@ -62,13 +62,13 @@ CLASS OEMock.Inspection.ProcedureInspector INHERITS BaseInspector:
                             Proc:Parameters:AddParameter(CreateParameter(hNode)).
                         END.
                     END CASE.
-
-                    /* Check access method is not "PRIVATE" */
-                    IF AccessMode NE "PRIVATE" THEN
-                        BuiltProc:Procedures:AddMethod(Proc).
-                    ELSE
-                        DELETE OBJECT Proc NO-ERROR.
                 END.
+
+                /* Check access method is not "PRIVATE" */
+                IF AccessMode NE "PRIVATE" THEN
+                    BuiltProc:Procedures:AddMethod(Proc).
+                ELSE
+                    DELETE OBJECT Proc NO-ERROR.
             END.
 
             WHEN "FUNCTION" THEN
