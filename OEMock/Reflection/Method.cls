@@ -52,8 +52,10 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
         IF TRIM(Name)        NE "" AND Name       NE ?   
         AND TRIM(ReturnType) NE "" AND ReturnType NE ? THEN
         DO:
-            ASSIGN meth = SUBSTITUTE("METHOD PUBLIC &1&2 &3 (&4):",
+            ASSIGN meth = SUBSTITUTE("METHOD PUBLIC &1&2&3&4 &5 (&6):",
                                      (IF THIS-OBJECT:Abstract THEN "ABSTRACT " ELSE IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
+                                     (IF THIS-OBJECT:Override THEN "OVERRIDE " ELSE ""),
+                                     (IF THIS-OBJECT:Final    THEN "FINAL "    ELSE ""),
                                      ReturnType,
                                      Name,
                                      GenerateParameters()).

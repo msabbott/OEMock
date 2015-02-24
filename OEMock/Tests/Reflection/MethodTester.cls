@@ -176,6 +176,30 @@ CLASS OEMock.Tests.Reflection.MethodTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateObservesOverrideMarker():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('TestMethod', "CHARACTER").
+        meth:Override = TRUE.
+        
+        AssertString:Contains(meth:Generate(), ' OVERRIDE ').
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesFinalMarker():
+        DEFINE VARIABLE meth AS Method NO-UNDO.
+        
+        meth = NEW Method('TestMethod', "CHARACTER").
+        meth:Final = TRUE.
+        
+        AssertString:Contains(meth:Generate(), ' FINAL ').
+
+        IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateCallsGenerators():
         DEFINE VARIABLE meth AS Method NO-UNDO.
         DEFINE VARIABLE gen  AS MethodGenerator NO-UNDO.
