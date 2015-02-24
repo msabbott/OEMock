@@ -65,6 +65,23 @@ CLASS OEMock.Tests.StubTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateCreatesProcedureFile():
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:Generate().
+        
+        FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Inspection/TestProcedure.p".
+        Assert:AreEqual(FILE-INFO:FILE-TYPE, "FRW").
+
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID DestructorDeletesFile():
         DEFINE VARIABLE stb  AS Stub NO-UNDO.
         DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
@@ -81,6 +98,24 @@ CLASS OEMock.Tests.StubTester:
         Assert:IsNull(FILE-INFO:FILE-TYPE).
     END METHOD.
     
+    @Test.
+    METHOD PUBLIC VOID DestructorDeletesFile2():
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
+        
+        insp = NEW ClassInspector('OEMock/Util/List.cls').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+        stb:DeleteOnDestruct = FALSE.
+        stb:Generate().
+
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
+        FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Util/ListObject.cls".
+        Assert:IsNull(FILE-INFO:FILE-TYPE).
+    END METHOD.
+    
+    /*
     @AfterClass.
     METHOD PUBLIC VOID DeleteTestDirectory():
         FILE-INFO:FILE-NAME = TestDir.
@@ -89,5 +124,5 @@ CLASS OEMock.Tests.StubTester:
             OS-DELETE VALUE(TestDir) RECURSIVE.
         END.
     END METHOD.
-
+    */
 END CLASS.
