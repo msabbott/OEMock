@@ -177,12 +177,14 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
     @Test.
     METHOD PUBLIC VOID GenerateObservesMethods():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        DEFINE VARIABLE outp    AS LONGCHAR  NO-UNDO.
         
         clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
         clsfile:Methods:AddMethod(NEW Method('MethName', 'CHARACTER')).
         
-        AssertString:Contains(clsfile:Generate(), 
-                              'METHOD PUBLIC CHARACTER MethName ():' + CHR(10) + CHR(13) + "END METHOD.").
+        outp = clsfile:Generate().
+        AssertString:Contains(outp, 'METHOD PUBLIC CHARACTER MethName ():').
+        AssertString:Contains(outp, "END METHOD.").
         
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
