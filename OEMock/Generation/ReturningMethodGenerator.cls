@@ -37,7 +37,8 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
 
 	    IF VALID-OBJECT(ReturningMethod) 
         AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
-        AND THIS-OBJECT:ReturningMethod:ReturnType NE "" THEN
+        AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
+        AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN
         DO:
             ASSIGN res = SUBSTITUTE("DEFINE VARIABLE res AS &1 NO-UNDO.",
                                     TRIM(THIS-OBJECT:ReturningMethod:ReturnType)).
@@ -57,7 +58,8 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
                                 (IF UseReturnValue THEN SUBSTITUTE("ASSIGN res = &1.", ReturnValue) ELSE ""),
                                 (IF VALID-OBJECT(ReturningMethod) 
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
-                                 AND THIS-OBJECT:ReturningMethod:ReturnType NE "" THEN "res" ELSE "")).
+                                 AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
+                                 AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "")).
         
         IF res = ? THEN res = "".
         
@@ -73,7 +75,8 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
         /* Format correct return value based on type */
         IF VALID-OBJECT(THIS-OBJECT:ReturningMethod)
         AND THIS-OBJECT:ReturningMethod:ReturnType NE "" 
-        AND THIS-OBJECT:ReturningMethod:ReturnType NE ? THEN
+        AND THIS-OBJECT:ReturningMethod:ReturnType NE ?
+        AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN
         DO:
             /* Indicate ReturnValue has been set */
             CASE THIS-OBJECT:ReturningMethod:ReturnType:
