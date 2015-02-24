@@ -48,5 +48,22 @@ CLASS OEMock.OEMock:
         
         RETURN stb.
     END METHOD.
+    
+    METHOD PUBLIC STATIC OEMock.Stub StubProcedure(INPUT fname AS CHARACTER):
+        DEFINE VARIABLE insp AS OEMock.Inspection.ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE stb  AS OEMock.Stub NO-UNDO.
+        
+        SetOutputDir().
+        
+        insp = NEW OEMock.Inspection.ProcedureInspector(fname).
+        
+        IF VALID-OBJECT(insp) THEN
+        DO:
+            stb = NEW OEMock.Stub(INPUT insp:Inspect(), INPUT OutputDir).
+            IF DebugMode THEN stb:DeleteOnDestruct = FALSE.
+        END.
+        
+        RETURN stb.
+    END METHOD.
 
 END CLASS.

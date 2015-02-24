@@ -70,4 +70,31 @@ CLASS OEMock.Tests.OEMockTester:
         
     END METHOD.
     
+    @Test.
+    METHOD PUBLIC VOID StubProcedureSetsOutputDirectory():
+        
+        DEFINE VARIABLE stb AS Stub NO-UNDO.
+        OEMock:DebugMode = TRUE.
+        stb = OEMock:StubProcedure('OEMock/Tests/Inspection/TestProcedure.p').
+        
+        Assert:IsNotNull(OEMock:OutputDir).
+        
+        IF VALID-OBJECT(stb) THEN DELETE OBJECT stb.
+        OEMock:CleanUp().
+    END.
+    
+    @Test.
+    METHOD PUBLIC VOID StubProcedureReturnsValidClass():
+        
+        DEFINE VARIABLE stb AS Stub NO-UNDO.
+        OEMock:DebugMode = TRUE.
+        stb = OEMock:StubProcedure('OEMock/Tests/Inspection/TestProcedure.p').
+        
+        Assert:IsTrue(VALID-OBJECT(stb)).
+        stb:Generate().
+        IF VALID-OBJECT(stb) THEN DELETE OBJECT stb.
+        OEMock:CleanUp().
+        
+    END METHOD.
+    
 END CLASS.
