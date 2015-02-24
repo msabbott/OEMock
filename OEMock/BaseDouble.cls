@@ -74,15 +74,13 @@ CLASS OEMock.BaseDouble:
         END.
         ELSE IF File:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
         DO:
-            FILE-INFO:FILE-NAME = THIS-OBJECT:File:FileName.
-            
             IF OPSYS = "Win32" THEN
-                tmpDir = REPLACE(FILE-INFO:PATHNAME, "~\", "/").
+                tmpDir = REPLACE(THIS-OBJECT:File:FileName, "~\", "/").
             ELSE
-                tmpDir = FILE-INFO:PATHNAME.
-                
+                tmpDir = THIS-OBJECT:File:FileName.
+    
             tmpDir = BaseDirectory
-                   + SUBSTRING(tmpDir, 1, R-INDEX(tmpDir, "/")).            
+                   + SUBSTRING(tmpDir, 1, R-INDEX(tmpDir, "/")).
         END.
         
         IF tmpDir NE ? AND tmpDir NE "" THEN
