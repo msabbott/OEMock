@@ -31,6 +31,20 @@ CLASS OEMock.Tests.BaseDoubleTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorSetsDeleteOnDestruct():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE fil AS ClassFile  NO-UNDO.
+        
+        fil = NEW ClassFile('OEMock/Tests/Util/ListObject.cls', 'OEMock.Tests.Util.ListObject').
+        dbl = NEW BaseDouble(fil, TestDir).
+        
+        Assert:IsTrue(dbl:DeleteOnDestruct).
+
+        IF VALID-OBJECT(fil) THEN DELETE OBJECT(fil).
+        IF VALID-OBJECT(dbl) THEN DELETE OBJECT(dbl).
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateCreatesDirectory():
         DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
         DEFINE VARIABLE fil AS ClassFile  NO-UNDO.
@@ -79,6 +93,24 @@ CLASS OEMock.Tests.BaseDoubleTester:
         
         FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Util/ListObject.cls".
         Assert:IsNull(FILE-INFO:FILE-TYPE).
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID DestructorLeavesFileWhenDeleteOnDestructIsFalse():
+        DEFINE VARIABLE dbl  AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
+        
+        insp = NEW ClassInspector('OEMock/Tests/Util/ListObject.cls').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        dbl:DeleteOnDestruct = FALSE.
+        
+        dbl:Generate().
+
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl).
+        
+        FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Util/ListObject.cls".
+        Assert:IsNotNull(FILE-INFO:FILE-TYPE).
     END METHOD.
     
     @AfterClass.

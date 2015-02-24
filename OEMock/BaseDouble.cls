@@ -10,6 +10,10 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.BaseDouble:
     
+    DEFINE PUBLIC PROPERTY DeleteOnDestruct AS LOGICAL NO-UNDO INITIAL TRUE
+    GET.
+    SET.
+    
 	DEFINE PUBLIC PROPERTY File AS BaseFile NO-UNDO
 	GET.
 	SET.
@@ -26,15 +30,19 @@ CLASS OEMock.BaseDouble:
 	    SUPER().
 	    
 	    /* Assign values */
-	    ASSIGN File          = fil
-	           BaseDirectory = basedir.
+	    ASSIGN File             = fil
+	           BaseDirectory    = basedir.
+	           DeleteOnDestruct = TRUE.
 	END CONSTRUCTOR.
 	
 	DESTRUCTOR BaseDouble():
-	    FILE-INFO:FILE-NAME = OutputFile.
-	    IF FILE-INFO:FILE-TYPE MATCHES "F*W*" THEN
+	    IF DeleteOnDestruct THEN
 	    DO:
-	        OS-DELETE VALUE(OutputFile).
+    	    FILE-INFO:FILE-NAME = OutputFile.
+    	    IF FILE-INFO:FILE-TYPE MATCHES "F*W*" THEN
+    	    DO:
+    	        OS-DELETE VALUE(OutputFile).
+    	    END.
 	    END.
 	END DESTRUCTOR.
 	
