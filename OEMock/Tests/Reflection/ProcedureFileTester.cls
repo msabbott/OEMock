@@ -47,12 +47,14 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     @Test.
     METHOD PUBLIC VOID GenerateObservesProcedures():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
         
         procfile = NEW ProcedureFile("FileName").
         procfile:Procedures:AddMethod(NEW Procedure('ProcName')).
         
-        AssertString:Contains(procfile:Generate(), 
-                              "PROCEDURE ProcName :" + CHR(10) + CHR(13) + "END PROCEDURE.").
+        outp = procfile:Generate().
+        AssertString:Contains(outp, "PROCEDURE ProcName :"). 
+        AssertString:Contains(outp, "END PROCEDURE.").
         
         IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
     END METHOD.
@@ -73,12 +75,14 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     @Test.
     METHOD PUBLIC VOID GenerateObservesFunctions():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
         
         procfile = NEW ProcedureFile("FileName").
         procfile:Functions:AddMethod(NEW Function('FuncName', 'CHARACTER')).
         
-        AssertString:Contains(procfile:Generate(), 
-                              "FUNCTION FuncName RETURNS CHARACTER ():" + CHR(10) + CHR(13) + "END FUNCTION.").
+        outp = procfile:Generate().
+        AssertString:Contains(outp, "FUNCTION FuncName RETURNS CHARACTER ():").
+        AssertString:Contains(outp, "END FUNCTION.").
         
         IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
     END METHOD.
@@ -95,7 +99,7 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
         
         /* Verify both forward declaration and declaration are generated */
         AssertString:Contains(procres, "FUNCTION FuncName RETURNS CHARACTER () FORWARD.").
-        AssertString:Contains(procres, "FUNCTION FuncName RETURNS CHARACTER ():" + CHR(10) + CHR(13) + "END FUNCTION.").
+        AssertString:Contains(procres, "FUNCTION FuncName RETURNS CHARACTER ():").
         
         Assert:IsTrue(INDEX(procres, "FUNCTION FuncName RETURNS CHARACTER () FORWARD.")
                       LT
