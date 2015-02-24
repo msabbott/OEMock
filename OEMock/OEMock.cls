@@ -8,7 +8,11 @@ USING OEMock.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
-CLASS OEMock.OEMock: 
+CLASS OEMock.OEMock:
+    
+    DEFINE PUBLIC STATIC PROPERTY DebugMode AS LOGICAL NO-UNDO INITIAL FALSE
+        GET.
+        SET.
     
     DEFINE PUBLIC STATIC PROPERTY OutputDir AS CHARACTER NO-UNDO INITIAL ?
         GET.
@@ -23,7 +27,8 @@ CLASS OEMock.OEMock:
     END METHOD.
     
     METHOD PUBLIC STATIC VOID CleanUp():
-        OS-DELETE VALUE(OutputDir) RECURSIVE.
+        IF NOT DebugMode THEN
+            OS-DELETE VALUE(OutputDir) RECURSIVE.
         OutputDir = ?.
     END METHOD.
     
@@ -38,6 +43,7 @@ CLASS OEMock.OEMock:
         IF VALID-OBJECT(insp) THEN
         DO:
             stb = NEW OEMock.Stub(INPUT insp:Inspect(), INPUT OutputDir).
+            IF DebugMode THEN stb:DeleteOnDestruct = FALSE.
         END.
         
         RETURN stb.
