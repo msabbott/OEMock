@@ -26,9 +26,26 @@ CLASS OEMock.OEMock:
         END.
     END METHOD.
     
+    METHOD PROTECTED STATIC VOID InsertIntoPropath():
+        
+        IF OutputDir = ? OR OutputDir = "" THEN RETURN.
+        
+        IF LOOKUP(OutputDir, PROPATH) = 0 THEN
+            PROPATH = OutputDir + "," + PROPATH.
+    END METHOD.
+    
+    METHOD PROTECTED STATIC VOID RemoveFromPropath():
+        
+        IF OutputDir = ? OR OutputDir = "" THEN RETURN.
+        
+        IF LOOKUP(OutputDir, PROPATH) > 0 THEN
+            PROPATH = REPLACE(PROPATH, OutputDir + ",", "").
+    END METHOD.
+    
     METHOD PUBLIC STATIC VOID CleanUp():
         IF NOT DebugMode THEN
             OS-DELETE VALUE(OutputDir) RECURSIVE.
+        RemoveFromProPath().
         OutputDir = ?.
     END METHOD.
     
@@ -37,6 +54,7 @@ CLASS OEMock.OEMock:
         DEFINE VARIABLE stb  AS OEMock.Stub NO-UNDO.
         
         SetOutputDir().
+        InsertIntoPropath().
         
         insp = NEW OEMock.Inspection.ClassInspector(fname).
         
@@ -54,6 +72,7 @@ CLASS OEMock.OEMock:
         DEFINE VARIABLE stb  AS OEMock.Stub NO-UNDO.
         
         SetOutputDir().
+        InsertIntoPropath().
         
         insp = NEW OEMock.Inspection.ProcedureInspector(fname).
         

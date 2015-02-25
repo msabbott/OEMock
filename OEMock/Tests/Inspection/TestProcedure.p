@@ -39,7 +39,7 @@ END PROCEDURE.
 /* ***************************  Function Implementations *************************** */
 
 FUNCTION TestFunction RETURNS CHARACTER():
-    RETURN "".
+    RETURN "TestFunction Return Value".
 END FUNCTION.
 
 FUNCTION TestFunctionWithParams RETURNS CHARACTER(INPUT        Param1 AS CHARACTER,
