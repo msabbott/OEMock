@@ -86,6 +86,7 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 	        DO:
 	            meth = CAST(basemeth, "OEMock.Reflection.Method").
 	            gen = NEW StubMethodGenerator().
+                MethodGenerators:AddGenerator(meth:Name, gen).
 	            gen:AttachTo(meth).
 	        END.
 	        
@@ -116,6 +117,7 @@ CLASS OEMock.Stub INHERITS BaseDouble:
             DO:
                 proc = CAST(basemeth, "OEMock.Reflection.Procedure").
                 pgen = NEW StubProcedureGenerator().
+                ProcedureGenerators:AddGenerator(proc:Name, pgen).
                 pgen:AttachTo(proc).
             END.
             
@@ -130,6 +132,7 @@ CLASS OEMock.Stub INHERITS BaseDouble:
             DO:
                 func = CAST(basemeth, "OEMock.Reflection.Function").
                 fgen = NEW StubFunctionGenerator().
+                FunctionGenerators:AddGenerator(func:Name, fgen).
                 fgen:AttachTo(func).
             END.
             
