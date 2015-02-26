@@ -71,7 +71,7 @@ CLASS OEMock.Tests.StubTester:
         
         insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
         stb = NEW Stub(insp:Inspect(), TestDir).
-        
+
         stb:Generate().
         
         FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Inspection/TestProcedure.p".
@@ -96,6 +96,60 @@ CLASS OEMock.Tests.StubTester:
         
         FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Util/ListObject.cls".
         Assert:IsNull(FILE-INFO:FILE-TYPE).
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SetProcedureOutputParameterValueNoErrors():
+        /* Assert that no errors are raised by this method */
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:SetProcedureOutputParameterValue("TestProcedureWithParams", "Param2", "StubOutputValue").
+
+        stb:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SetFunctionOutputParameterValueNoErrors():
+        /* Assert that no errors are raised by this method */
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:SetFunctionOutputParameterValue("TestFunctionWithParams", "Param2", "StubOutputValue").
+
+        stb:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SetFunctionReturnValueNoErrors():
+        /* Assert that no errors are raised by this method */
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:SetFunctionReturnValue("TestFunctionWithParams", "StubOutputValue").
+
+        stb:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
     END METHOD.
     
     @AfterClass.

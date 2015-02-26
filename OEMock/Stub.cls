@@ -139,5 +139,52 @@ CLASS OEMock.Stub INHERITS BaseDouble:
             basemeth = procfile:Functions:MoveNext().
         END.
 	END METHOD.
+    
+    METHOD PUBLIC VOID SetProcedureOutputParameterValue(INPUT procName AS CHARACTER,
+                                                        INPUT paramName AS CHARACTER,
+                                                        INPUT paramReturnValue AS CHARACTER):
+        DEFINE VARIABLE baseGen AS BaseGenerator       NO-UNDO.
+        DEFINE VARIABLE methGen AS BaseMethodGenerator NO-UNDO.
+        
+        baseGen = ProcedureGenerators:GetGenerator(procName).
+        
+        IF VALID-OBJECT(baseGen) AND baseGen:GetClass():IsA("OEMock.Generation.BaseMethodGenerator") THEN
+        DO:
+            methGen = DYNAMIC-CAST(baseGen, baseGen:GetClass():TypeName).
+            methGen:SetParameterOutputValue(INPUT paramName, INPUT paramReturnValue).
+        END.
+        
+    END METHOD.
+    
+    METHOD PUBLIC VOID SetFunctionOutputParameterValue(INPUT funcName AS CHARACTER,
+                                                       INPUT paramName AS CHARACTER,
+                                                       INPUT paramReturnValue AS CHARACTER):
+        DEFINE VARIABLE baseGen AS BaseGenerator       NO-UNDO.
+        DEFINE VARIABLE methGen AS BaseMethodGenerator NO-UNDO.
+        
+        baseGen = FunctionGenerators:GetGenerator(funcName).
+        
+        IF VALID-OBJECT(baseGen) AND baseGen:GetClass():IsA("OEMock.Generation.BaseMethodGenerator") THEN
+        DO:
+            methGen = DYNAMIC-CAST(baseGen, baseGen:GetClass():TypeName).
+            methGen:SetParameterOutputValue(INPUT paramName, INPUT paramReturnValue).
+        END.
+        
+    END METHOD.
+    
+    METHOD PUBLIC VOID SetFunctionReturnValue(INPUT funcName AS CHARACTER,
+                                              INPUT retValue AS CHARACTER):
+        DEFINE VARIABLE baseGen AS BaseGenerator     NO-UNDO.
+        DEFINE VARIABLE funcGen AS FunctionGenerator NO-UNDO.
+        
+        baseGen = FunctionGenerators:GetGenerator(funcName).
+        
+        IF VALID-OBJECT(baseGen) AND baseGen:GetClass():IsA("OEMock.Generation.FunctionGenerator") THEN
+        DO:
+            funcGen = DYNAMIC-CAST(baseGen, baseGen:GetClass():TypeName).
+            funcGen:SetReturnValue(INPUT retValue).
+        END.
+        
+    END METHOD.
 
 END CLASS.
