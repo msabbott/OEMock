@@ -17,8 +17,8 @@ CLASS OEMock.Stub INHERITS BaseDouble:
         PROTECTED SET.
         
     DEFINE PROTECTED PROPERTY ProcedureGenerators AS OEMock.Generation.NamedGeneratorList NO-UNDO
-        PROTECTED GET.
-        PROTECTED SET.
+        GET.
+        SET.
         
     DEFINE PROTECTED PROPERTY FunctionGenerators AS OEMock.Generation.NamedGeneratorList NO-UNDO
         PROTECTED GET.
@@ -30,15 +30,15 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 
 	CONSTRUCTOR PUBLIC Stub(INPUT fil AS BaseFile, INPUT basedir AS CHARACTER):
 		SUPER(fil, baseDir).
+        
+        ASSIGN ProcedureGenerators = NEW NamedGeneratorList()
+               FunctionGenerators  = NEW NamedGeneratorList()
+               MethodGenerators    = NEW NamedGeneratorList().
 		
 		IF VALID-OBJECT(File) THEN
 		DO:
 		    Initialise().
 		END.
-		
-		ASSIGN ProcedureGenerators = NEW NamedGeneratorList()
-		       FunctionGenerators  = NEW NamedGeneratorList()
-		       MethodGenerators    = NEW NamedGeneratorList().
 
 	END CONSTRUCTOR.
 	
