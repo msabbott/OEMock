@@ -186,5 +186,36 @@ CLASS OEMock.Stub INHERITS BaseDouble:
         END.
         
     END METHOD.
+    
+    METHOD PUBLIC VOID SetMethodOutputParameterValue(INPUT methName AS CHARACTER,
+                                                     INPUT paramName AS CHARACTER,
+                                                     INPUT paramReturnValue AS CHARACTER):
+        DEFINE VARIABLE baseGen AS BaseGenerator       NO-UNDO.
+        DEFINE VARIABLE methGen AS BaseMethodGenerator NO-UNDO.
+        
+        baseGen = MethodGenerators:GetGenerator(methName).
+        
+        IF VALID-OBJECT(baseGen) AND baseGen:GetClass():IsA("OEMock.Generation.BaseMethodGenerator") THEN
+        DO:
+            methGen = DYNAMIC-CAST(baseGen, baseGen:GetClass():TypeName).
+            methGen:SetParameterOutputValue(INPUT paramName, INPUT paramReturnValue).
+        END.
+        
+    END METHOD.
+    
+    METHOD PUBLIC VOID SetMethodReturnValue(INPUT methName AS CHARACTER,
+                                            INPUT retValue AS CHARACTER):
+        DEFINE VARIABLE baseGen AS BaseGenerator   NO-UNDO.
+        DEFINE VARIABLE methGen AS MethodGenerator NO-UNDO.
+        
+        baseGen = MethodGenerators:GetGenerator(methName).
+        
+        IF VALID-OBJECT(baseGen) AND baseGen:GetClass():IsA("OEMock.Generation.MethodGenerator") THEN
+        DO:
+            methGen = DYNAMIC-CAST(baseGen, baseGen:GetClass():TypeName).
+            methGen:SetReturnValue(INPUT retValue).
+        END.
+        
+    END METHOD.
 
 END CLASS.

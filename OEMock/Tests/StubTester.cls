@@ -152,6 +152,42 @@ CLASS OEMock.Tests.StubTester:
         
     END METHOD.
     
+    @Test.
+    METHOD PUBLIC VOID SetMethodOutputParameterValueNoErrors():
+        /* Assert that no errors are raised by this method */
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
+        
+        insp = NEW ClassInspector('OEMock/Util/StringList.cls').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:SetMethodOutputParameterValue("MoveFirst", "Param1", "StubOutputValue").
+
+        stb:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID SetMethodReturnValueNoErrors():
+        /* Assert that no errors are raised by this method */
+        DEFINE VARIABLE stb  AS Stub NO-UNDO.
+        DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
+        
+        insp = NEW ClassInspector('OEMock/Util/StringList.cls').
+        stb = NEW Stub(insp:Inspect(), TestDir).
+
+        stb:SetMethodReturnValue("MoveFirst", "StubOutputValue").
+
+        stb:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(stb)  THEN DELETE OBJECT(stb).
+        
+    END METHOD.
+    
     @AfterClass.
     METHOD PUBLIC VOID DeleteTestDirectory():
         FILE-INFO:FILE-NAME = TestDir.
