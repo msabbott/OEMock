@@ -11,6 +11,7 @@ CLASS OEMock.Tests.AllTests INHERITS TestSuite:
     AddTest(NEW OEMock.Tests.Util.AllTests()).
     AddTest(NEW OEMock.Tests.Inspection.AllTests()).
     AddTest(NEW OEMock.Tests.Generation.AllTests()).
+    AddTest(NEW OEMock.Tests.Expectation.AllTests()).
     
     /* Tests for root level objects */
     AddTest(NEW OEMock.Tests.BaseDoubleTester()).
