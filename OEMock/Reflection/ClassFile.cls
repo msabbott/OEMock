@@ -92,7 +92,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                 ASSIGN res  = SUBSTITUTE("&1&2USING &3.",
                                          res,
                                          CHR(10) + CHR(13),
-                                         ref).
+                                         IF INDEX(ref, " ") > 0 THEN '"' + ref + '"' ELSE ref).
                        ref = UsingList:MoveNext().
             END.
             
@@ -123,7 +123,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                               + "&1&7"
                               + "&1END CLASS.&1",
                                 CHR(10) + CHR(13),
-                                TypeName,
+                                IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 GenerateInterfaces(),
                                 GenerateConstructors(),

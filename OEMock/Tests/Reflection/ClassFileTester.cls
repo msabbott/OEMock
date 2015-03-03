@@ -109,6 +109,15 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructHandlesClassNamesWithSpaces():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "Examples.Example 3.ClassToStub").
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateCreatesUsingStatements():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
         
@@ -154,6 +163,20 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         Assert:AreEqual(INDEX(txt,"USING Progress.Lang.*", ind + 1),
                         0).
 
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsWithSpaces():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:UsingList:Add("Examples.Example 3.ClassToStub").
+
+        AssertString:Contains(clsfile:Generate(), 
+                              'USING "Examples.Example 3.ClassToStub".',
+                              STRING(clsfile:Generate())).
+        
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
     
@@ -212,6 +235,18 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
 
         AssertString:Contains(clsfile:Generate(), 
                               "CLASS " + clsFile:TypeName + "  IMPLEMENTS DummyInterface, DummyInterface2").
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesSpacesInClassPackage():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "Examples.Example 3.ClassToStub").
+
+        AssertString:Contains(clsfile:Generate(), 
+                              'CLASS "' + clsFile:TypeName + '" ').
         
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.
