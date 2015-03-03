@@ -1,15 +1,6 @@
-
 /*------------------------------------------------------------------------
     File        : ProcedureToStub.p
-    Purpose     : 
-
-    Syntax      :
-
-    Description : 
-
-    Author(s)   : Mark Abbott
-    Created     : Fri Feb 27 13:28:39 GMT 2015
-    Notes       :
+    Purpose     : Procedure that will be stubbed out in tests.
   ----------------------------------------------------------------------*/
 
 /* ***************************  Definitions  ************************** */
