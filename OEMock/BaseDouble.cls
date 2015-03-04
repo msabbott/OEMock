@@ -5,10 +5,23 @@
 
 USING Progress.Lang.*.
 USING OEMock.Reflection.BaseFile.
+USING OEMock.Generation.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.BaseDouble:
+    
+    DEFINE PROTECTED PROPERTY ProcedureGenerators AS OEMock.Generation.NamedGeneratorList NO-UNDO
+    GET.
+    SET.
+        
+    DEFINE PROTECTED PROPERTY FunctionGenerators AS OEMock.Generation.NamedGeneratorList NO-UNDO
+    GET.
+    SET.
+        
+    DEFINE PROTECTED PROPERTY MethodGenerators AS OEMock.Generation.NamedGeneratorList NO-UNDO
+    GET.
+    SET.
     
     DEFINE PUBLIC PROPERTY DeleteOnDestruct AS LOGICAL NO-UNDO INITIAL TRUE
     GET.
@@ -31,8 +44,13 @@ CLASS OEMock.BaseDouble:
 	    
 	    /* Assign values */
 	    ASSIGN File             = fil
-	           BaseDirectory    = basedir.
+	           BaseDirectory    = basedir
 	           DeleteOnDestruct = TRUE.
+        
+        /* Construct objects */
+        ASSIGN ProcedureGenerators = NEW NamedGeneratorList()
+               FunctionGenerators  = NEW NamedGeneratorList()
+               MethodGenerators    = NEW NamedGeneratorList().
 	END CONSTRUCTOR.
 	
 	DESTRUCTOR BaseDouble():
@@ -44,6 +62,10 @@ CLASS OEMock.BaseDouble:
     	        OS-DELETE VALUE(OutputFile).
     	    END.
 	    END.
+	    
+        IF VALID-OBJECT(ProcedureGenerators) THEN DELETE OBJECT ProcedureGenerators.
+        IF VALID-OBJECT(FunctionGenerators)  THEN DELETE OBJECT FunctionGenerators.
+        IF VALID-OBJECT(MethodGenerators)    THEN DELETE OBJECT MethodGenerators.
 	END DESTRUCTOR.
 	
 	METHOD PUBLIC VOID Generate():
