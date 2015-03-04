@@ -9,6 +9,7 @@ CLASS OEMock.Tests.Expectation.AllTests INHERITS TestSuite:
   CONSTRUCTOR AllTests():
     AddTest(NEW BaseExpectationTester()).
     AddTest(NEW ExpectationTester()).
+    AddTest(NEW ExpectationListTester()).
   END CONSTRUCTOR.
 
 END CLASS.
