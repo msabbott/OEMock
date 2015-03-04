@@ -5,7 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEMock.BaseDouble.
-USING OEMock.Reflection.BaseFile.
+USING OEMock.Reflection.*.
 USING OEMock.Generation.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
@@ -41,14 +41,11 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 
 	END METHOD.
 	
-	METHOD OVERRIDE PROTECTED VOID InitialiseClass():
+	METHOD OVERRIDE PROTECTED VOID InitialiseClass(INPUT clsfile AS ClassFile):
 	    
-	    DEFINE VARIABLE clsfile  AS OEMock.Reflection.ClassFile           NO-UNDO.
 	    DEFINE VARIABLE basemeth AS OEMock.Reflection.BaseMethod          NO-UNDO.
 	    DEFINE VARIABLE meth     AS OEMock.Reflection.Method              NO-UNDO.
 	    DEFINE VARIABLE gen      AS OEMock.Generation.StubMethodGenerator NO-UNDO.
-	    
-	    clsfile = CAST(File, "OEMock.Reflection.ClassFile").
 	    
 	    /* Attach interface generator */
 	    InterfaceGenerator:AttachTo(clsfile).
@@ -70,16 +67,13 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 
 	END METHOD.
 	
-	METHOD OVERRIDE PROTECTED VOID InitialiseProcedure():
+	METHOD OVERRIDE PROTECTED VOID InitialiseProcedure(INPUT procfile AS ProcedureFile):
         
-        DEFINE VARIABLE procfile AS OEMock.Reflection.ProcedureFile          NO-UNDO.
         DEFINE VARIABLE basemeth AS OEMock.Reflection.BaseMethod             NO-UNDO.
         DEFINE VARIABLE proc     AS OEMock.Reflection.Procedure              NO-UNDO.
         DEFINE VARIABLE func     AS OEMock.Reflection.Function               NO-UNDO.
         DEFINE VARIABLE pgen     AS OEMock.Generation.StubProcedureGenerator NO-UNDO.
         DEFINE VARIABLE fgen     AS OEMock.Generation.StubFunctionGenerator  NO-UNDO.
-        
-        procfile = CAST(File, "OEMock.Reflection.ProcedureFile").
         
         /* Attach interface generator */
         InterfaceGenerator:AttachTo(procfile).

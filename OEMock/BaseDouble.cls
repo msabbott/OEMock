@@ -4,7 +4,7 @@
   ----------------------------------------------------------------------*/
 
 USING Progress.Lang.*.
-USING OEMock.Reflection.BaseFile.
+USING OEMock.Reflection.*.
 USING OEMock.Generation.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
@@ -72,19 +72,19 @@ CLASS OEMock.BaseDouble:
         
         IF File:GetClass():IsA("OEMock.Reflection.ClassFile") THEN
         DO:
-            InitialiseClass().
+            InitialiseClass(DYNAMIC-CAST(File, File:GetClass():TypeName)).
         END.
         ELSE IF File:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
         DO:
-            InitialiseProcedure().
+            InitialiseProcedure(DYNAMIC-CAST(File, File:GetClass():TypeName)).
         END.
 
     END METHOD.
     
-    METHOD PROTECTED VOID InitialiseClass():
+    METHOD PROTECTED VOID InitialiseClass(INPUT clsfile AS ClassFile):
     END METHOD.
     
-    METHOD PROTECTED VOID InitialiseProcedure():
+    METHOD PROTECTED VOID InitialiseProcedure(INPUT procfile AS ProcedureFile):
     END METHOD.
 	
 	METHOD PUBLIC VOID Generate():
