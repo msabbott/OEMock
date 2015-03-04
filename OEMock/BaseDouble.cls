@@ -67,6 +67,25 @@ CLASS OEMock.BaseDouble:
         IF VALID-OBJECT(FunctionGenerators)  THEN DELETE OBJECT FunctionGenerators.
         IF VALID-OBJECT(MethodGenerators)    THEN DELETE OBJECT MethodGenerators.
 	END DESTRUCTOR.
+    
+    METHOD PROTECTED VOID Initialise():
+        
+        IF File:GetClass():IsA("OEMock.Reflection.ClassFile") THEN
+        DO:
+            InitialiseClass().
+        END.
+        ELSE IF File:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
+        DO:
+            InitialiseProcedure().
+        END.
+
+    END METHOD.
+    
+    METHOD PROTECTED VOID InitialiseClass():
+    END METHOD.
+    
+    METHOD PROTECTED VOID InitialiseProcedure():
+    END METHOD.
 	
 	METHOD PUBLIC VOID Generate():
 	    CreateDirectory().

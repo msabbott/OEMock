@@ -30,25 +30,18 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 	    
 	END DESTRUCTOR.
 	
-	METHOD PROTECTED VOID Initialise():
+	METHOD OVERRIDE PROTECTED VOID Initialise():
 	    
 	    IF VALID-OBJECT(InterfaceGenerator) THEN
 	       DELETE OBJECT InterfaceGenerator.
 	    
 	    InterfaceGenerator = NEW StubInterfaceGenerator().
 	    
-        IF File:GetClass():IsA("OEMock.Reflection.ClassFile") THEN
-        DO:
-            InitialiseClass().
-        END.
-        ELSE IF File:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
-        DO:
-            InitialiseProcedure().
-        END.
+	    SUPER:Initialise().
 
 	END METHOD.
 	
-	METHOD PROTECTED VOID InitialiseClass():
+	METHOD OVERRIDE PROTECTED VOID InitialiseClass():
 	    
 	    DEFINE VARIABLE clsfile  AS OEMock.Reflection.ClassFile           NO-UNDO.
 	    DEFINE VARIABLE basemeth AS OEMock.Reflection.BaseMethod          NO-UNDO.
@@ -77,7 +70,7 @@ CLASS OEMock.Stub INHERITS BaseDouble:
 
 	END METHOD.
 	
-	METHOD PROTECTED VOID InitialiseProcedure():
+	METHOD OVERRIDE PROTECTED VOID InitialiseProcedure():
         
         DEFINE VARIABLE procfile AS OEMock.Reflection.ProcedureFile          NO-UNDO.
         DEFINE VARIABLE basemeth AS OEMock.Reflection.BaseMethod             NO-UNDO.
