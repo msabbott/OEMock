@@ -35,5 +35,33 @@ CLASS OEMock.Generation.MockInterfaceGenerator INHERITS BaseGenerator:
             procfile:Generators:AddGenerator(THIS-OBJECT).
         END.
     END METHOD.
+    
+    METHOD OVERRIDE PUBLIC LONGCHAR Generate():
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+        res = SUPER:Generate().
+        
+        res = res + "~n"
+            + "DEFINE TEMP-TABLE OEMockExpectationMethodCall NO-UNDO~n"
+            + "FIELD CallNumber AS INTEGER~n"
+            + "FIELD MethodRef  AS CHARACTER~n"
+            + "FIELD NumCalls   AS INTEGER~n"
+            + "INDEX PriKey  IS PRIMARY UNIQUE CallNumber ASCENDING~n"
+            + "INDEX MethKey                   MethodRef  ASCENDING.~n~n"
+            
+            + "DEFINE TEMP-TABLE OEMockExpectationMethodCallParam NO-UNDO~n"
+            + "FIELD CallNumber AS INTEGER~n"
+            + "FIELD ParamName  AS CHARACTER~n"
+            + "FIELD ParamValue AS CHARACTER~n"
+            + "INDEX PriKey IS PRIMARY UNIQUE CallNumber ASCENDING ParamName ASCENDING~n"
+            + "INDEX ValKey                   CallNumber ASCENDING ParamName ASCENDING ParamValue.~n~n".
+            
+        RETURN res.
+    END METHOD.
+    
+    METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+        res = SUPER:GenerateProcedural().
+        RETURN res.
+    END METHOD.
 
 END CLASS.
