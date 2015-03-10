@@ -24,23 +24,45 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenerateReturnsBlank():
-        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
+    METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
         
-        gen = NEW MockProcedureGenerator().
+        gen = NEW MockMethodGenerator().
         
-        Assert:AreEqual(gen:Generate(), "").
+        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCall(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenerateProceduralReturnsBlank():
-        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
+    METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
         
-        gen = NEW MockProcedureGenerator().
+        gen = NEW MockMethodGenerator().
         
-        Assert:AreEqual(gen:GenerateProcedural(), "").
+        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCallParam(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCall(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCallParam(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
@@ -126,7 +148,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         gen:AttachTo(meth).
         gen:SetParameterOutputValue("Param1", "1234").
         
-        AssertString:Contains(gen:Generate(), "Param1 = 1234").
+        AssertString:Contains(gen:GenerateProcedural(), "Param1 = 1234").
         
         IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
@@ -153,7 +175,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         gen:SetParameterOutputValue("Param1", "1234").
         gen:SetParameterOutputValue("Param2", "5678").
         
-        res = gen:Generate().        
+        res = gen:GenerateProcedural().        
         AssertString:Contains(res, "Param1 = 1234").
         AssertString:Contains(res, "Param2 = 5678").
         
@@ -178,7 +200,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         gen:AttachTo(meth).
         gen:SetParameterOutputValue("Param1", ?).
         
-        AssertString:Contains(gen:Generate(), "Param1 = ?").
+        AssertString:Contains(gen:GenerateProcedural(), "Param1 = ?").
         
         IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
