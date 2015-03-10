@@ -5,6 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEMock.Generation.MethodGenerator.
+USING OEMock.Reflection.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -17,5 +18,28 @@ CLASS OEMock.Generation.MockMethodGenerator INHERITS MethodGenerator:
     DESTRUCTOR PUBLIC MockMethodGenerator():
 
     END DESTRUCTOR.
-
+    
+    METHOD OVERRIDE PROTECTED LONGCHAR GenerateAdditionalContents():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO INITIAL "".
+        DEFINE VARIABLE parm AS BaseParameter NO-UNDO. 
+        
+        res = SUPER:GenerateAdditionalContents() + "~n".
+        
+        IF res = ? THEN res = "".
+        
+        ASSIGN res = res
+                   + "DEFINE VARIABLE OEMockRegisterMethodCallNo AS INTEGER NO-UNDO.~n"
+                   + "OEMockRegisterMethodCallNo = OEMockRegisterMethodCall('" + Method:Name + "').~n".
+        
+        /* Iterate through parameters and make call to log parameter value */    
+        parm = Method:Parameters:MoveFirst().
+        DO WHILE VALID-OBJECT(parm):
+            res = res 
+                + 'OEMockRegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).'.
+            parm = Method:Parameters:MoveNext().
+        END.
+        
+        RETURN res.
+    END METHOD.
+    
 END CLASS.

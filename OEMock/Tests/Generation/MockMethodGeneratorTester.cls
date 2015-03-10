@@ -46,6 +46,50 @@ CLASS OEMock.Tests.Generation.MockMethodGeneratorTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCall(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCallParam(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCall(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        
+        gen = NEW MockMethodGenerator().
+        
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCallParam(").
+        
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID AttachToAddsToGeneratorList():
         DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
         DEFINE VARIABLE meth AS Method NO-UNDO.
