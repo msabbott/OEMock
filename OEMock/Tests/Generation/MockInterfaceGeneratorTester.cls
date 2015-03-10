@@ -13,24 +13,90 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 CLASS OEMock.Tests.Generation.MockInterfaceGeneratorTester:
     
     @Test.
-    METHOD PUBLIC VOID GenerateReturnsBlank():
+    METHOD PUBLIC VOID GenerateGeneratesTempTableOEMockExpectationMethodCall():
         DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
         
         gen = NEW MockInterfaceGenerator().
 
-        Assert:AreEqual(gen:Generate(), "").
-        
+        AssertString:Contains(gen:Generate(), "DEFINE TEMP-TABLE OEMockExpectationMethodCall NO-UNDO").
+
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenerateProceduralReturnsBlank():
+    METHOD PUBLIC VOID GenerateGeneratesTempTableOEMockExpectationMethodCallParam():
         DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
         
         gen = NEW MockInterfaceGenerator().
 
-        Assert:AreEqual(gen:GenerateProcedural(), "").
+        AssertString:Contains(gen:Generate(), "DEFINE TEMP-TABLE OEMockExpectationMethodCallParam NO-UNDO").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateGeneratesMethodOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
         
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:Generate(), "METHOD PRIVATE INTEGER OEMockRegisterMethodCall(INPUT methRef AS CHARACTER):").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateGeneratesMethodOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
+        
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:Generate(), "METHOD PRIVATE VOID OEMockRegisterMethodCallParam(INPUT callNo AS INTEGER, INPUT parmName AS CHARACTER, INPUT parmValue AS CHARACTER):").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralGeneratesTempTableOEMockExpectationMethodCall():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
+        
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:GenerateProcedural(), "DEFINE TEMP-TABLE OEMockExpectationMethodCall NO-UNDO").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralGeneratesTempTableOEMockExpectationMethodCallParam():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
+        
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:GenerateProcedural(), "DEFINE TEMP-TABLE OEMockExpectationMethodCallParam NO-UNDO").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralGeneratesFunctionOEMockRegisterMethodCall():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
+        
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:GenerateProcedural(), "FUNCTION OEMockRegisterMethodCall RETURNS INTEGER (INPUT methRef AS CHARACTER):").
+
+        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateProceduralGeneratesFunctionOEMockRegisterMethodCallParam():
+        DEFINE VARIABLE gen AS MockInterfaceGenerator NO-UNDO.
+        
+        gen = NEW MockInterfaceGenerator().
+
+        AssertString:Contains(gen:GenerateProcedural(), "FUNCTION OEMockRegisterMethodCallParam RETURNS INTEGER (INPUT callNo AS INTEGER, INPUT parmName AS CHARACTER, INPUT parmValue AS CHARACTER):").
+
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
     
