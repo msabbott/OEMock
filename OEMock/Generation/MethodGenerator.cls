@@ -11,7 +11,7 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Generation.MethodGenerator INHERITS ReturningMethodGenerator: 
     
-    DEFINE PRIVATE PROPERTY Method AS OEMock.Reflection.Method NO-UNDO
+    DEFINE PROTECTED PROPERTY Method AS OEMock.Reflection.Method NO-UNDO
     GET.
     SET.
         
