@@ -11,7 +11,7 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Generation.ProcedureGenerator INHERITS BaseMethodGenerator:
     
-    DEFINE PRIVATE PROPERTY Procedure AS OEMock.Reflection.Procedure NO-UNDO
+    DEFINE PROTECTED PROPERTY Procedure AS OEMock.Reflection.Procedure NO-UNDO
     GET.
     SET.
         
