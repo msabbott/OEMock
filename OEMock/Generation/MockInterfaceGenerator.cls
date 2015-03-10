@@ -36,12 +36,10 @@ CLASS OEMock.Generation.MockInterfaceGenerator INHERITS BaseGenerator:
         END.
     END METHOD.
     
-    METHOD OVERRIDE PUBLIC LONGCHAR Generate():
+    METHOD PRIVATE LONGCHAR GenerateTempTable():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
-        res = SUPER:Generate().
         
-        res = res + "~n"
-            + "DEFINE TEMP-TABLE OEMockExpectationMethodCall NO-UNDO~n"
+        res = "DEFINE TEMP-TABLE OEMockExpectationMethodCall NO-UNDO~n"
             + "FIELD CallNumber AS INTEGER~n"
             + "FIELD MethodRef  AS CHARACTER~n"
             + "FIELD NumCalls   AS INTEGER~n"
@@ -58,9 +56,58 @@ CLASS OEMock.Generation.MockInterfaceGenerator INHERITS BaseGenerator:
         RETURN res.
     END METHOD.
     
+    METHOD OVERRIDE PUBLIC LONGCHAR Generate():
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+        res = SUPER:Generate().
+        
+        res = res + "~n"
+            + GenerateTempTable()
+            + "METHOD PRIVATE INTEGER OEMockRegisterMethodCall(INPUT methRef AS CHARACTER):~n"
+            +   "DEFINE VARIABLE callNo AS INTEGER NO-UNDO INITIAL 1.~n"
+            +   "FIND LAST OEMockExpectationMethodCall NO-LOCK NO-ERROR.~n"
+            +   "IF AVAILABLE OEMockExpectationMethodCall THEN ASSIGN callNo = OEMockExpectationMethodCall.CallNumber + 1.~n"
+            +   "CREATE OEMockExpectationMethodCall.~n"
+            +   "ASSIGN OEMockExpectationMethodCall.CallNumber = callNo~n"
+            +   "       OEMockExpectationMethodCall.MethodRef  = methRef~n"
+            +   "       OEMockExpectationMethodCall.NumCalls   = 1.~n"
+            +   "RETURN callNo.~n"
+            + "END METHOD.~n~n"
+    
+            + "METHOD PRIVATE VOID OEMockRegisterMethodCallParam(INPUT callNo AS INTEGER, INPUT parmName AS CHARACTER, INPUT parmValue AS CHARACTER):~n"
+            + "CREATE OEMockExpectationMethodCallParam.~n"
+            + "ASSIGN OEMockExpectationMethodCallParam.CallNumber = callNo~n"
+            + "       OEMockExpectationMethodCallParam.ParamName  = parmName~n"
+            + "       OEMockExpectationMethodCallParam.ParamValue = parmValue.~n"
+            + "END METHOD.~n~n"   
+            .
+        RETURN res.
+    END METHOD.
+    
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         res = SUPER:GenerateProcedural().
+        
+        res = res + "~n"
+            + GenerateTempTable()
+            + "FUNCTION OEMockRegisterMethodCall RETURNS INTEGER (INPUT methRef AS CHARACTER):~n"
+            +   "DEFINE VARIABLE callNo AS INTEGER NO-UNDO INITIAL 1.~n"
+            +   "FIND LAST OEMockExpectationMethodCall NO-LOCK NO-ERROR.~n"
+            +   "IF AVAILABLE OEMockExpectationMethodCall THEN ASSIGN callNo = OEMockExpectationMethodCall.CallNumber + 1.~n"
+            +   "CREATE OEMockExpectationMethodCall.~n"
+            +   "ASSIGN OEMockExpectationMethodCall.CallNumber = callNo~n"
+            +   "       OEMockExpectationMethodCall.MethodRef  = methRef~n"
+            +   "       OEMockExpectationMethodCall.NumCalls   = 1.~n"
+            +   "RETURN callNo.~n"
+            + "END FUNCTION.~n~n"
+    
+            + "FUNCTION OEMockRegisterMethodCallParam RETURNS INTEGER (INPUT callNo AS INTEGER, INPUT parmName AS CHARACTER, INPUT parmValue AS CHARACTER):~n"
+            +   "CREATE OEMockExpectationMethodCallParam.~n"
+            +   "ASSIGN OEMockExpectationMethodCallParam.CallNumber = callNo~n"
+            +   "       OEMockExpectationMethodCallParam.ParamName  = parmName~n"
+            +   "       OEMockExpectationMethodCallParam.ParamValue = parmValue.~n"
+            +   "RETURN callNo.~n"
+            + "END FUNCTION.~n~n"
+            .  
         RETURN res.
     END METHOD.
 
