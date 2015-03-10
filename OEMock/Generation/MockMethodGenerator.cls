@@ -35,7 +35,7 @@ CLASS OEMock.Generation.MockMethodGenerator INHERITS MethodGenerator:
         parm = Method:Parameters:MoveFirst().
         DO WHILE VALID-OBJECT(parm):
             res = res 
-                + 'OEMockRegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).'.
+                + 'OEMockRegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
             parm = Method:Parameters:MoveNext().
         END.
         
