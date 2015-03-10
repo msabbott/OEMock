@@ -119,14 +119,27 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
-        RETURN TRIM(SUBSTITUTE("&2&1&3",
+        RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
                                CHR(10) + CHR(13),
                                GenerateVariableDefinitions(),
-                               GenerateParameterAssignment())).
+                               GenerateParameterAssignment(),
+                               GenerateAdditionalContents())).
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
-        RETURN Generate().
+        RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
+                               CHR(10) + CHR(13),
+                               GenerateVariableDefinitions(),
+                               GenerateParameterAssignment(),
+                               GenerateProceduralAdditionalContents())).
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateAdditionalContents():
+        RETURN "".
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateProceduralAdditionalContents():
+        RETURN "".
     END METHOD.
 
 END CLASS.
