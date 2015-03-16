@@ -20,6 +20,17 @@ CLASS OEMock.Tests.Reflection.BaseFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesUsingList():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        
+        Assert:IsTrue(VALID-OBJECT(clsfile:UsingList)).
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateReturnsBlank():
         DEFINE VARIABLE fil AS BaseFile NO-UNDO.
         fil = NEW BaseFile('filename').
