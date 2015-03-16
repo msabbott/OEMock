@@ -45,6 +45,80 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesUsingList():
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        procFile = NEW ProcedureFile("FileName").
+        
+        Assert:IsTrue(VALID-OBJECT(procFile:UsingList)).
+        
+        IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatements():
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        procFile = NEW ProcedureFile("FileName").
+        
+        AssertString:Contains(procFile:Generate(), 
+                              "USING Progress.Lang.*").
+        
+        IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsFromList():
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        procFile = NEW ProcedureFile("FileName").
+        procFile:UsingList:Add("OEMock.Tests.*").
+
+        AssertString:Contains(procFile:Generate(), 
+                              "USING Progress.Lang.*",
+                              STRING(procFile:Generate())).
+                              
+        AssertString:Contains(procFile:Generate(), 
+                              "USING OEMock.Tests.*",
+                              STRING(procFile:Generate())).
+        
+        IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsNoDuplicateProgressLangStar():
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE txt     AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ind     AS INTEGER   NO-UNDO.
+        
+        procFile = NEW ProcedureFile("FileName").
+        procFile:UsingList:Add("Progress.Lang.*").
+        
+        txt = procFile:Generate().
+        ind = INDEX(txt, "USING Progress.Lang.*").
+        
+        /* Verify it is not found after first instance */
+        Assert:AreEqual(INDEX(txt,"USING Progress.Lang.*", ind + 1),
+                        0).
+
+        IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateCreatesUsingStatementsWithSpaces():
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        procFile = NEW ProcedureFile("FileName").
+        procFile:UsingList:Add("Examples.Example 3.ClassToStub").
+
+        AssertString:Contains(procFile:Generate(), 
+                              'USING "Examples.Example 3.ClassToStub".',
+                              STRING(procFile:Generate())).
+        
+        IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateObservesProcedures():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
         DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
