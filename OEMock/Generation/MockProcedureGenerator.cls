@@ -29,13 +29,13 @@ CLASS OEMock.Generation.MockProcedureGenerator INHERITS ProcedureGenerator:
         
         ASSIGN res = res
                    + "DEFINE VARIABLE OEMockRegisterMethodCallNo AS INTEGER NO-UNDO.~n"
-                   + "OEMockRegisterMethodCallNo = OEMockRegisterMethodCall('" + Procedure:Name + "').~n".
+                   + "OEMockRegisterMethodCallNo = OEMockRegister:RegisterMethodCall('" + Procedure:Name + "').~n".
         
         /* Iterate through parameters and make call to log parameter value */    
         parm = Procedure:Parameters:MoveFirst().
         DO WHILE VALID-OBJECT(parm):
             res = res 
-                + 'OEMockRegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
+                + 'OEMockRegister:RegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
             parm = Procedure:Parameters:MoveNext().
         END.
         

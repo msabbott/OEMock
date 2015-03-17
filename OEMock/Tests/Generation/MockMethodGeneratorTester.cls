@@ -51,7 +51,7 @@ CLASS OEMock.Tests.Generation.MockMethodGeneratorTester:
         
         gen = NEW MockMethodGenerator().
         
-        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCall(").
+        AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCall(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
@@ -62,7 +62,7 @@ CLASS OEMock.Tests.Generation.MockMethodGeneratorTester:
         
         gen = NEW MockMethodGenerator().
         
-        AssertString:Contains(gen:Generate(), "OEMockRegisterMethodCallParam(").
+        AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCallParam(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
@@ -73,7 +73,7 @@ CLASS OEMock.Tests.Generation.MockMethodGeneratorTester:
         
         gen = NEW MockMethodGenerator().
         
-        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCall(").
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCall(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
@@ -84,7 +84,7 @@ CLASS OEMock.Tests.Generation.MockMethodGeneratorTester:
         
         gen = NEW MockMethodGenerator().
         
-        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegisterMethodCallParam(").
+        AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCallParam(").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
