@@ -8,14 +8,57 @@ USING OEMock.Expectation.BaseExpectation.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
-CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation: 
-		
-	CONSTRUCTOR PUBLIC Expectation():
+CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
+    
+	DEFINE PUBLIC PROPERTY MethodName AS CHARACTER NO-UNDO 
+	GET.
+	PROTECTED SET.
+
+	DEFINE PUBLIC PROPERTY MinimumCalls AS INTEGER INITIAL ? NO-UNDO 
+	GET.
+	PROTECTED SET(INPUT arg AS INTEGER):
+		IF arg = ? OR arg >= 0 THEN
+		  MinimumCalls = arg.
+	END SET.
+
+    DEFINE PUBLIC PROPERTY MaximumCalls AS INTEGER INITIAL ? NO-UNDO 
+    GET.
+    PROTECTED SET(INPUT arg AS INTEGER):
+        IF arg = ? OR arg >= 0 THEN
+          MaximumCalls = arg.
+    END SET.
+	 
+	CONSTRUCTOR PUBLIC Expectation(INPUT methName AS CHARACTER):
 		SUPER().
+		
+		ASSIGN MethodName   = methName
+		       MinimumCalls = ?
+		       MaximumCalls = ?.
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC Expectation():
 
 	END DESTRUCTOR.
+	
+	METHOD PUBLIC VOID CalledAtLeast(INPUT numCalls AS INTEGER):
+	    MinimumCalls = numCalls.
+	END METHOD.
+    
+    METHOD PUBLIC VOID CalledAtMost(INPUT numCalls AS INTEGER):
+        MaximumCalls = numCalls.
+    END METHOD.
+    
+    METHOD PUBLIC VOID CalledExactly(INPUT numCalls AS INTEGER):
+        CalledAtLeast(numCalls).
+        CalledAtMost(numCalls).
+    END METHOD.
+    
+    METHOD PUBLIC VOID CalledOnlyOnce():
+        CalledExactly(1).
+    END METHOD.
+    
+    METHOD PUBLIC VOID NeverCalled():
+        CalledExactly(0).
+    END METHOD.
 
 END CLASS.
