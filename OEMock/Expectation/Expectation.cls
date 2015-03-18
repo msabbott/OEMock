@@ -18,14 +18,24 @@ CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
 	GET.
 	PROTECTED SET(INPUT arg AS INTEGER):
 		IF arg = ? OR arg >= 0 THEN
-		  MinimumCalls = arg.
+		    MinimumCalls = arg.
+        ELSE
+            MinimumCalls = ?.
+		  
+		IF THIS-OBJECT:MaximumCalls NE ? AND arg > THIS-OBJECT:MaximumCalls THEN
+		    THIS-OBJECT:MaximumCalls = ?.
 	END SET.
 
     DEFINE PUBLIC PROPERTY MaximumCalls AS INTEGER INITIAL ? NO-UNDO 
     GET.
     PROTECTED SET(INPUT arg AS INTEGER):
         IF arg = ? OR arg >= 0 THEN
-          MaximumCalls = arg.
+            MaximumCalls = arg.
+        ELSE
+            MaximumCalls = ?.
+          
+        IF THIS-OBJECT:MinimumCalls NE ? AND arg < THIS-OBJECT:MinimumCalls THEN
+            THIS-OBJECT:MinimumCalls = ?.
     END SET.
 	 
 	CONSTRUCTOR PUBLIC Expectation(INPUT methName AS CHARACTER):

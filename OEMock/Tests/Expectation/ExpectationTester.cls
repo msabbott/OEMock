@@ -56,6 +56,60 @@ CLASS OEMock.Tests.Expectation.ExpectationTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID MaximumCallsResetsMinimumCallsIfLowerThan():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        expect = NEW Expectation("MethodName").
+        
+        expect:CalledAtLeast(9).
+        expect:CalledAtMost(5).
+        
+        Assert:IsNull(expect:MinimumCalls, ?).
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID MaximumCallsSetToNegativeResetsToNull():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        expect = NEW Expectation("MethodName").
+        
+        expect:CalledAtMost(-5).
+        
+        Assert:IsNull(expect:MaximumCalls, ?).
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID MinimumCallsResetsMaximumCallsIfGreaterThan():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        expect = NEW Expectation("MethodName").
+        
+        expect:CalledAtMost(5).
+        expect:CalledAtLeast(9).
+        
+        Assert:IsNull(expect:MaximumCalls, ?).
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID MinimumCallsSetToNegativeResetsToNull():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        expect = NEW Expectation("MethodName").
+        
+        expect:CalledAtLeast(-5).
+        
+        Assert:IsNull(expect:MinimumCalls, ?).
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID CalledAtLeastSetsMinimumCalls():
         DEFINE VARIABLE expect AS Expectation NO-UNDO.
         
