@@ -24,6 +24,12 @@ CLASS OEMock.OEMockRegister:
             INDEX PriKey IS PRIMARY UNIQUE CallNumber ASCENDING ParamName ASCENDING
             INDEX ValKey                   CallNumber ASCENDING ParamName ASCENDING ParamValue.
             
+    DEFINE STATIC DATASET MethodCalls
+        FOR MethodCall, MethodCallParam
+        DATA-RELATION callparams 
+                  FOR MethodCall, MethodCallParam
+                      RELATION-FIELDS (CallNumber,CallNumber).
+            
     METHOD STATIC PUBLIC INTEGER RegisterMethodCall(INPUT methRef AS CHARACTER):
         DEFINE VARIABLE callNo AS INTEGER NO-UNDO INITIAL 1.
         FIND LAST MethodCall NO-LOCK NO-ERROR.
@@ -45,6 +51,9 @@ CLASS OEMock.OEMockRegister:
     METHOD STATIC PUBLIC VOID ClearMethodCallRegister():
         EMPTY TEMP-TABLE MethodCallParam.
         EMPTY TEMP-TABLE MethodCall.        
+    END METHOD.
+    
+    METHOD STATIC PUBLIC VOID ReceiveMethodCallRegister(OUTPUT DATASET MethodCalls):
     END METHOD.
 
 END CLASS.
