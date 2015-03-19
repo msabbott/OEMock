@@ -92,7 +92,7 @@ CLASS OEMock.Tests.Expectation.ExpectationListTester:
         DEFINE VARIABLE res  AS BaseExpectation NO-UNDO.
         
         list = NEW OEMock.Expectation.ExpectationList().
-        meth = NEW Expectation().
+        meth = NEW Expectation("MethodName").
         
         list:AddExpectation(meth).
         res = list:MoveFirst().
@@ -134,7 +134,7 @@ CLASS OEMock.Tests.Expectation.ExpectationListTester:
         DEFINE VARIABLE res  AS BaseExpectation NO-UNDO.
         
         list = NEW OEMock.Expectation.ExpectationList().
-        meth = NEW Expectation().
+        meth = NEW Expectation("MethodName").
         
         list:AddExpectation(meth).
         res = list:MoveLast().
@@ -176,7 +176,7 @@ CLASS OEMock.Tests.Expectation.ExpectationListTester:
         DEFINE VARIABLE res  AS BaseExpectation NO-UNDO.
         
         list = NEW OEMock.Expectation.ExpectationList().
-        meth = NEW Expectation().
+        meth = NEW Expectation("MethodName").
         
         list:AddExpectation(meth).
         res = list:MoveNext().
@@ -218,7 +218,7 @@ CLASS OEMock.Tests.Expectation.ExpectationListTester:
         DEFINE VARIABLE res  AS BaseExpectation NO-UNDO.
         
         list = NEW OEMock.Expectation.ExpectationList().
-        meth = NEW Expectation().
+        meth = NEW Expectation("MethodName").
         
         list:AddExpectation(meth).
         res = list:MovePrev().
