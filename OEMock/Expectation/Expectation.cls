@@ -5,10 +5,32 @@
 
 USING Progress.Lang.*.
 USING OEMock.Expectation.BaseExpectation.
+USING OEMock.OEMockRegister.
+USING OEUnit.Assertion.*.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
+    
+    DEFINE PROTECTED TEMP-TABLE MethodCall NO-UNDO
+        FIELD CallNumber      AS INTEGER
+        FIELD MethodReference AS CHARACTER
+        FIELD NumCalls        AS INTEGER
+            INDEX PriKey  IS PRIMARY UNIQUE CallNumber      ASCENDING
+            INDEX MethKey                   MethodReference ASCENDING.
+            
+    DEFINE PROTECTED TEMP-TABLE MethodCallParam NO-UNDO
+        FIELD CallNumber AS INTEGER
+        FIELD ParamName  AS CHARACTER
+        FIELD ParamValue AS CHARACTER
+            INDEX PriKey IS PRIMARY UNIQUE CallNumber ASCENDING ParamName ASCENDING
+            INDEX ValKey                   CallNumber ASCENDING ParamName ASCENDING ParamValue.
+            
+    DEFINE PROTECTED DATASET MethodCalls
+        FOR MethodCall, MethodCallParam
+        DATA-RELATION callparams 
+                  FOR MethodCall, MethodCallParam
+                      RELATION-FIELDS (CallNumber,CallNumber).
     
 	DEFINE PUBLIC PROPERTY MethodName AS CHARACTER NO-UNDO 
 	GET.
@@ -70,5 +92,34 @@ CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
     METHOD PUBLIC VOID NeverCalled():
         CalledExactly(0).
     END METHOD.
-
+    
+    METHOD OVERRIDE PUBLIC VOID AssertIsSatisfied():
+        
+        DEFINE VARIABLE NumCalls AS INTEGER NO-UNDO.
+        
+        OEMockRegister:ReceiveMethodCallRegister(OUTPUT DATASET MethodCalls).
+        
+        /* Count number of calls */
+        FOR EACH MethodCall NO-LOCK
+           WHERE MethodCall.MethodReference = MethodName:
+            ASSIGN NumCalls = NumCalls + 1.
+        END.
+        
+        /* Verify against minimum number of calls */
+        IF MinimumCalls NE ? THEN
+            Assert:IsTrue(NumCalls >= MinimumCalls,
+                          SUBSTITUTE("Expecting minimum of &2 calls to &1 but only &3 were made",
+                                     MethodName,
+                                     STRING(MinimumCalls),
+                                     STRING(NumCalls))).
+        
+        /* Verify against maximum number of calls */
+        IF MaximumCalls NE ? THEN
+            Assert:IsTrue(NumCalls <= MaximumCalls,
+                          SUBSTITUTE("Expecting maximum of &2 calls to &1 but &3 were made",
+                                     MethodName,
+                                     STRING(MaximumCalls),
+                                     STRING(NumCalls))).
+    END METHOD.
+    
 END CLASS.

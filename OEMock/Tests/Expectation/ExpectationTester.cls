@@ -6,6 +6,7 @@
 USING Progress.Lang.*.
 USING OEUnit.Assertion.*.
 USING OEMock.Expectation.*.
+USING OEMock.OEMockRegister.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -225,6 +226,136 @@ CLASS OEMock.Tests.Expectation.ExpectationTester:
         expect:NeverCalled().
         
         Assert:AreEqual(expect:MinimumCalls, 0).
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedPassesEqualToMinimumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtLeast(1).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedPassesGreaterThanMinimumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtLeast(1).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedFailsLessThanMinimumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtLeast(2).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedIgnoresNullMinimumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+
+        Assert:IsNull(expect:MinimumCalls).        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedPassesEqualToMaximumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtMost(1).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedPassesLessThanMaximumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtMost(2).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedFailsGreaterThanMaximumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:CalledAtMost(1).
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCall("MethodName").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedIgnoresNullMaximumCalls():
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        
+        OEMockRegister:RegisterMethodCall("MethodName").
+
+        Assert:IsNull(expect:MaximumCalls).        
+        expect:AssertIsSatisfied().
         
         IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
     END METHOD.
