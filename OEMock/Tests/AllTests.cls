@@ -16,6 +16,7 @@ CLASS OEMock.Tests.AllTests INHERITS TestSuite:
     /* Tests for root level objects */
     AddTest(NEW OEMock.Tests.BaseDoubleTester()).
     AddTest(NEW OEMock.Tests.StubTester()).
+    AddTest(NEW OEMock.Tests.MockTester()).
     AddTest(NEW OEMock.Tests.OEMockTester()).
     AddTest(NEW OEMock.Tests.OEMockRegisterTester()).
   END CONSTRUCTOR.
