@@ -23,5 +23,8 @@ CLASS OEMock.Expectation.BaseExpectation:
 	DESTRUCTOR PUBLIC BaseExpectation():
 
 	END DESTRUCTOR.
+	
+	METHOD PUBLIC VOID AssertIsSatisfied():
+	END METHOD.
 
 END CLASS.

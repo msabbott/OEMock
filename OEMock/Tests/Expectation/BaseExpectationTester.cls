@@ -21,5 +21,18 @@ CLASS OEMock.Tests.Expectation.BaseExpectationTester:
         
         IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedDoesNotError():
+        /* Method verifies that no error was raised from AssertIsSatisfied */
+        DEFINE VARIABLE expect AS BaseExpectation NO-UNDO.
+        
+        expect = NEW BaseExpectation().
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
 
 END CLASS.
