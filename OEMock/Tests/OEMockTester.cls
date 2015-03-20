@@ -264,7 +264,6 @@ CLASS OEMock.Tests.OEMockTester:
         DEFINE VARIABLE procName AS CHARACTER NO-UNDO INITIAL 'OEMock/Tests/Inspection/TestProcedure.p'.
         DEFINE VARIABLE hProc AS HANDLE NO-UNDO.
 
-        OEMock:DebugMode = TRUE.
         mck = OEMock:MockProcedure(procName).
         mck:Generate().
 
