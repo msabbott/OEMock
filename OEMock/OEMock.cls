@@ -84,5 +84,41 @@ CLASS OEMock.OEMock:
         
         RETURN stb.
     END METHOD.
+    
+    METHOD PUBLIC STATIC OEMock.Mock MockClass(INPUT fname AS CHARACTER):
+        DEFINE VARIABLE insp AS OEMock.Inspection.ClassInspector NO-UNDO.
+        DEFINE VARIABLE mck  AS OEMock.Mock NO-UNDO.
+        
+        SetOutputDir().
+        InsertIntoPropath().
+        
+        insp = NEW OEMock.Inspection.ClassInspector(fname).
+        
+        IF VALID-OBJECT(insp) THEN
+        DO:
+            mck = NEW OEMock.Mock(INPUT insp:Inspect(), INPUT OutputDir).
+            IF DebugMode THEN mck:DeleteOnDestruct = FALSE.
+        END.
+        
+        RETURN mck.
+    END METHOD.
+    
+    METHOD PUBLIC STATIC OEMock.Mock MockProcedure(INPUT fname AS CHARACTER):
+        DEFINE VARIABLE insp AS OEMock.Inspection.ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE mck  AS OEMock.Mock NO-UNDO.
+        
+        SetOutputDir().
+        InsertIntoPropath().
+        
+        insp = NEW OEMock.Inspection.ProcedureInspector(fname).
+        
+        IF VALID-OBJECT(insp) THEN
+        DO:
+            mck = NEW OEMock.Mock(INPUT insp:Inspect(), INPUT OutputDir).
+            IF DebugMode THEN mck:DeleteOnDestruct = FALSE.
+        END.
+        
+        RETURN mck.
+    END METHOD.
 
 END CLASS.

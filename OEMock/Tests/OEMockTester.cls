@@ -171,4 +171,110 @@ CLASS OEMock.Tests.OEMockTester:
         OEMock:CleanUp().
     END.
     
+    @Test.
+    METHOD PUBLIC VOID MockClassSetsOutputDirectory():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        
+        mck = OEMock:MockClass('OEMock/Tests/Util/ListObject.cls').
+        
+        Assert:IsNotNull(OEMock:OutputDir).
+        
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+    END.
+    
+    @Test.
+    METHOD PUBLIC VOID MockClassSetsPropath():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        DEFINE VARIABLE tmpDir AS CHARACTER NO-UNDO.
+        
+        mck = OEMock:MockClass('OEMock/Tests/Util/ListObject.cls').
+        
+        tmpDir = OEMock:OutputDir.
+        
+        Assert:AreNotEqual(LOOKUP(tmpDir, PROPATH), 0).
+        
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+    END.
+    
+    @Test.
+    METHOD PUBLIC VOID MockClassReturnsValidClass():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        
+        mck = OEMock:MockClass('OEMock/Tests/Util/ListObject.cls').
+        
+        Assert:IsTrue(VALID-OBJECT(mck)).
+        
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID MockProcedureSetsOutputDirectory():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+
+        mck = OEMock:MockProcedure('OEMock/Tests/Inspection/TestProcedure.p').
+        
+        Assert:IsNotNull(OEMock:OutputDir).
+        
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+    END.
+    
+    @Test.
+    METHOD PUBLIC VOID MockProcedureReturnsValidClass():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        
+        mck = OEMock:MockProcedure('OEMock/Tests/Inspection/TestProcedure.p').
+        
+        Assert:IsTrue(VALID-OBJECT(mck)).
+        
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID MockProcedureSetsPropath():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        DEFINE VARIABLE tmpDir AS CHARACTER NO-UNDO.
+        
+        mck = OEMock:MockProcedure('OEMock/Tests/Inspection/TestProcedure.p').
+        
+        tmpDir = OEMock:OutputDir.
+        
+        Assert:AreNotEqual(LOOKUP(tmpDir, PROPATH), 0).
+
+        IF VALID-OBJECT(mck) THEN DELETE OBJECT mck.
+        OEMock:CleanUp().
+    END.
+    
+    @Test.
+    METHOD PUBLIC VOID CodeIsLoadedFromMockProcedure():
+        
+        DEFINE VARIABLE mck AS Mock NO-UNDO.
+        DEFINE VARIABLE procName AS CHARACTER NO-UNDO INITIAL 'OEMock/Tests/Inspection/TestProcedure.p'.
+        DEFINE VARIABLE hProc AS HANDLE NO-UNDO.
+
+        OEMock:DebugMode = TRUE.
+        mck = OEMock:MockProcedure(procName).
+        mck:Generate().
+
+        RUN VALUE(procName) PERSISTENT SET hProc.
+
+        Assert:AreEqual(DYNAMIC-FUNCTION("TestFunction" IN hProc), "").        
+       
+        IF VALID-OBJECT(mck)   THEN DELETE OBJECT mck.
+        IF VALID-HANDLE(hProc) THEN DELETE OBJECT hProc.
+        OEMock:CleanUp().
+    END.
+    
 END CLASS.
