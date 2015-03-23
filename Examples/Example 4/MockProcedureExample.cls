@@ -29,7 +29,7 @@ CLASS "Examples.Example 4.MockProcedureExample":
     METHOD PUBLIC VOID TestGetUserNameIsCalled():
         
         DEFINE VARIABLE MessageText AS CHARACTER NO-UNDO.
-        DEFINE VARIABLE mck AS OEMock.Mock NO-UNDO.
+        DEFINE VARIABLE mck         AS OEMock.Mock NO-UNDO.
         
         /* Ask OEMock to generate a Mock object for the required procedure */
         mck = OEMock:MockProcedure("Examples/Example 4/ProcedureToMock.p").
