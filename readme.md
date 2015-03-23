@@ -6,6 +6,8 @@ OEMock supports the creation of Stub and Mock test doubles.
 
 Please note that although OEMock functions, it is alpha-quality software and should not be used in production.
 
+Bug reports, issues and pull-requests are very welcome.
+
 Installation Instructions
 -------------------------
 To install OEMock, simply download the source from the master branch, and add the root directory to your PROPATH.
