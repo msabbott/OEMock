@@ -15,15 +15,15 @@ CLASS OEMock.Reflection.DataSetRelation:
         
     DEFINE PUBLIC PROPERTY ParentBufferName AS CHARACTER NO-UNDO 
     GET.
-    PROTECTED SET.
+    SET.
         
     DEFINE PUBLIC PROPERTY ChildBufferName AS CHARACTER NO-UNDO 
     GET.
-    PROTECTED SET.
+    SET.
         
     DEFINE PUBLIC PROPERTY RelationList AS CHARACTER NO-UNDO 
     GET.
-    PROTECTED SET.
+    SET.
 		
     CONSTRUCTOR PUBLIC DataSetRelation(INPUT nam AS CHARACTER):
         SUPER().
@@ -33,5 +33,17 @@ CLASS OEMock.Reflection.DataSetRelation:
 
 	DESTRUCTOR PUBLIC DataSetRelation():
 	END DESTRUCTOR.
+	
+	METHOD PUBLIC LONGCHAR Generate():
+	    
+	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+	    
+	    ASSIGN res = "DATA-RELATION "
+	               + (IF Name NE "" AND Name NE ? THEN Name + " " ELSE "")
+	               + "FOR " + ParentBufferName + "," + ChildBufferName + " "
+	               + "RELATION-FIELDS (" + RelationList + ")".
+
+	    RETURN res.
+	END METHOD.
 
 END CLASS.
