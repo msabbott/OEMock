@@ -24,10 +24,15 @@ CLASS OEMock.Reflection.DataSet:
 	GET.
 	PROTECTED SET.
 	
+	DEFINE PUBLIC PROPERTY Static AS LOGICAL NO-UNDO INITIAL FALSE
+	GET.
+	SET.
+	
 	CONSTRUCTOR PUBLIC DataSet(INPUT nam AS CHARACTER):
 		SUPER().
 		
-		ASSIGN Name = nam.
+		ASSIGN Name   = nam
+		       Static = FALSE.
 		
 		/* Create objects */
 		ASSIGN DataSetRelations = NEW OEMock.Reflection.DataSetRelationList().
@@ -42,7 +47,8 @@ CLASS OEMock.Reflection.DataSet:
 	    DEFINE VARIABLE res AS LONGCHAR        NO-UNDO.
 	    DEFINE VARIABLE rel AS DataSetRelation NO-UNDO.
 	    
-	    res = SUBSTITUTE("DEFINE DATASET &1 FOR &2 ",
+	    res = SUBSTITUTE("DEFINE &1DATASET &2 FOR &3 ",
+	                     (IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
 	                     Name,
 	                     Buffers).
 	    

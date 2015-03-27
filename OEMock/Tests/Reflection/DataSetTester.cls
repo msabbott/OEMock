@@ -25,6 +25,18 @@ CLASS OEMock.Tests.Reflection.DataSetTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorSetsNotStatic():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        
+        Assert:IsFalse(dset:Static).
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesDataSetRelations():
         
         DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
@@ -48,6 +60,22 @@ CLASS OEMock.Tests.Reflection.DataSetTester:
         
         AssertString:Contains(gen, "DEFINE DATASET ").
         AssertString:Contains(gen, " FOR ").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesStatic():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        dset:Static = TRUE.
+        
+        gen = dset:Generate().
+        
+        AssertString:Contains(gen, "DEFINE STATIC DATASET dsName FOR ").
         
         IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
     END METHOD.
