@@ -23,6 +23,18 @@ CLASS OEMock.Reflection.DataSet:
 	DEFINE PUBLIC PROPERTY Name AS CHARACTER NO-UNDO 
 	GET.
 	PROTECTED SET.
+        
+    DEFINE PUBLIC PROPERTY NamespacePrefix AS CHARACTER NO-UNDO 
+    GET.
+    SET.
+        
+    DEFINE PUBLIC PROPERTY NamespaceURI AS CHARACTER NO-UNDO 
+    GET.
+    SET.
+    
+    DEFINE PUBLIC PROPERTY Reference AS LOGICAL NO-UNDO INITIAL FALSE
+    GET.
+    SET.
 	
 	DEFINE PUBLIC PROPERTY Static AS LOGICAL NO-UNDO INITIAL FALSE
 	GET.
@@ -31,8 +43,11 @@ CLASS OEMock.Reflection.DataSet:
 	CONSTRUCTOR PUBLIC DataSet(INPUT nam AS CHARACTER):
 		SUPER().
 		
-		ASSIGN Name   = nam
-		       Static = FALSE.
+		ASSIGN Name            = nam
+		       NamespacePrefix = ""
+		       NamespaceURI    = ""
+               Reference       = FALSE
+               Static          = FALSE.
 		
 		/* Create objects */
 		ASSIGN DataSetRelations = NEW OEMock.Reflection.DataSetRelationList().
@@ -47,10 +62,13 @@ CLASS OEMock.Reflection.DataSet:
 	    DEFINE VARIABLE res AS LONGCHAR        NO-UNDO.
 	    DEFINE VARIABLE rel AS DataSetRelation NO-UNDO.
 	    
-	    res = SUBSTITUTE("DEFINE &1DATASET &2 FOR &3 ",
+	    res = SUBSTITUTE("DEFINE &1DATASET &2 FOR &3 &4&5&6",
 	                     (IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
 	                     Name,
-	                     Buffers).
+	                     Buffers,
+	                     (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE ""),
+                         (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE ""),
+	                     (IF THIS-OBJECT:Reference THEN "REFERENCE-ONLY " ELSE "")).
 	    
 	    /* Build list of data relations */
 	    rel = DataSetRelations:MoveFirst().

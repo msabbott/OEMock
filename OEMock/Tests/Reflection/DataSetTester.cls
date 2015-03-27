@@ -25,6 +25,42 @@ CLASS OEMock.Tests.Reflection.DataSetTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorSetsBlankNamespacePrefix():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        
+        Assert:AreEqual(dset:NamespacePrefix, "").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID ConstructorSetsBlankNamespaceURI():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        
+        Assert:AreEqual(dset:NamespaceURI, "").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID ConstructorSetsNotReference():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        
+        Assert:IsFalse(dset:Reference).
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsNotStatic():
         
         DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
@@ -106,6 +142,54 @@ CLASS OEMock.Tests.Reflection.DataSetTester:
         gen = dset:Generate().
         
         AssertString:Contains(gen, " FOR TableA,TableB ").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesNamespacePrefix():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        dset:NamespacePrefix = "MyNameSpacePrefix".
+        
+        gen = dset:Generate().
+        
+        AssertString:Contains(gen, " NAMESPACE-PREFIX ~"MyNameSpacePrefix~" ").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesNamespaceURI():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        dset:NamespaceURI = "MyNameSpaceURI".
+        
+        gen = dset:Generate().
+        
+        AssertString:Contains(gen, " NAMESPACE-URI ~"MyNameSpaceURI~" ").
+        
+        IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesReference():
+        
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        dset = NEW OEMock.Reflection.DataSet("dsName").
+        dset:Reference = TRUE.
+        
+        gen = dset:Generate().
+        
+        AssertString:Contains(gen, " REFERENCE-ONLY ").
         
         IF VALID-OBJECT(dset) THEN DELETE OBJECT dset.
     END METHOD.
