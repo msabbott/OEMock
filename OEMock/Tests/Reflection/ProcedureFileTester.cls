@@ -12,6 +12,17 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 CLASS OEMock.Tests.Reflection.ProcedureFileTester: 
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesDataSetList():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        
+        Assert:IsTrue(VALID-OBJECT(procfile:DataSets)).
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesFunctionList():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
         
@@ -116,6 +127,20 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
                               STRING(procFile:Generate())).
         
         IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesDataSets():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        procfile:DataSets:AddDataSet(NEW OEMock.Reflection.DataSet('dsName')).
+        
+        outp = procfile:Generate().
+        AssertString:Contains(outp, "DEFINE DATASET dsName"). 
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
     END METHOD.
     
     @Test.
