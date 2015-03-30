@@ -102,6 +102,7 @@ CLASS OEMock.Inspection.BaseInspector:
 	    
 	    DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
 	    DEFINE VARIABLE primparm AS PrimitiveParameter NO-UNDO.
+	    DEFINE VARIABLE dsetparm AS DataSetParameter   NO-UNDO.
 	    DEFINE VARIABLE tableparm AS TableParameter NO-UNDO.
 	    
 	    /* Factory method. Based on the information passed through hParamNode,
@@ -121,6 +122,12 @@ CLASS OEMock.Inspection.BaseInspector:
                 tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
                 tableparm:ParameterType = ParamMode.
                 parm = tableparm.
+            END.
+            ELSE IF ParamMode = "DATASET" THEN
+            DO:
+                dsetparm = NEW OEMock.Reflection.DataSetParameter(ParamName).
+                dsetparm:ParameterType = ParamMode.
+                parm = dsetparm.
             END.
             ELSE
 	        DO:
