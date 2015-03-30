@@ -89,5 +89,31 @@ CLASS OEMock.Tests.Inspection.ProcedureInspectorTester:
         IF VALID-OBJECT(base) THEN DELETE OBJECT base.
         IF VALID-OBJECT(proc) THEN DELETE OBJECT proc.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID InspectReturnsClassWithDataSets():
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE base AS BaseFile           NO-UNDO.
+        DEFINE VARIABLE proc AS ProcedureFile      NO-UNDO.
+        
+        insp = NEW ProcedureInspector("OEMock/Tests/Inspection/TestProcedure.p").
+        base = insp:Inspect().
+        
+        Assert:IsTrue(VALID-OBJECT(base), "Invalid object returned").
+        
+        IF base:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
+        DO:
+            proc = DYNAMIC-CAST(base, base:GetClass():TypeName).
+            Assert:IsTrue(proc:DataSets:Count > 0).
+        END.
+        ELSE
+        DO:
+            Assert:Fail("Incompatible object type returned").
+        END.
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT insp.
+        IF VALID-OBJECT(base) THEN DELETE OBJECT base.
+        IF VALID-OBJECT(proc) THEN DELETE OBJECT proc.
+    END METHOD.
 
 END CLASS.

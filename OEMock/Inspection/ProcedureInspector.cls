@@ -30,6 +30,7 @@ CLASS OEMock.Inspection.ProcedureInspector INHERITS BaseInspector:
         DEFINE VARIABLE AccessMode AS CHARACTER NO-UNDO.
         DEFINE VARIABLE Proc       AS Procedure NO-UNDO.
         DEFINE VARIABLE Func       AS Function  NO-UNDO.
+        DEFINE VARIABLE DSet       AS OEMock.Reflection.DataSet NO-UNDO.
 
         CREATE X-NODEREF hNode.
         
@@ -100,6 +101,15 @@ CLASS OEMock.Inspection.ProcedureInspector INHERITS BaseInspector:
                     BuiltProc:Functions:AddMethod(Func).
                 ELSE
                     DELETE OBJECT Func NO-ERROR.
+            END.
+            
+            WHEN "DATASET" THEN
+            DO:
+                /* Use parent method to interpret into a DataSet object */
+                DSet = CreateDataSet(hRefNode, objId).
+                
+                /* If valid object, then add to list of DataSets */
+                IF VALID-OBJECT(DSet) THEN BuiltProc:DataSets:AddDataSet(DSet).
             END.
         END CASE.
         

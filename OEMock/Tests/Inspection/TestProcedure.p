@@ -8,6 +8,21 @@
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
+DEFINE TEMP-TABLE ttTempTable NO-UNDO
+    FIELD KeyField AS INTEGER
+    INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING.
+    
+DEFINE TEMP-TABLE ttChildTable NO-UNDO
+    FIELD KeyField AS INTEGER
+    FIELD ChildField AS CHARACTER
+    FIELD DataField  AS CHARACTER
+    INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING ChildField ASCENDING.
+    
+DEFINE DATASET dsTempData
+    FOR ttTempTable, ttChildTable
+    DATA-RELATION FOR ttTempTable, ttChildTable
+        RELATION-FIELDS(KeyField,KeyField).
+
 /* ********************  Preprocessor Definitions  ******************** */
 
 /* ************************  Function Prototypes ********************** */
