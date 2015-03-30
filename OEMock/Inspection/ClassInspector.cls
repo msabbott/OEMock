@@ -35,6 +35,8 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
         DEFINE VARIABLE Meth       AS Method      NO-UNDO.
         DEFINE VARIABLE Const      AS CONSTRUCTOR NO-UNDO.
         
+        DEFINE VARIABLE DSet       AS OEMock.Reflection.DataSet NO-UNDO.
+        
         CREATE X-NODEREF hNode.
         CREATE X-NODEREF hChildNode.
 
@@ -96,6 +98,15 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
                 END.
                 
                 BuiltClass:Constructors:AddMethod(Const).
+            END.
+            
+            WHEN "DATASET" THEN
+            DO:
+                /* Use parent method to interpret into a DataSet object */
+                DSet = CreateDataSet(hRefNode, objId).
+
+                /* If valid object, then add to list of DataSets */
+                IF VALID-OBJECT(DSet) THEN BuiltClass:DataSets:AddDataSet(DSet).
             END.
             
             WHEN "METHOD" THEN
