@@ -77,6 +77,9 @@ CLASS OEMock.Reflection.DataSet:
 	        rel = DataSetRelations:MoveNext().
 	    END.
 	    
+	    ASSIGN res = TRIM(TRIM(res,"."))
+	               + ".".
+	    
 	    RETURN res.
 	    
 	END METHOD.
