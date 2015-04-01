@@ -8,6 +8,7 @@ USING OEMock.Reflection.BaseFile.
 USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Util.StringList.
+USING OEMock.Reflection.DataSetList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -18,6 +19,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     SET. 
 
     DEFINE PUBLIC PROPERTY Constructors AS OEMock.Reflection.MethodList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
+    DEFINE PUBLIC PROPERTY DataSets AS OEMock.Reflection.DataSetList NO-UNDO 
     GET.
     PROTECTED SET. 
 
@@ -63,7 +68,9 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         Constructors = NEW MethodList().
         Methods      = NEW MethodList().
         Generators   = NEW GeneratorList().
-        Interfaces   = NEW StringList().       
+        Interfaces   = NEW StringList().
+        DataSets     = NEW DataSetList().
+             
     END CONSTRUCTOR.
 
     DESTRUCTOR PUBLIC ClassFile():
@@ -72,6 +79,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         IF VALID-OBJECT(ClassRef)     THEN DELETE OBJECT ClassRef.
         IF VALID-OBJECT(Generators)   THEN DELETE OBJECT Generators.
         IF VALID-OBJECT(Interfaces)   THEN DELETE OBJECT Interfaces.
+        IF VALID-OBJECT(DataSets)     THEN DELETE OBJECT DataSets.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateClass():
@@ -81,14 +89,34 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                               + "&1&5"
                               + "&1&6"
                               + "&1&7"
+                              + "&1&8"
                               + "&1END CLASS.&1",
                                 CHR(10) + CHR(13),
                                 IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 GenerateInterfaces(),
+                                GenerateDataSets(),
                                 GenerateConstructors(),
                                 GenerateMethods(),
                                 Generators:Generate()).
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateDataSets():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        /* Loop through datasets */
+        dset = DataSets:MoveFirst().
+        DO WHILE VALID-OBJECT(dset):
+            ASSIGN res  = res + dset:Generate()
+                        + CHR(10) + CHR(13)
+                   dset = DataSets:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
         RETURN res.
     END METHOD.
     

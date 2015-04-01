@@ -7,14 +7,19 @@ USING Progress.Lang.*.
 USING OEMock.Reflection.BaseFile.
 USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
+USING OEMock.Reflection.DataSetList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile: 
 
-	DEFINE PUBLIC PROPERTY Functions AS OEMock.Reflection.MethodList NO-UNDO 
+	DEFINE PUBLIC PROPERTY DataSets AS OEMock.Reflection.DataSetList NO-UNDO 
 	GET.
 	PROTECTED SET. 
+
+    DEFINE PUBLIC PROPERTY Functions AS OEMock.Reflection.MethodList NO-UNDO 
+    GET.
+    PROTECTED SET. 
 
     DEFINE PUBLIC PROPERTY Generators AS OEMock.Generation.GeneratorList NO-UNDO 
     GET.
@@ -28,12 +33,14 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 		SUPER(INPUT fname).
 		
 		/* Create objects */
+		DataSets   = NEW DataSetList().
 		Functions  = NEW MethodList().
 		Procedures = NEW MethodList().
 		Generators = NEW GeneratorList().
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC ProcedureFile():
+        IF VALID-OBJECT(DataSets)   THEN DELETE OBJECT DataSets.
 	    IF VALID-OBJECT(Functions)  THEN DELETE OBJECT Functions.
 	    IF VALID-OBJECT(Procedures) THEN DELETE OBJECT Procedures.
         IF VALID-OBJECT(Generators) THEN DELETE OBJECT Generators.
@@ -42,9 +49,10 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6",
+	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7",
 	                            CHR(10) + CHR(13),
 	                            GenerateUsing(),
+	                            GenerateDataSets(),
 	                            GenerateFunctionForwards(),
 	                            Generators:GenerateProcedural(),
                                 GenerateProcedures(),
@@ -52,6 +60,24 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 
         RETURN res.
 	END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateDataSets():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE dset AS OEMock.Reflection.DataSet NO-UNDO.
+        
+        /* Loop through datasets */
+        dset = DataSets:MoveFirst().
+        DO WHILE VALID-OBJECT(dset):
+            ASSIGN res  = res + dset:Generate()
+                        + CHR(10) + CHR(13)
+                   dset = DataSets:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
 	
 	METHOD PROTECTED LONGCHAR GenerateFunctionForwards():
 	    DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.

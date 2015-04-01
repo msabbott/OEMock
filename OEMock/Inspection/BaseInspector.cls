@@ -102,6 +102,7 @@ CLASS OEMock.Inspection.BaseInspector:
 	    
 	    DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
 	    DEFINE VARIABLE primparm AS PrimitiveParameter NO-UNDO.
+	    DEFINE VARIABLE dsetparm AS DataSetParameter   NO-UNDO.
 	    DEFINE VARIABLE tableparm AS TableParameter NO-UNDO.
 	    
 	    /* Factory method. Based on the information passed through hParamNode,
@@ -122,6 +123,12 @@ CLASS OEMock.Inspection.BaseInspector:
                 tableparm:ParameterType = ParamMode.
                 parm = tableparm.
             END.
+            ELSE IF ParamMode = "DATASET" THEN
+            DO:
+                dsetparm = NEW OEMock.Reflection.DataSetParameter(ParamName).
+                dsetparm:ParameterType = ParamMode.
+                parm = dsetparm.
+            END.
             ELSE
 	        DO:
 	            primparm = NEW OEMock.Reflection.PrimitiveParameter(ParamName, ParamType).
@@ -135,6 +142,111 @@ CLASS OEMock.Inspection.BaseInspector:
 	    END.
 	    
 	    RETURN parm.
+	END METHOD.
+	
+	METHOD PROTECTED OEMock.Reflection.DataSet CreateDataSet(INPUT hNodeRef AS HANDLE, INPUT objId AS CHARACTER):
+	    
+	    DEFINE VARIABLE DSet       AS OEMock.Reflection.DataSet NO-UNDO.
+	    DEFINE VARIABLE DRel       AS OEMock.Reflection.DataSetRelation NO-UNDO.
+	    DEFINE VARIABLE AccessMode AS CHARACTER NO-UNDO. 
+	    DEFINE VARIABLE hNode      AS HANDLE    NO-UNDO.
+	    DEFINE VARIABLE hChildNode AS HANDLE    NO-UNDO.
+	    DEFINE VARIABLE iNode      AS INTEGER   NO-UNDO.
+	    DEFINE VARIABLE iChildNode AS INTEGER   NO-UNDO.
+	    
+	    CREATE X-NODEREF hNode.
+	    CREATE X-NODEREF hChildNode.
+	    
+	    DSet = NEW OEMock.Reflection.DataSet(objId).
+	    
+        DO iNode = 1 TO hNodeRef:NUM-CHILDREN:
+            hNodeRef:GET-CHILD(hNode, iNode).
+            IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+            CASE hNode:NAME:
+                WHEN "Access-mode" THEN
+                DO:
+                    hNode:NORMALIZE().
+                    ASSIGN AccessMode = ExtractTextValue(hNode).
+                END.
+                WHEN "Is-static" THEN
+                DO:
+                    hNode:NORMALIZE().
+                    ASSIGN DSet:Static = (ExtractTextValue(hNode) = "true").
+                END.
+                WHEN "Dataset-Ref" THEN
+                DO:
+                    /* Dataset-Ref holds useful information about the Dataset
+                     * e.g. buffer lists, relations, etc.
+                     */
+                    DO iChildNode = 1 TO hNode:NUM-CHILDREN:
+                        hNode:GET-CHILD(hChildNode, iChildNode).
+                        IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+                        CASE hChildNode:NAME:
+                            WHEN "Buffer-list" THEN
+                            DO:
+                                DSet:Buffers = ExtractTextValue(hChildNode).
+                            END.
+                            WHEN "N-prefix" THEN
+                            DO:
+                                DSet:NamespacePrefix = ExtractTextValue(hChildNode).
+                            END.
+                            WHEN "N-uri" THEN
+                            DO:
+                                DSet:NamespaceURI = ExtractTextValue(hChildNode).
+                            END.
+                            WHEN "Relation" THEN
+                            DO:
+                                DRel = CreateDataSetRelation(hChildNode).
+                                IF VALID-OBJECT(DRel) THEN 
+                                    DSet:DataSetRelations:AddDataSetRelation(DRel).
+                            END.
+                        END CASE.
+                    END.
+                END.
+            END CASE.
+        END.
+
+        /* If this is a private object, then return an invalid object */
+        IF AccessMode EQ "PRIVATE" THEN DELETE OBJECT DSet NO-ERROR.
+	    
+	    RETURN DSet.
+	    
+	END METHOD.
+	
+	METHOD PRIVATE OEMock.Reflection.DataSetRelation CreateDataSetRelation(INPUT hNodeRef AS HANDLE):
+	    
+	    DEFINE VARIABLE DRel AS OEMock.Reflection.DataSetRelation NO-UNDO.
+        DEFINE VARIABLE hNode      AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE iNode      AS INTEGER   NO-UNDO.
+        
+        CREATE X-NODEREF hNode.
+	    
+	    DRel = NEW OEMock.Reflection.DataSetRelation(hNodeRef:GET-ATTRIBUTE("Relation-name")).
+	    
+	    DO iNode = 1 TO hNodeRef:NUM-CHILDREN:
+            hNodeRef:GET-CHILD(hNode, iNode).
+            IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+            CASE hNode:NAME:
+                WHEN "Parent-buffer-name" THEN
+                DO:
+                    hNode:NORMALIZE().
+                    ASSIGN DRel:ParentBufferName = ExtractTextValue(hNode).
+                END.
+                WHEN "Child-buffer-name" THEN
+                DO:
+                    hNode:NORMALIZE().
+                    ASSIGN DRel:ChildBufferName = ExtractTextValue(hNode).
+                END.
+                WHEN "Relation-list" THEN
+                DO:
+                    hNode:NORMALIZE().
+                    ASSIGN DRel:RelationList = ExtractTextValue(hNode).
+                END.
+            END CASE.
+        END.
+	    
+	    RETURN DRel.
+	    
 	END METHOD.
 	
 	METHOD PROTECTED LONGCHAR ExtractTextValue(INPUT hNodeRef AS HANDLE):
