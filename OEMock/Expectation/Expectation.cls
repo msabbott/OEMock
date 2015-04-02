@@ -31,6 +31,12 @@ CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
         DATA-RELATION callparams 
                   FOR MethodCall, MethodCallParam
                       RELATION-FIELDS (CallNumber,CallNumber).
+                      
+    DEFINE PROTECTED TEMP-TABLE ExpectedParamValue NO-UNDO
+        FIELD ParamName  AS CHARACTER
+        FIELD ParamValue AS CHARACTER
+        FIELD Equal      AS LOGICAL INITIAL TRUE
+            INDEX PriKey IS PRIMARY UNIQUE ParamName ASCENDING.
     
 	DEFINE PUBLIC PROPERTY MethodName AS CHARACTER NO-UNDO 
 	GET.
@@ -93,16 +99,75 @@ CLASS OEMock.Expectation.Expectation INHERITS BaseExpectation:
         CalledExactly(0).
     END METHOD.
     
+    METHOD PUBLIC VOID WithParameterValue(INPUT ParamName AS CHARACTER, INPUT ParamValue AS CHARACTER, INPUT Equal AS LOGICAL):
+        FIND FIRST ExpectedParamValue
+             WHERE ExpectedParamValue.ParamName = ParamName
+                   EXCLUSIVE-LOCK NO-ERROR.
+                   
+        IF NOT AVAILABLE ExpectedParamValue THEN
+        DO:
+            CREATE ExpectedParamValue.
+            ASSIGN ExpectedParamValue.ParamName = ParamName.
+        END.
+        
+        ASSIGN ExpectedParamValue.ParamValue = ParamValue
+               ExpectedParamValue.Equal      = Equal.
+            
+    END METHOD.
+    
+    METHOD PUBLIC VOID WithParameterValue(INPUT ParamName AS CHARACTER, INPUT ParamValue AS CHARACTER):
+        WithParameterValue(ParamName, ParamValue, TRUE).
+    END METHOD.
+    
+    METHOD PUBLIC VOID WithParameterValueNot(INPUT ParamName AS CHARACTER, INPUT ParamValue AS CHARACTER):
+        WithParameterValue(ParamName, ParamValue, FALSE).
+    END METHOD.
+    
     METHOD OVERRIDE PUBLIC VOID AssertIsSatisfied():
         
-        DEFINE VARIABLE NumCalls AS INTEGER NO-UNDO.
+        DEFINE VARIABLE NumCalls   AS INTEGER NO-UNDO.
+        DEFINE VARIABLE ParamCount AS INTEGER NO-UNDO.
         
         OEMockRegister:ReceiveMethodCallRegister(OUTPUT DATASET MethodCalls).
         
-        /* Count number of calls */
-        FOR EACH MethodCall NO-LOCK
-           WHERE MethodCall.MethodReference = MethodName:
-            ASSIGN NumCalls = NumCalls + 1.
+        /* Count number of expected parameters */
+        FOR EACH ExpectedParamValue NO-LOCK:
+            ASSIGN ParamCount = ParamCount + 1.
+        END.
+        
+        /* If the number of expected parameters is 0, just
+         * count the number of calls
+         */
+        IF ParamCount = 0 THEN
+        DO:
+            /* Count number of calls */
+            FOR EACH MethodCall NO-LOCK
+               WHERE MethodCall.MethodReference = MethodName:
+                ASSIGN NumCalls = NumCalls + 1.
+            END.
+        END.
+        ELSE
+        DO:
+            CallLoop:
+            FOR EACH MethodCall NO-LOCK
+               WHERE MethodCall.MethodReference = MethodName:
+                   
+                FOR EACH ExpectedParamValue NO-LOCK,
+                    
+                   FIRST MethodCallParam NO-LOCK 
+                   WHERE MethodCallParam.CallNumber = MethodCall.CallNumber
+                     AND MethodCallParam.ParamName  = ExpectedParamValue.ParamName:
+
+                    /* Skip to the next method call if this one parameter does not match */    
+                    IF (ExpectedParamValue.Equal EQ TRUE AND ExpectedParamValue.ParamValue NE MethodCallParam.ParamValue)
+                    OR (ExpectedParamValue.Equal NE TRUE AND ExpectedParamValue.ParamValue EQ MethodCallParam.ParamValue) THEN
+                    DO:
+                        NEXT CallLoop.
+                    END.
+                END.
+                
+                ASSIGN NumCalls = NumCalls + 1.
+            END.
         END.
         
         /* Verify against minimum number of calls */

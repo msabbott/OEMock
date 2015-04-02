@@ -359,5 +359,181 @@ CLASS OEMock.Tests.Expectation.ExpectationTester:
         
         IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedChecksWithParamValueEqual():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValue("ParamName", "ParamValue").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName", "ParamValue").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedChecksWithParamValueEqual_MultipleParams():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValue("ParamName",  "ParamValue").
+        expect:WithParameterValue("ParamName2", "ParamValue2").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName",  "ParamValue").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName2", "ParamValue2").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedRaisesErrorWithParamValueEqual():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValue("ParamName", "ParamValue").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName", "NotTheParamValue").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedRaisesErrorWithParamValueEqual_MultipleParams():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValue("ParamName",  "ParamValue").
+        expect:WithParameterValue("ParamName2", "ParamValue2").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName",  "NotTheParamValue").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName2", "NotTheParamValue2").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedChecksWithParamValueNotEqual():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValueNot("ParamName", "ParamValue").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName", "NotTheParamValue").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AssertIsSatisfiedChecksWithParamValueNotEqual_MultipleParams():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValueNot("ParamName", "ParamValue").
+        expect:WithParameterValue("ParamName2",   "ParamValue2").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName",  "NotTheParamValue").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName2", "ParamValue2").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedRaisesErrorWithParamValueNotEqual():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValueNot("ParamName", "ParamValue").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName", "ParamValue").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
+    
+    @Test(Expected="AssertionFailedError"). @Ignore. /* Bad test - cannot override OEUnit Assert failure */
+    METHOD PUBLIC VOID AssertIsSatisfiedRaisesErrorWithParamValueNotEqual_MultipleParams():
+        
+        DEFINE VARIABLE expect AS Expectation NO-UNDO.
+        DEFINE VARIABLE callNo AS INTEGER     NO-UNDO.
+        
+        OEMockRegister:ClearMethodCallRegister().
+        
+        expect = NEW Expectation("MethodName").
+        expect:WithParameterValueNot("ParamName",  "ParamValue").
+        expect:WithParameterValueNot("ParamName2", "ParamValue2").
+        expect:CalledOnlyOnce().
+        
+        callNo = OEMockRegister:RegisterMethodCall("MethodName").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName",  "ParamValue").
+        OEMockRegister:RegisterMethodCallParam(callNo, "ParamName2", "ParamValue2").
+        
+        expect:AssertIsSatisfied().
+        
+        IF VALID-OBJECT(expect) THEN DELETE OBJECT expect.
+        
+    END METHOD.
 
 END CLASS.
