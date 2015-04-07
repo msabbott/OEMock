@@ -8,6 +8,7 @@ USING OEMock.Reflection.BaseFile.
 USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Reflection.DataSetList.
+USING OEMock.Reflection.ParameterList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -25,6 +26,10 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
     GET.
     PROTECTED SET. 
 
+    DEFINE PUBLIC PROPERTY Parameters AS OEMock.Reflection.ParameterList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
     DEFINE PUBLIC PROPERTY Procedures AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
     PROTECTED SET. 
@@ -37,6 +42,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 		Functions  = NEW MethodList().
 		Procedures = NEW MethodList().
 		Generators = NEW GeneratorList().
+		Parameters = NEW ParameterList().
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC ProcedureFile():
@@ -44,15 +50,17 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	    IF VALID-OBJECT(Functions)  THEN DELETE OBJECT Functions.
 	    IF VALID-OBJECT(Procedures) THEN DELETE OBJECT Procedures.
         IF VALID-OBJECT(Generators) THEN DELETE OBJECT Generators.
+        IF VALID-OBJECT(Parameters) THEN DELETE OBJECT Parameters.
 	END DESTRUCTOR.
 	
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7",
+	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8",
 	                            CHR(10) + CHR(13),
 	                            GenerateUsing(),
 	                            GenerateDataSets(),
+	                            GenerateParameters(),
 	                            GenerateFunctionForwards(),
 	                            Generators:GenerateProcedural(),
                                 GenerateProcedures(),
@@ -76,6 +84,20 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         /* Sanity check output */
         IF res = ? THEN res = "".
 
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateParameters():
+        DEFINE VARIABLE res AS CHARACTER NO-UNDO.
+        DEFINE VARIABLE parm AS OEMock.Reflection.BaseParameter NO-UNDO.
+        
+        /* Loop through parameters */
+        parm = Parameters:MoveFirst().
+        DO WHILE VALID-OBJECT(parm):
+            ASSIGN res  = res + parm:GenerateDefinition()
+                   parm = Parameters:MoveNext().
+        END. 
+        
         RETURN res.
     END METHOD.
 	

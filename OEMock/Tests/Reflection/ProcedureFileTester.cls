@@ -45,6 +45,17 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesParameterList():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        
+        Assert:IsTrue(VALID-OBJECT(procfile:Parameters)).
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorCreatesProcedureList():
         DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
         
@@ -127,6 +138,20 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
                               STRING(procFile:Generate())).
         
         IF VALID-OBJECT(procFile) THEN DELETE OBJECT procFile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesParameters():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        procfile:Parameters:AddParameter(NEW OEMock.Reflection.PrimitiveParameter('ParamName', 'CHARACTER')).
+        
+        outp = procfile:Generate().
+        AssertString:Contains(outp, "DEFINE INPUT PARAMETER ParamName AS CHARACTER NO-UNDO."). 
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
     END METHOD.
     
     @Test.
