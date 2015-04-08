@@ -40,6 +40,21 @@ Usage
     * CalledAtExactly(integer) - Validates the number of times the method, function or procedure is called is exactly the value of the integer parameter.
     * CalledOnlyOnce() - Validates the number of times the method, function or procedure is exactly once.
     * NeverCalled() - Validates that the method, function or procedure is never called.
+* Due to deficiencies in the COMPILE XREF functionality of OpenEdge, certain structures are not exported during this process. This means that OEMock is not able to detect these items when producing Stubs or Mocks.
+ * Procedure file parameters - Parameters that are defined in the main block of an ABL procedure are not detected. These can be manually added to a test double using the following methods on the Stub and Mock objects
+  * AddProcedureParameter(INPUT paramType AS CHARACTER, INPUT name AS CHARACTER, INPUT dataType AS CHARACTER)
+   * Where:
+    * paramType is the type of the parameter (i.e. "INPUT", "OUTPUT" or "INPUT-OUTPUT")
+    * name is the name of the parameter
+    * dataType is the data type of the parameter
+  * AddProcedureBufferParameter(INPUT bufferName AS CHARACTER, INPUT tableName AS CHARACTER)
+   * Where:
+    * bufferName is the name of buffer
+    * tableName is the name of the table the buffer is created for
+  * AddProcedureDataSetParameter(INPUT datasetName AS CHARACTER)
+   * Where:
+    * datasetName is the name of the ProDataSet.
+ * Temp-Table definitions - Definitions of temp-tables are not detected.
 * Once the initialisation of the test double object is complete, call the method 'Generate()' on the object.
  * A temporary directory structure will be created at this point, and placed at the front of the session's PROPATH value.
 * After your test is complete, delete the test double object.
