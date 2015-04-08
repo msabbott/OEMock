@@ -113,6 +113,63 @@ CLASS OEMock.Tests.BaseDoubleTester:
         Assert:IsNotNull(FILE-INFO:FILE-TYPE).
     END METHOD.
     
+    @Test.
+    METHOD PUBLIC VOID AddProcedureParameterAddsToProcedureFileParameters():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        
+        dbl:AddProcedureParameter(INPUT "INPUT", INPUT "ProcParam", INPUT "CHARACTER").
+        
+        procFile = DYNAMIC-CAST(dbl:File, dbl:File:GetClass():TypeName).
+        
+        Assert:AreEqual(procFile:Parameters:Count, 1).
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl). 
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AddProcedureBufferParameterAddsToProcedureFileParameters():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        
+        dbl:AddProcedureBufferParameter(INPUT "BufferName", INPUT "TableName").
+        
+        procFile = DYNAMIC-CAST(dbl:File, dbl:File:GetClass():TypeName).
+        
+        Assert:AreEqual(procFile:Parameters:Count, 1).
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl). 
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AddProcedureDatasetParameterAddsToProcedureFileParameters():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        
+        dbl:AddProcedureDataSetParameter(INPUT "DataSetName").
+        
+        procFile = DYNAMIC-CAST(dbl:File, dbl:File:GetClass():TypeName).
+        
+        Assert:AreEqual(procFile:Parameters:Count, 1).
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl). 
+    END METHOD.
+    
     @AfterClass.
     METHOD PUBLIC VOID DeleteTestDirectory():
         FILE-INFO:FILE-NAME = TestDir.

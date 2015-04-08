@@ -134,5 +134,47 @@ CLASS OEMock.BaseDouble:
             END.
         END.
 	END METHOD.
+	
+	METHOD PROTECTED VOID AddProcedureParameter(INPUT parm AS OEMock.Reflection.BaseParameter):
+	    
+	    DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
+	    
+	    IF THIS-OBJECT:File:GetClass():IsA("OEMock.Reflection.ProcedureFile") THEN
+	    DO:
+	        procFile = DYNAMIC-CAST(THIS-OBJECT:File, THIS-OBJECT:File:GetClass():TypeName).
+	        procFile:Parameters:AddParameter(parm).
+	    END.
+	    
+	END METHOD.
+	
+	METHOD PUBLIC VOID AddProcedureParameter(INPUT paramType AS CHARACTER, INPUT nam AS CHARACTER, INPUT dType AS CHARACTER):
+	    DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+	    
+	    ASSIGN paramType = TRIM(paramType).
+	    
+	    IF paramType NE "INPUT" AND paramType NE "INPUT-OUTPUT" AND paramType NE "OUTPUT" THEN
+	       RETURN.
+
+	    parm = NEW PrimitiveParameter(INPUT nam, INPUT dType).
+	    parm:ParameterType = paramType.
+	    
+	    AddProcedureParameter(parm).
+	END METHOD.
+	
+	METHOD PUBLIC VOID AddProcedureBufferParameter(INPUT nam AS CHARACTER, INPUT tabl AS CHARACTER):
+        DEFINE VARIABLE parm AS BufferParameter NO-UNDO.
+        
+        parm = NEW BufferParameter(INPUT nam, INPUT tabl).
+        
+        AddProcedureParameter(parm).
+	END METHOD.
+    
+    METHOD PUBLIC VOID AddProcedureDataSetParameter(INPUT nam AS CHARACTER):
+        DEFINE VARIABLE parm AS DataSetParameter NO-UNDO.
+        
+        parm = NEW DataSetParameter(INPUT nam).
+        
+        AddProcedureParameter(parm).
+    END METHOD.
 
 END CLASS.
