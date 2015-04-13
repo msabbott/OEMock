@@ -25,7 +25,7 @@ A number of examples are provided with OEMock, and are held in the Examples/ dir
 
 Documentation
 -------------
-Documentation for OEMock can be found in the project's [Wiki pages](wiki/Home). The following documentation is available:
+Documentation for OEMock can be found in the project's [Wiki pages](../../wiki). The following documentation is available:
 * Requirements and Dependencies
 * Installation Instructions
 * Class/Interface References
