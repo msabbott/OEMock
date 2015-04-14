@@ -28,6 +28,7 @@ CLASS OEMock.Tests.Reflection.AllTests INHERITS TestSuite:
     AddTest(NEW DataSetListTester()).
     AddTest(NEW DataSetParameterTester()).
     AddTest(NEW TempTableTester()).
+    AddTest(NEW TempTableListTester()).
   END CONSTRUCTOR.
 
 END CLASS.
