@@ -12,6 +12,18 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 CLASS OEMock.Tests.Reflection.TempTableTester:
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesFields():
+        
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        ttab = NEW OEMock.Reflection.TempTable("ttTempTable").
+        
+        Assert:IsTrue(VALID-OBJECT(ttab:Fields)).
+        
+        IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsName():
         
         DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
@@ -145,7 +157,7 @@ CLASS OEMock.Tests.Reflection.TempTableTester:
         
         gen = ttab:Generate().
         
-        AssertString:Contains(gen, " NAMESPACE-PREFIX ~"MyNameSpacePrefix~" ").
+        AssertString:Contains(gen, " NAMESPACE-PREFIX ~"MyNameSpacePrefix~"").
         
         IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
     END METHOD.
@@ -160,8 +172,25 @@ CLASS OEMock.Tests.Reflection.TempTableTester:
         ttab:NamespaceURI = "MyNameSpaceURI".
         
         gen = ttab:Generate().
-       
-        AssertString:Contains(gen, " NAMESPACE-URI ~"MyNameSpaceURI~" ").
+
+        AssertString:Contains(gen, " NAMESPACE-URI ~"MyNameSpaceURI~"").
+        
+        IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesFields():
+        
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        ttab = NEW OEMock.Reflection.TempTable("ttTempTable").
+        ttab:Fields:AddTempTableField(NEW OEMock.Reflection.TempTableField("Field1", "CHARACTER")).
+        
+        gen = ttab:Generate().
+
+        AssertString:Contains(gen, "FIELD Field1 AS CHARACTER").
         
         IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
     END METHOD.

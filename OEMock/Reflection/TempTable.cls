@@ -4,10 +4,16 @@
   ----------------------------------------------------------------------*/
 
 USING Progress.Lang.*.
+USING OEMock.Reflection.TempTableField.
+USING OEMock.Reflection.TempTableFieldList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Reflection.TempTable:
+    
+    DEFINE PUBLIC PROPERTY Fields AS OEMock.Reflection.TempTableFieldList NO-UNDO
+    GET.
+    PROTECTED SET.
         
     DEFINE PUBLIC PROPERTY Name AS CHARACTER NO-UNDO 
     GET.
@@ -32,7 +38,8 @@ CLASS OEMock.Reflection.TempTable:
     CONSTRUCTOR PUBLIC TempTable(INPUT nam AS CHARACTER):
         SUPER().
         
-        ASSIGN Name               = nam
+        ASSIGN THIS-OBJECT:Fields = NEW TempTableFieldList()
+               Name               = nam
                NamespacePrefix    = ""
                NamespaceURI       = ""
                NoUndo             = TRUE
@@ -40,11 +47,13 @@ CLASS OEMock.Reflection.TempTable:
     END CONSTRUCTOR.
 
     DESTRUCTOR PUBLIC TempTable():
+        IF VALID-OBJECT(THIS-OBJECT:Fields) THEN DELETE OBJECT THIS-OBJECT:Fields.
     END DESTRUCTOR.
     
     METHOD PUBLIC LONGCHAR Generate():
         
-        DEFINE VARIABLE res AS LONGCHAR        NO-UNDO.
+        DEFINE VARIABLE res AS LONGCHAR       NO-UNDO.
+        DEFINE VARIABLE fld AS TempTableField NO-UNDO.
         
         res = SUBSTITUTE("DEFINE &2TEMP-TABLE &3&4&5&6&1",
                          CHR(10),
@@ -53,9 +62,18 @@ CLASS OEMock.Reflection.TempTable:
                          (IF NoUndo THEN " NO-UNDO " ELSE ""),
                          (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE ""),
                          (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "")).
+
+        /* Build field list */
+        fld = THIS-OBJECT:Fields:MoveFirst().
+        DO WHILE(VALID-OBJECT(fld)):
+            res = res + " " + fld:Generate().
+            fld = THIS-OBJECT:Fields:MoveNext().
+        END.
+
+        /* Trim contents and add ending fullstop */
+        ASSIGN res = TRIM(TRIM(res),".") + ".".
+                                 
         RETURN res.
     END METHOD.
     
-    
-
 END CLASS.
