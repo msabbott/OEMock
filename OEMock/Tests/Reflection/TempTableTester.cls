@@ -24,6 +24,18 @@ CLASS OEMock.Tests.Reflection.TempTableTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesIndexes():
+        
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        ttab = NEW OEMock.Reflection.TempTable("ttTempTable").
+        
+        Assert:IsTrue(VALID-OBJECT(ttab:Indexes)).
+        
+        IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsName():
         
         DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
@@ -191,6 +203,23 @@ CLASS OEMock.Tests.Reflection.TempTableTester:
         gen = ttab:Generate().
 
         AssertString:Contains(gen, "FIELD Field1 AS CHARACTER").
+        
+        IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesIndexes():
+        
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableIndex NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                  NO-UNDO.
+        
+        ttab = NEW OEMock.Reflection.TempTable("ttTempTable").
+        ttab:Indexes:AddTempTableIndex(NEW OEMock.Reflection.TempTableIndex("Index1")).
+        
+        gen = ttab:Generate().
+
+        AssertString:Contains(gen, "INDEX Index1").
         
         IF VALID-OBJECT(ttab) THEN DELETE OBJECT ttab.
     END METHOD.
