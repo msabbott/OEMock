@@ -9,6 +9,7 @@ USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Util.StringList.
 USING OEMock.Reflection.DataSetList.
+USING OEMock.Reflection.TempTableList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -50,6 +51,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
             RETURN ?.
     END GET.
 
+    DEFINE PUBLIC PROPERTY TempTables AS OEMock.Reflection.TempTableList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
     DEFINE PUBLIC PROPERTY TypeName AS CHARACTER NO-UNDO 
     GET():
         IF VALID-OBJECT(ClassRef) THEN
@@ -70,6 +75,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         Generators   = NEW GeneratorList().
         Interfaces   = NEW StringList().
         DataSets     = NEW DataSetList().
+        TempTables   = NEW TempTableList().
              
     END CONSTRUCTOR.
 
@@ -80,6 +86,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         IF VALID-OBJECT(Generators)   THEN DELETE OBJECT Generators.
         IF VALID-OBJECT(Interfaces)   THEN DELETE OBJECT Interfaces.
         IF VALID-OBJECT(DataSets)     THEN DELETE OBJECT DataSets.
+        IF VALID-OBJECT(TempTables)   THEN DELETE OBJECT TempTables.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateClass():
@@ -90,15 +97,35 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                               + "&1&6"
                               + "&1&7"
                               + "&1&8"
+                              + "&1&9"
                               + "&1END CLASS.&1",
                                 CHR(10) + CHR(13),
                                 IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 GenerateInterfaces(),
+                                GenerateTempTables(),
                                 GenerateDataSets(),
                                 GenerateConstructors(),
                                 GenerateMethods(),
                                 Generators:Generate()).
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateTempTables():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        /* Loop through datasets */
+        ttab = TempTables:MoveFirst().
+        DO WHILE VALID-OBJECT(ttab):
+            ASSIGN res  = res + ttab:Generate()
+                        + CHR(10) + CHR(13)
+                   ttab = TempTables:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
         RETURN res.
     END METHOD.
     
