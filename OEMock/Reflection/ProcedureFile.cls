@@ -9,6 +9,7 @@ USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Reflection.DataSetList.
 USING OEMock.Reflection.ParameterList.
+USING OEMock.Reflection.TempTableList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -34,6 +35,10 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
     GET.
     PROTECTED SET. 
 
+    DEFINE PUBLIC PROPERTY TempTables AS OEMock.Reflection.TempTableList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
 	CONSTRUCTOR PUBLIC ProcedureFile(INPUT fname AS CHARACTER):
 		SUPER(INPUT fname).
 		
@@ -43,6 +48,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 		Procedures = NEW MethodList().
 		Generators = NEW GeneratorList().
 		Parameters = NEW ParameterList().
+        TempTables = NEW TempTableList().
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC ProcedureFile():
@@ -51,14 +57,16 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	    IF VALID-OBJECT(Procedures) THEN DELETE OBJECT Procedures.
         IF VALID-OBJECT(Generators) THEN DELETE OBJECT Generators.
         IF VALID-OBJECT(Parameters) THEN DELETE OBJECT Parameters.
+        IF VALID-OBJECT(TempTables) THEN DELETE OBJECT TempTables.
 	END DESTRUCTOR.
 	
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8",
+	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8&1&9",
 	                            CHR(10) + CHR(13),
 	                            GenerateUsing(),
+                                GenerateTempTables(),
 	                            GenerateDataSets(),
 	                            GenerateParameters(),
 	                            GenerateFunctionForwards(),
@@ -68,6 +76,24 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 
         RETURN res.
 	END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateTempTables():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        /* Loop through datasets */
+        ttab = TempTables:MoveFirst().
+        DO WHILE VALID-OBJECT(ttab):
+            ASSIGN res  = res + ttab:Generate()
+                        + CHR(10) + CHR(13)
+                   ttab = TempTables:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
     
     METHOD PROTECTED LONGCHAR GenerateDataSets():
         DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.

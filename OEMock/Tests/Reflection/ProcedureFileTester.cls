@@ -78,6 +78,17 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesTempTableList():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        
+        Assert:IsTrue(VALID-OBJECT(procfile:TempTables)).
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateCreatesUsingStatements():
         DEFINE VARIABLE procFile AS ProcedureFile NO-UNDO.
         
@@ -150,6 +161,20 @@ CLASS OEMock.Tests.Reflection.ProcedureFileTester:
         
         outp = procfile:Generate().
         AssertString:Contains(outp, "DEFINE INPUT PARAMETER ParamName AS CHARACTER NO-UNDO."). 
+        
+        IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesTempTables():
+        DEFINE VARIABLE procfile AS ProcedureFile NO-UNDO.
+        DEFINE VARIABLE outp     AS LONGCHAR NO-UNDO.
+        
+        procfile = NEW ProcedureFile("FileName").
+        procfile:TempTables:AddTempTable(NEW OEMock.Reflection.TempTable('ttName')).
+        
+        outp = procfile:Generate().
+        AssertString:Contains(outp, "DEFINE TEMP-TABLE ttName"). 
         
         IF VALID-OBJECT(procfile) THEN DELETE OBJECT procfile.
     END METHOD.
