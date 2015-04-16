@@ -12,6 +12,18 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 CLASS OEMock.Tests.Reflection.TempTableIndexTester: 
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesFields():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableIndex NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableIndex("FieldName").
+        
+        Assert:IsTrue(VALID-OBJECT(tfld:Fields)).
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsName():
         
         DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableIndex NO-UNDO.
@@ -121,6 +133,22 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         tfld:WordIndex = TRUE.
         
         AssertString:Contains(tfld:Generate(), "INDEX FieldName IS PRIMARY UNIQUE WORD-INDEX ").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesIndexes():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableIndex NO-UNDO.
+        DEFINE VARIABLE gen  AS LONGCHAR                         NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableIndex("Index").
+        tfld:Fields:AddTempTableIndexField(NEW OEMock.Reflection.TempTableIndexField("Field1")).
+        
+        gen = tfld:Generate().
+
+        AssertString:Contains(gen, "Field1 ASCENDING").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
