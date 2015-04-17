@@ -21,13 +21,22 @@ CLASS OEMock.Tests.Reflection.BaseFileTester:
     
     @Test.
     METHOD PUBLIC VOID ConstructorCreatesUsingList():
-        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        DEFINE VARIABLE fil AS BaseFile NO-UNDO.
+        fil = NEW BaseFile('filename').
         
-        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        Assert:IsTrue(VALID-OBJECT(fil:UsingList)).
         
-        Assert:IsTrue(VALID-OBJECT(clsfile:UsingList)).
+        IF VALID-OBJECT(fil) THEN DELETE OBJECT fil.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID ConstructorCreatesTempTableList():
+        DEFINE VARIABLE fil AS BaseFile NO-UNDO.
+        fil = NEW BaseFile('filename').
         
-        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+        Assert:IsTrue(VALID-OBJECT(fil:TempTables)).
+        
+        IF VALID-OBJECT(fil) THEN DELETE OBJECT fil.
     END METHOD.
     
     @Test.

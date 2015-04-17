@@ -9,7 +9,6 @@ USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Reflection.DataSetList.
 USING OEMock.Reflection.ParameterList.
-USING OEMock.Reflection.TempTableList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -33,11 +32,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 
     DEFINE PUBLIC PROPERTY Procedures AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
-    PROTECTED SET. 
-
-    DEFINE PUBLIC PROPERTY TempTables AS OEMock.Reflection.TempTableList NO-UNDO 
-    GET.
-    PROTECTED SET. 
+    PROTECTED SET.
 
 	CONSTRUCTOR PUBLIC ProcedureFile(INPUT fname AS CHARACTER):
 		SUPER(INPUT fname).
@@ -48,7 +43,6 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 		Procedures = NEW MethodList().
 		Generators = NEW GeneratorList().
 		Parameters = NEW ParameterList().
-        TempTables = NEW TempTableList().
 	END CONSTRUCTOR.
 
 	DESTRUCTOR PUBLIC ProcedureFile():
@@ -57,7 +51,6 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	    IF VALID-OBJECT(Procedures) THEN DELETE OBJECT Procedures.
         IF VALID-OBJECT(Generators) THEN DELETE OBJECT Generators.
         IF VALID-OBJECT(Parameters) THEN DELETE OBJECT Parameters.
-        IF VALID-OBJECT(TempTables) THEN DELETE OBJECT TempTables.
 	END DESTRUCTOR.
 	
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():

@@ -5,6 +5,7 @@
 
 USING Progress.Lang.*.
 USING OEMock.Util.StringList.
+USING OEMock.Reflection.TempTableList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -20,16 +21,22 @@ CLASS OEMock.Reflection.BaseFile:
 
     DEFINE PUBLIC PROPERTY UsingList AS OEMock.Util.StringList NO-UNDO 
     GET.
+    PROTECTED SET.  
+
+    DEFINE PUBLIC PROPERTY TempTables AS OEMock.Reflection.TempTableList NO-UNDO 
+    GET.
     PROTECTED SET. 
 	
 	CONSTRUCTOR BaseFile(INPUT fname AS CHARACTER):
 	    SUPER().
 	    ASSIGN FileName  = fname.
                UsingList = NEW StringList(). 
+               TempTables = NEW TempTableList().
     END CONSTRUCTOR. 
     
     DESTRUCTOR BaseFile():
         IF VALID-OBJECT(UsingList) THEN DELETE OBJECT UsingList.
+        IF VALID-OBJECT(TempTables) THEN DELETE OBJECT TempTables.
     END DESTRUCTOR.
     
     METHOD PUBLIC LONGCHAR Generate():
