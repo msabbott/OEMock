@@ -162,10 +162,10 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
         
         DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
         
-        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
-        tfld:INITIAL = "'Initial Value'".
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "INTEGER").
+        tfld:INITIAL = "5".
         
-        AssertString:Contains(tfld:Generate(), "INITIAL 'Initial Value'").
+        AssertString:Contains(tfld:Generate(), "INITIAL 5").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
@@ -246,6 +246,32 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
         tfld:XMLNodeName = "XMLNodeName".
         
         AssertString:Contains(tfld:Generate(), "XML-NODE-NAME ~"XMLNodeName~"").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateQuotesStringInitials():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
+        tfld:Initial = "InitialValue".
+        
+        AssertString:Contains(tfld:Generate(), "INITIAL ~"InitialValue~"").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateDoesNotQuoteNullStringInitials():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
+        tfld:Initial = ?.
+        
+        AssertString:Contains(tfld:Generate(), "INITIAL ?").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.

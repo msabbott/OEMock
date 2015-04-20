@@ -70,7 +70,8 @@ CLASS OEMock.Reflection.TempTableField:
 	END DESTRUCTOR.
 	
 	METHOD PUBLIC LONGCHAR Generate():
-	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
+	    DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+	    DEFINE VARIABLE init AS CHARACTER NO-UNDO.
 	    
 	    ASSIGN res = SUBSTITUTE("FIELD &1 AS &2",
 	                            Name,
@@ -78,9 +79,17 @@ CLASS OEMock.Reflection.TempTableField:
 	    
 	    IF Initial NE "" THEN
 	    DO:
+	        ASSIGN Init = Initial.
+	        
+	        /* Check for values that need to be formatted */
+	        IF (DataType = "CHARACTER" OR DataType = "LONGCHAR") AND Init NE ? THEN
+	        DO:
+	            ASSIGN Init = SUBSTITUTE('"&1"', Init).
+	        END.
+	        
 	        ASSIGN res = SUBSTITUTE("&1 INITIAL &2",
 	                                res,
-	                                Initial).
+	                                Init).
 	    END.
 	    
 	    IF Extent GT 0 AND Extent NE ? THEN
