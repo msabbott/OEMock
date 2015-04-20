@@ -176,5 +176,84 @@ CLASS OEMock.BaseDouble:
         
         AddProcedureParameter(parm).
     END METHOD.
+    
+    METHOD PUBLIC VOID AddTempTable(INPUT ttHandle AS HANDLE):
+        
+        DEFINE VARIABLE ttObject   AS OEMock.Reflection.TempTable NO-UNDO.
+        DEFINE VARIABLE ttField    AS OEMock.Reflection.TempTableField NO-UNDO.
+        DEFINE VARIABLE ttIndex    AS OEMock.Reflection.TempTableIndex NO-UNDO.
+        DEFINE VARIABLE ttIdxField AS OEMock.Reflection.TempTableIndexField NO-UNDO.
+        DEFINE VARIABLE ttBuffer   AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE fieldLoop  AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE bufField   AS HANDLE    NO-UNDO.
+        DEFINE VARIABLE indexLoop  AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE indexData  AS CHARACTER NO-UNDO.
+        DEFINE VARIABLE idxField   AS INTEGER   NO-UNDO.
+        
+        IF NOT VALID-HANDLE(ttHandle) THEN RETURN.
+        
+        /* Set properties on object, and fetch buffer handle */
+        ASSIGN ttObject                 = NEW OEMock.Reflection.TempTable(INPUT ttHandle:NAME)
+               ttObject:NamespacePrefix = ttHandle:NAMESPACE-PREFIX
+               ttObject:NamespaceURI    = ttHandle:NAMESPACE-URI
+               ttObject:NoUndo          = NOT(ttHandle:UNDO)
+               ttBuffer                 = ttHandle:DEFAULT-BUFFER-HANDLE.
+               
+        /* Loop through buffer information to create field list */
+        DO fieldLoop = 1 TO ttBuffer:NUM-FIELDS:
+            
+            ASSIGN bufField = ttBuffer:BUFFER-FIELD(fieldLoop)
+                   ttField  = NEW OEMock.Reflection.TempTableField(INPUT bufField:NAME, INPUT bufField:DATA-TYPE).
+                   
+            /* Set temp-table field properties */
+            ASSIGN ttField:Extent          = bufField:EXTENT
+                   ttField:Initial         = bufField:INITIAL
+                   ttField:SerializeHidden = bufField:SERIALIZE-HIDDEN
+                   ttField:SerializeName   = bufField:SERIALIZE-NAME
+                   ttField:XMLDataType     = bufField:XML-DATA-TYPE
+                   ttField:XMLNodeType     = bufField:XML-NODE-TYPE
+                   ttField:XMLNodeName     = bufField:XML-NODE-NAME.
+
+            ttObject:Fields:AddTempTableField(ttField).
+        END.
+        
+        /* Loop through index information */
+        ASSIGN indexLoop = 1
+               indexData = ttBuffer:INDEX-INFORMATION(indexLoop).
+        
+        indexLoop:
+        DO WHILE(indexData NE ?):
+            
+            /* If the name of the index is 'default' and there are only 5 entries in the list, then
+             * this is the default index, and there were no explicit indexes added to the temp-table
+             */
+            IF ENTRY(1, indexData) = "default" AND NUM-ENTRIES(indexData) = 5 THEN LEAVE indexLoop.
+
+            ASSIGN ttIndex           = NEW OEMock.Reflection.TempTableIndex(ENTRY(1, indexData))
+                   ttIndex:Unique    = (ENTRY(2,indexData) = "1")
+                   ttIndex:Primary   = (ENTRY(3,indexData) = "1")
+                   ttIndex:WordIndex = (ENTRY(4,indexData) = "1").
+            
+            /* Remaining data is field list, following by 0 for ascending, 1 for descending */
+            ASSIGN idxField = 5.
+            indexFieldLoop:
+            DO WHILE(idxField <= NUM-ENTRIES(indexData)):
+                
+                ASSIGN ttIdxField = NEW OEMock.Reflection.TempTableIndexField(ENTRY(idxField, indexData))
+                       ttIdxField:Descending = (ENTRY(idxField + 1, indexData) = "1")
+                       idxField = idxField + 2.
+                       
+                ttIndex:Fields:AddTempTableIndexField(ttIdxField).
+            END.
+            
+            ttObject:Indexes:AddTempTableIndex(ttIndex).
+        
+            ASSIGN indexLoop = indexLoop + 1
+                   indexData = ttBuffer:INDEX-INFORMATION(indexLoop).
+        END.
+        
+        THIS-OBJECT:File:TempTables:AddTempTable(INPUT ttObject).
+               
+    END METHOD.
 
 END CLASS.
