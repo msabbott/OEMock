@@ -50,8 +50,7 @@ CLASS OEMock.Reflection.TempTableIndex:
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    DEFINE VARIABLE fld AS TempTableIndexField NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("INDEX &2 &3&4&5&6&1",
-	                            CHR(13),
+	    ASSIGN res = SUBSTITUTE("INDEX &1 &2&3&4&5",
 	                            Name,
 	                            (IF THIS-OBJECT:Primary OR THIS-OBJECT:Unique OR WordIndex THEN "IS " ELSE ""),
 	                            (IF THIS-OBJECT:Primary THEN "PRIMARY " ELSE ""),
@@ -64,6 +63,8 @@ CLASS OEMock.Reflection.TempTableIndex:
             res = res + " " + fld:Generate().
             fld = THIS-OBJECT:Fields:MoveNext().
         END.
+        
+        ASSIGN res = TRIM(res) + CHR(13).
 	    
 	    RETURN res.
 

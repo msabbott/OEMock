@@ -78,7 +78,7 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         
         tfld = NEW OEMock.Reflection.TempTableIndex("FieldName").
         
-        AssertString:Contains(tfld:Generate(), "INDEX FieldName ").
+        AssertString:Contains(tfld:Generate(), "INDEX FieldName").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
@@ -91,7 +91,7 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         tfld = NEW OEMock.Reflection.TempTableIndex("FieldName").
         tfld:Primary = TRUE.
         
-        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS PRIMARY ").
+        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS PRIMARY").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
@@ -104,7 +104,7 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         tfld = NEW OEMock.Reflection.TempTableIndex("FieldName").
         tfld:Unique = TRUE.
         
-        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS UNIQUE ").
+        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS UNIQUE").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
@@ -117,7 +117,7 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         tfld = NEW OEMock.Reflection.TempTableIndex("FieldName").
         tfld:WordIndex = TRUE.
         
-        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS WORD-INDEX ").
+        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS WORD-INDEX").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
@@ -132,13 +132,13 @@ CLASS OEMock.Tests.Reflection.TempTableIndexTester:
         tfld:Unique    = TRUE.
         tfld:WordIndex = TRUE.
         
-        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS PRIMARY UNIQUE WORD-INDEX ").
+        AssertString:Contains(tfld:Generate(), "INDEX FieldName IS PRIMARY UNIQUE WORD-INDEX").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenerateObservesIndexes():
+    METHOD PUBLIC VOID GenerateObservesIndexFields():
         
         DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableIndex NO-UNDO.
         DEFINE VARIABLE gen  AS LONGCHAR                         NO-UNDO.
