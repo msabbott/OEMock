@@ -90,15 +90,35 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                               + "&1&6"
                               + "&1&7"
                               + "&1&8"
+                              + "&1&9"
                               + "&1END CLASS.&1",
                                 CHR(10) + CHR(13),
                                 IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 GenerateInterfaces(),
+                                GenerateTempTables(),
                                 GenerateDataSets(),
                                 GenerateConstructors(),
                                 GenerateMethods(),
                                 Generators:Generate()).
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateTempTables():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        /* Loop through datasets */
+        ttab = TempTables:MoveFirst().
+        DO WHILE VALID-OBJECT(ttab):
+            ASSIGN res  = res + ttab:Generate()
+                        + CHR(10) + CHR(13)
+                   ttab = TempTables:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
         RETURN res.
     END METHOD.
     

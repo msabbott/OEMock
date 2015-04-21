@@ -15,6 +15,10 @@ CLASS OEMock.Tests.BaseDoubleTester:
     
     DEFINE PROTECTED VARIABLE TestDir AS CHARACTER NO-UNDO INITIAL "tests/".
     
+    /* Basic temp-table used to pass to 'AddTempTable' */
+    DEFINE PROTECTED TEMP-TABLE ttTestTable NO-UNDO
+        FIELD CharField AS CHARACTER.
+    
     @Test.
     METHOD PUBLIC VOID ConstructorSetsFile():
         DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
@@ -165,6 +169,22 @@ CLASS OEMock.Tests.BaseDoubleTester:
         procFile = DYNAMIC-CAST(dbl:File, dbl:File:GetClass():TypeName).
         
         Assert:AreEqual(procFile:Parameters:Count, 1).
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl). 
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID AddTempTableAddsToFileTempTables():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        
+        dbl:AddTempTable(INPUT TEMP-TABLE ttTestTable:HANDLE).
+        
+        Assert:AreEqual(dbl:File:TempTables:Count, 1).
         
         IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
         IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl). 

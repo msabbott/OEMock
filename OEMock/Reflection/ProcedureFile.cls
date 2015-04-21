@@ -32,7 +32,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 
     DEFINE PUBLIC PROPERTY Procedures AS OEMock.Reflection.MethodList NO-UNDO 
     GET.
-    PROTECTED SET. 
+    PROTECTED SET.
 
 	CONSTRUCTOR PUBLIC ProcedureFile(INPUT fname AS CHARACTER):
 		SUPER(INPUT fname).
@@ -56,9 +56,10 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8",
+	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8&1&9",
 	                            CHR(10) + CHR(13),
 	                            GenerateUsing(),
+                                GenerateTempTables(),
 	                            GenerateDataSets(),
 	                            GenerateParameters(),
 	                            GenerateFunctionForwards(),
@@ -68,6 +69,24 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 
         RETURN res.
 	END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateTempTables():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE ttab AS OEMock.Reflection.TempTable NO-UNDO.
+        
+        /* Loop through datasets */
+        ttab = TempTables:MoveFirst().
+        DO WHILE VALID-OBJECT(ttab):
+            ASSIGN res  = res + ttab:Generate()
+                        + CHR(10) + CHR(13)
+                   ttab = TempTables:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
     
     METHOD PROTECTED LONGCHAR GenerateDataSets():
         DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
