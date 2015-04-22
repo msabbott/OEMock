@@ -54,7 +54,7 @@ CLASS OEMock.Reflection.BaseFile:
             DO WHILE (ref NE ? AND ref NE ""):
                 ASSIGN res  = SUBSTITUTE("&1&2USING &3.",
                                          res,
-                                         CHR(10) + CHR(13),
+                                         CHR(13),
                                          IF INDEX(ref, " ") > 0 THEN '"' + ref + '"' ELSE ref).
                        ref = UsingList:MoveNext().
             END.
@@ -70,7 +70,7 @@ CLASS OEMock.Reflection.BaseFile:
         AND INDEX(res, "USING Progress.Lang.Object.") = 0 THEN
         DO:
             ASSIGN res = SUBSTITUTE("USING Progress.Lang.*.&1&2",
-                                    CHR(10) + CHR(13),
+                                    CHR(13),
                                     res).
         END.
         

@@ -75,8 +75,8 @@ CLASS OEMock.Tests.Reflection.ProcedureTester:
         
         outp = meth:Generate().
         AssertString:Contains(outp, 'PROCEDURE ProcName :'
-                                    + CHR(10) + CHR(13) + "DEFINE INPUT PARAMETER Param1 AS CHARACTER NO-UNDO."
-                                    + CHR(10) + CHR(13) + "DEFINE INPUT PARAMETER Param2 AS CHARACTER NO-UNDO.").
+                                    + CHR(13) + "DEFINE INPUT PARAMETER Param1 AS CHARACTER NO-UNDO."
+                                    + CHR(13) + "DEFINE INPUT PARAMETER Param2 AS CHARACTER NO-UNDO.").
         AssertString:Contains(outp, "END PROCEDURE.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.

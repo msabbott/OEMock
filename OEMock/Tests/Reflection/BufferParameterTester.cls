@@ -39,7 +39,7 @@ CLASS OEMock.Tests.Reflection.BufferParameterTester:
         
         parm = NEW BufferParameter('ParamName', 'TableName').
         
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(10) + CHR(13) + 'DEFINE PARAMETER BUFFER ParamName FOR TableName.').
+        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE PARAMETER BUFFER ParamName FOR TableName.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -90,7 +90,7 @@ CLASS OEMock.Tests.Reflection.BufferParameterTester:
         
         parm = NEW BufferParameter('ParamName', 'TableName').
         
-        Assert:AreEqual(parm:Generate(), CHR(10) + CHR(13) + 'BUFFER ParamName FOR TableName,').
+        Assert:AreEqual(parm:Generate(), CHR(13) + 'BUFFER ParamName FOR TableName,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.

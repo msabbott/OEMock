@@ -31,12 +31,11 @@ CLASS OEMock.Reflection.Function INHERITS ReturningMethod:
                                      
             ASSIGN func = SUBSTITUTE("&1&2&3&2",
                                      func,
-                                     CHR(10) + CHR(13),
+                                     CHR(13),
                                      Generators:Generate()).
                                      
-            ASSIGN func = SUBSTITUTE("&1&2&3END FUNCTION.",
+            ASSIGN func = SUBSTITUTE("&1&2END FUNCTION.",
                                      func,
-                                     CHR(10),
                                      CHR(13)).
         END.
         

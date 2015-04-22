@@ -92,7 +92,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                               + "&1&8"
                               + "&1&9"
                               + "&1END CLASS.&1",
-                                CHR(10) + CHR(13),
+                                CHR(13),
                                 IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
                                 GenerateInterfaces(),
@@ -112,7 +112,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         ttab = TempTables:MoveFirst().
         DO WHILE VALID-OBJECT(ttab):
             ASSIGN res  = res + ttab:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    ttab = TempTables:MoveNext().
         END.
         
@@ -130,7 +130,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         dset = DataSets:MoveFirst().
         DO WHILE VALID-OBJECT(dset):
             ASSIGN res  = res + dset:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    dset = DataSets:MoveNext().
         END.
         
@@ -148,7 +148,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         meth = Constructors:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    meth = Constructors:MoveNext().
         END.
         
@@ -166,7 +166,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         meth = Methods:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    meth = Methods:MoveNext().
         END.
         
@@ -205,7 +205,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
         ASSIGN res = SUBSTITUTE("&2&1&3",
-                                CHR(10) + CHR(13),
+                                CHR(13),
                                 GenerateUsing(),
                                 GenerateClass()).
 

@@ -96,7 +96,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
                 DO:
                     res = SUBSTITUTE("&1&2&3 = &4",
                                      res,
-                                     CHR(10) + CHR(13),
+                                     CHR(13),
                                      parm:Name,
                                      ParameterOutputValues:GetValue(parm:Name)).
                 END.
@@ -108,7 +108,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             IF res NE ? AND res NE "" THEN
                 ASSIGN res = SUBSTITUTE("ASSIGN &1.&2",
                                         res,
-                                        CHR(10) + CHR(13)).
+                                        CHR(13)).
         END.
         
         /* Sanity check output */
@@ -120,7 +120,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
         RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
-                               CHR(10) + CHR(13),
+                               CHR(13),
                                GenerateVariableDefinitions(),
                                GenerateParameterAssignment(),
                                GenerateAdditionalContents())).
@@ -128,7 +128,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
         RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
-                               CHR(10) + CHR(13),
+                               CHR(13),
                                GenerateVariableDefinitions(),
                                GenerateParameterAssignment(),
                                GenerateProceduralAdditionalContents())).

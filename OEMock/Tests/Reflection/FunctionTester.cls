@@ -188,8 +188,8 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
         
         outp = meth:Generate().
         AssertString:Contains(outp, 'FUNCTION TestFunction RETURNS CHARACTER ('
-                                    + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                    + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER):").
+                                    + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                    + CHR(13) + "INPUT Param2 AS CHARACTER):").
                                          
         AssertString:Contains(outp, "END FUNCTION.").
 
@@ -211,8 +211,8 @@ CLASS OEMock.Tests.Reflection.FunctionTester:
         Assert:AreEqual(meth:Parameters:Count, 2).
         
         Assert:AreEqual(meth:GenerateForward(), 'FUNCTION TestFunction RETURNS CHARACTER ('
-                                                + CHR(10) + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                                + CHR(10) + CHR(13) + "INPUT Param2 AS CHARACTER) FORWARD.").
+                                                + CHR(13) + "INPUT Param1 AS CHARACTER,"
+                                                + CHR(13) + "INPUT Param2 AS CHARACTER) FORWARD.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.

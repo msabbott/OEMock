@@ -57,7 +57,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
 	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8&1&9",
-	                            CHR(10) + CHR(13),
+	                            CHR(13),
 	                            GenerateUsing(),
                                 GenerateTempTables(),
 	                            GenerateDataSets(),
@@ -78,7 +78,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         ttab = TempTables:MoveFirst().
         DO WHILE VALID-OBJECT(ttab):
             ASSIGN res  = res + ttab:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    ttab = TempTables:MoveNext().
         END.
         
@@ -96,7 +96,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         dset = DataSets:MoveFirst().
         DO WHILE VALID-OBJECT(dset):
             ASSIGN res  = res + dset:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    dset = DataSets:MoveNext().
         END.
         
@@ -129,7 +129,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         DO WHILE VALID-OBJECT(meth):
             IF meth:RequireForward THEN
                 ASSIGN res = res + meth:GenerateForward()
-                           + CHR(10) + CHR(13).
+                           + CHR(13).
             ASSIGN meth = Functions:MoveNext().
         END.
         
@@ -147,7 +147,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         meth = Procedures:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(10) + CHR(13)
+                        + CHR(13)
                    meth = Procedures:MoveNext().
         END.
         
@@ -165,7 +165,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         meth = Functions:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                              + CHR(10) + CHR(13)
+                              + CHR(13)
                    meth = Functions:MoveNext().
         END.
         

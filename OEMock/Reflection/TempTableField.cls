@@ -136,7 +136,7 @@ CLASS OEMock.Reflection.TempTableField:
         END.
 	    
 	    /* Ensure appropriate spacing between this statement and the next */
-	    ASSIGN res = res + CHR(10).
+	    ASSIGN res = res + CHR(13).
 	    
 	    RETURN res.
 	END METHOD.

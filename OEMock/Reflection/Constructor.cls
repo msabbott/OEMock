@@ -32,9 +32,8 @@ CLASS OEMock.Reflection.Constructor INHERITS BaseMethod:
                                        Name,
                                        GenerateParameters()).
                                      
-            ASSIGN constr = SUBSTITUTE("&1&2&3END CONSTRUCTOR.",
+            ASSIGN constr = SUBSTITUTE("&1&2END CONSTRUCTOR.",
                                        constr,
-                                       CHR(10),
                                        CHR(13)).
         END.
         

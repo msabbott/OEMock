@@ -53,7 +53,7 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
         ASSIGN res = SUBSTITUTE("&1&2&1&3&1RETURN &4.&1",
-                                CHR(10) + CHR(13),
+                                CHR(13),
                                 SUPER:Generate(),
                                 (IF UseReturnValue THEN SUBSTITUTE("ASSIGN res = &1.", ReturnValue) ELSE ""),
                                 (IF VALID-OBJECT(ReturningMethod) 

@@ -61,7 +61,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(10) + CHR(13) + 'DEFINE INPUT PARAMETER ParamName AS CHARACTER NO-UNDO.').
+        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE INPUT PARAMETER ParamName AS CHARACTER NO-UNDO.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -72,7 +72,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         parm:AddNoUndo = FALSE.
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(10) + CHR(13) + 'DEFINE INPUT PARAMETER ParamName AS CHARACTER .').
+        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE INPUT PARAMETER ParamName AS CHARACTER .').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -83,7 +83,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(10) + CHR(13) + 'DEFINE OUTPUT PARAMETER ParamName AS CHARACTER NO-UNDO.').
+        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE OUTPUT PARAMETER ParamName AS CHARACTER NO-UNDO.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -156,7 +156,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         
-        Assert:AreEqual(parm:Generate(), CHR(10) + CHR(13) + 'INPUT ParamName AS CHARACTER,').
+        Assert:AreEqual(parm:Generate(), CHR(13) + 'INPUT ParamName AS CHARACTER,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -167,7 +167,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         parm:AddNoUndo = FALSE.
-        Assert:AreEqual(parm:Generate(), CHR(10) + CHR(13) + 'INPUT ParamName AS CHARACTER,').
+        Assert:AreEqual(parm:Generate(), CHR(13) + 'INPUT ParamName AS CHARACTER,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -178,7 +178,7 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         parm = NEW PrimitiveParameter('ParamName', 'CHARACTER').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:Generate(), CHR(10) + CHR(13) + 'OUTPUT ParamName AS CHARACTER,').
+        Assert:AreEqual(parm:Generate(), CHR(13) + 'OUTPUT ParamName AS CHARACTER,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.

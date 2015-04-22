@@ -65,7 +65,7 @@ CLASS OEMock.Reflection.TempTable:
         DEFINE VARIABLE idx AS TempTableIndex NO-UNDO.
         
         res = SUBSTITUTE("DEFINE &2TEMP-TABLE &3&4&5&6&1",
-                         CHR(10),
+                         CHR(13),
                          (IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
                          NAME,
                          (IF NoUndo THEN " NO-UNDO " ELSE ""),
