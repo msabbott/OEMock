@@ -36,6 +36,7 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
         DEFINE VARIABLE Const      AS CONSTRUCTOR NO-UNDO.
         
         DEFINE VARIABLE DSet       AS OEMock.Reflection.DataSet NO-UNDO.
+        DEFINE VARIABLE evnt       AS OEMock.Reflection.Event   NO-UNDO.
         
         CREATE X-NODEREF hNode.
         CREATE X-NODEREF hChildNode.
@@ -107,6 +108,38 @@ CLASS OEMock.Inspection.ClassInspector INHERITS BaseInspector:
 
                 /* If valid object, then add to list of DataSets */
                 IF VALID-OBJECT(DSet) THEN BuiltClass:DataSets:AddDataSet(DSet).
+            END.
+            
+            WHEN "EVENT" THEN
+            DO:
+                evnt = NEW Event(objId).
+                DO iNode = 1 TO hRefNode:NUM-CHILDREN:
+                    hRefNode:GET-CHILD(hNode, iNode).
+                    IF hNode:SUBTYPE NE "ELEMENT" THEN NEXT.
+                    CASE hNode:NAME:
+                        WHEN "Is-static" THEN
+                        DO:
+                            hNode:NORMALIZE().
+                            ASSIGN evnt:Static = (ExtractTextValue(hNode) = "true").
+                        END.
+                        WHEN "Is-abstract" THEN
+                        DO:
+                            hNode:NORMALIZE().
+                            ASSIGN evnt:Abstract = (ExtractTextValue(hNode) = "true").
+                        END.
+                        WHEN "Object-Context" THEN
+                        DO:
+                            list = ExtractTextValue(hNode).
+                            ASSIGN evnt:Override = (list MATCHES "*OVERRIDE*").
+                        END.
+                        WHEN "Parameter-ref" THEN
+                        DO:
+                            evnt:Parameters:AddParameter(CreateParameter(hNode)).
+                        END.
+                    END CASE.
+                END.
+
+                BuiltClass:Events:AddEvent(evnt).
             END.
             
             WHEN "METHOD" THEN
