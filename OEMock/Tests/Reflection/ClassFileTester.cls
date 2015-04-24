@@ -89,6 +89,17 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID ConstructorCreatesEventsList():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        
+        Assert:IsTrue(VALID-OBJECT(clsfile:Events)).
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID ConstructorSetsTypeName():
         DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
         
@@ -243,6 +254,20 @@ CLASS OEMock.Tests.Reflection.ClassFileTester:
         
         outp = clsfile:Generate().
         AssertString:Contains(outp, "DEFINE DATASET dsName"). 
+        
+        IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesEvents():
+        DEFINE VARIABLE clsfile AS ClassFile NO-UNDO.
+        DEFINE VARIABLE outp    AS LONGCHAR  NO-UNDO.
+        
+        clsfile = NEW ClassFile("FileName", "OEMock.Tests.Util.ListObject").
+        clsfile:Events:AddEvent(NEW OEMock.Reflection.Event('EventName')).
+        
+        outp = clsfile:Generate().
+        AssertString:Contains(outp, "DEFINE PUBLIC EVENT EventName SIGNATURE VOID"). 
         
         IF VALID-OBJECT(clsfile) THEN DELETE OBJECT clsfile.
     END METHOD.

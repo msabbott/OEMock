@@ -9,6 +9,7 @@ USING OEMock.Reflection.MethodList.
 USING OEMock.Generation.GeneratorList.
 USING OEMock.Util.StringList.
 USING OEMock.Reflection.DataSetList.
+USING OEMock.Reflection.EventList.
 
 ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
@@ -23,6 +24,10 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     PROTECTED SET. 
 
     DEFINE PUBLIC PROPERTY DataSets AS OEMock.Reflection.DataSetList NO-UNDO 
+    GET.
+    PROTECTED SET. 
+
+    DEFINE PUBLIC PROPERTY Events AS OEMock.Reflection.EventList NO-UNDO 
     GET.
     PROTECTED SET. 
 
@@ -70,6 +75,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         Generators   = NEW GeneratorList().
         Interfaces   = NEW StringList().
         DataSets     = NEW DataSetList().
+        Events       = NEW EventList().
              
     END CONSTRUCTOR.
 
@@ -80,18 +86,21 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         IF VALID-OBJECT(Generators)   THEN DELETE OBJECT Generators.
         IF VALID-OBJECT(Interfaces)   THEN DELETE OBJECT Interfaces.
         IF VALID-OBJECT(DataSets)     THEN DELETE OBJECT DataSets.
+        IF VALID-OBJECT(Events)       THEN DELETE OBJECT Events.
     END DESTRUCTOR.
     
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
+        /* Substitute will take a maximum of 9 items to replace, therefore this
+         * has had to be split into separate statements.
+         */
         ASSIGN res = SUBSTITUTE("CLASS &2 &3&4:"
                               + "&1&5"
                               + "&1&6"
                               + "&1&7"
                               + "&1&8"
-                              + "&1&9"
-                              + "&1END CLASS.&1",
+                              + "&1&9",
                                 CHR(13),
                                 IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
                                 (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
@@ -101,6 +110,13 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
                                 GenerateConstructors(),
                                 GenerateMethods(),
                                 Generators:Generate()).
+                                
+        ASSIGN res = SUBSTITUTE("&2&1&3"
+                              + "&1END CLASS.&1",
+                                CHR(13),
+                                res,
+                                GenerateEvents()).
+                              
         RETURN res.
     END METHOD.
     
@@ -132,6 +148,24 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
             ASSIGN res  = res + dset:Generate()
                         + CHR(13)
                    dset = DataSets:MoveNext().
+        END.
+        
+        /* Sanity check output */
+        IF res = ? THEN res = "".
+
+        RETURN res.
+    END METHOD.
+    
+    METHOD PROTECTED LONGCHAR GenerateEvents():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
+        DEFINE VARIABLE evnt AS OEMock.Reflection.Event NO-UNDO.
+        
+        /* Loop through datasets */
+        evnt = Events:MoveFirst().
+        DO WHILE VALID-OBJECT(evnt):
+            ASSIGN res  = res + evnt:Generate()
+                        + CHR(13)
+                   evnt = Events:MoveNext().
         END.
         
         /* Sanity check output */
