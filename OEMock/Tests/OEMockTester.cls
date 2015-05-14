@@ -11,6 +11,16 @@ ROUTINE-LEVEL ON ERROR UNDO, THROW.
 
 CLASS OEMock.Tests.OEMockTester:
     
+    DEFINE PROTECTED TEMP-TABLE ttTempTable NO-UNDO
+        FIELD KeyField AS INTEGER
+        INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING.
+    
+    DEFINE PROTECTED TEMP-TABLE ttChildTable NO-UNDO
+        FIELD KeyField AS INTEGER
+        FIELD ChildField AS CHARACTER
+        FIELD DataField  AS CHARACTER
+        INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING ChildField ASCENDING.
+    
     @Before.
     METHOD PUBLIC VOID ResetDebugMode():
         OEMock:DebugMode = FALSE.
@@ -265,6 +275,8 @@ CLASS OEMock.Tests.OEMockTester:
         DEFINE VARIABLE hProc AS HANDLE NO-UNDO.
 
         mck = OEMock:MockProcedure(procName).
+        mck:AddTempTable(TEMP-TABLE ttTempTable:HANDLE).
+        mck:AddTempTable(TEMP-TABLE ttChildTable:HANDLE).
         mck:Generate().
 
         RUN VALUE(procName) PERSISTENT SET hProc.
