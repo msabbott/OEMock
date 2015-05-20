@@ -29,7 +29,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         
         gen = NEW BaseMethodGenerator().
         
-        Assert:AreEqual(gen:Generate(), "").
+        Assert:AreEqual(TRIM(gen:Generate()), "").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
@@ -40,7 +40,7 @@ CLASS OEMock.Tests.Generation.BaseMethodGeneratorTester:
         
         gen = NEW BaseMethodGenerator().
         
-        Assert:AreEqual(gen:GenerateProcedural(), "").
+        Assert:AreEqual(TRIM(gen:GenerateProcedural()), "").
         
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
     END METHOD.
