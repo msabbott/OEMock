@@ -41,5 +41,28 @@ CLASS OEMock.Generation.MockProcedureGenerator INHERITS ProcedureGenerator:
         
         RETURN res.
     END METHOD.
+    
+    METHOD OVERRIDE PROTECTED LONGCHAR GenerateProceduralAdditionalContents():
+        DEFINE VARIABLE res  AS LONGCHAR NO-UNDO INITIAL "".
+        DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
+        
+        res = SUPER:GenerateProceduralAdditionalContents() + "~n".
+        
+        IF res = ? THEN res = "".
+        
+        ASSIGN res = res
+                   + "DEFINE VARIABLE OEMockRegisterMethodCallNo AS INTEGER NO-UNDO.~n"
+                   + "OEMockRegisterMethodCallNo = OEMockRegister:RegisterMethodCall('" + Procedure:NAME + "').~n".
+        
+        /* Iterate through parameters and make call to log parameter value */    
+        parm = Procedure:Parameters:MoveFirst().
+        DO WHILE VALID-OBJECT(parm):
+            res = res 
+                + 'OEMockRegister:RegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
+            parm = Procedure:Parameters:MoveNext().
+        END.
+        
+        RETURN res.
+    END METHOD.
 
 END CLASS.
