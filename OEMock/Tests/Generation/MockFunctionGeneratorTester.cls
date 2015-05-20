@@ -24,32 +24,11 @@ CLASS OEMock.Tests.Generation.MockFunctionGeneratorTester:
     END METHOD.
     
     @Test.
-    METHOD PUBLIC VOID GenerateReturnsEmptyReturn():
-        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
-        
-        gen = NEW MockFunctionGenerator().
-        
-        AssertString:Contains(gen:Generate(), "RETURN .").
-        
-        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
-    END METHOD.
-    
-    @Test.
-    METHOD PUBLIC VOID GenerateProceduralReturnsEmptyReturn():
-        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
-        
-        gen = NEW MockFunctionGenerator().
-        
-        AssertString:Contains(gen:GenerateProcedural(), "RETURN .").
-        
-        IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
-    END METHOD.
-    
-    @Test.
     METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCall():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockFunctionGenerator().
+        gen:AttachTo(CreateDummyFunctionWithParam()).
         
         AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCall(").
         
@@ -58,9 +37,10 @@ CLASS OEMock.Tests.Generation.MockFunctionGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCallParam():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockFunctionGenerator().
+        gen:AttachTo(CreateDummyFunctionWithParam()).
         
         AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCallParam(").
         
@@ -69,9 +49,10 @@ CLASS OEMock.Tests.Generation.MockFunctionGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCall():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockFunctionGenerator().
+        gen:AttachTo(CreateDummyFunctionWithParam()).
         
         AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCall(").
         
@@ -80,9 +61,10 @@ CLASS OEMock.Tests.Generation.MockFunctionGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCallParam():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockFunctionGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockFunctionGenerator().
+        gen:AttachTo(CreateDummyFunctionWithParam()).
         
         AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCallParam(").
         
@@ -330,6 +312,18 @@ CLASS OEMock.Tests.Generation.MockFunctionGeneratorTester:
         
         IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
+        
+    END METHOD.
+    
+    METHOD PROTECTED Function CreateDummyFunctionWithParam():
+        DEFINE VARIABLE meth AS Function NO-UNDO.
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        
+        meth = NEW Function("Method1", "CHARACTER").
+        parm = NEW PrimitiveParameter("Param1", "INTEGER").
+        meth:Parameters:AddParameter(parm).
+        
+        RETURN meth.
         
     END METHOD.
 

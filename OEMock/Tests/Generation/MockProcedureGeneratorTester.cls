@@ -25,9 +25,12 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCall():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
+        DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockProcedureGenerator().
+        gen:AttachTo(CreateDummyProcedureWithParam()).
+        ASSIGN res = gen:Generate() NO-ERROR.
         
         AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCall(").
         
@@ -36,20 +39,23 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateCallsOEMockRegisterMethodCallParam():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
-        
+        gen = NEW MockProcedureGenerator().
+        gen:AttachTo(CreateDummyProcedureWithParam()).
         AssertString:Contains(gen:Generate(), "OEMockRegister:RegisterMethodCallParam(").
         
+        FINALLY:
         IF VALID-OBJECT(gen) THEN DELETE OBJECT gen.
+        END FINALLY.
     END METHOD.
     
     @Test.
     METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCall():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockProcedureGenerator().
+        gen:AttachTo(CreateDummyProcedureWithParam()).
         
         AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCall(").
         
@@ -58,9 +64,10 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
     
     @Test.
     METHOD PUBLIC VOID GenerateProceduralCallsOEMockRegisterMethodCallParam():
-        DEFINE VARIABLE gen AS MockMethodGenerator NO-UNDO.
+        DEFINE VARIABLE gen AS MockProcedureGenerator NO-UNDO.
         
-        gen = NEW MockMethodGenerator().
+        gen = NEW MockProcedureGenerator().
+        gen:AttachTo(CreateDummyProcedureWithParam()).
         
         AssertString:Contains(gen:GenerateProcedural(), "OEMockRegister:RegisterMethodCallParam(").
         
@@ -73,7 +80,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE genCount AS INTEGER NO-UNDO.
         
-        meth = NEW Procedure().
+        meth = NEW Procedure("ProcName").
         genCount = meth:Generators:Count.
         
         gen = NEW MockProcedureGenerator().
@@ -92,7 +99,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
         
-        meth = NEW Procedure().
+        meth = NEW Procedure("ProcName").
         parm = NEW PrimitiveParameter("Param1", "INTEGER").
         meth:Parameters:AddParameter(parm).
         
@@ -113,7 +120,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
         
-        meth = NEW Procedure().
+        meth = NEW Procedure("ProcName").
         parm = NEW PrimitiveParameter("Param1", "CHARACTER").
         meth:Parameters:AddParameter(parm).
         
@@ -140,7 +147,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
         
-        meth = NEW Procedure().
+        meth = NEW Procedure("ProcName").
         parm = NEW PrimitiveParameter("Param1", "INTEGER").
         meth:Parameters:AddParameter(parm).
         
@@ -164,7 +171,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE parm2 AS PrimitiveParameter NO-UNDO.
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 
-        meth  = NEW Procedure().
+        meth  = NEW Procedure("ProcName").
         parm  = NEW PrimitiveParameter("Param1", "INTEGER").
         parm2 = NEW PrimitiveParameter("Param2", "INTEGER").
         meth:Parameters:AddParameter(parm).
@@ -192,7 +199,7 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         DEFINE VARIABLE meth AS Procedure NO-UNDO.
         DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
         
-        meth = NEW Procedure().
+        meth = NEW Procedure("ProcName").
         parm = NEW PrimitiveParameter("Param1", "INTEGER").
         meth:Parameters:AddParameter(parm).
         
@@ -205,6 +212,18 @@ CLASS OEMock.Tests.Generation.MockProcedureGeneratorTester:
         IF VALID-OBJECT(gen)  THEN DELETE OBJECT gen.
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+        
+    END METHOD.
+    
+    METHOD PROTECTED Procedure CreateDummyProcedureWithParam():
+        DEFINE VARIABLE meth AS Procedure NO-UNDO.
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        
+        meth = NEW Procedure("ProcName").
+        parm = NEW PrimitiveParameter("Param1", "INTEGER").
+        meth:Parameters:AddParameter(parm).
+        
+        RETURN meth.
         
     END METHOD.
 
