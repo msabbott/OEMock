@@ -46,5 +46,17 @@ CLASS OEMock.Reflection.BufferParameter INHERITS BaseParameter:
         END.
         RETURN parm.
     END METHOD.
+    
+    METHOD OVERRIDE PUBLIC CHARACTER Normalise():
+        DEFINE VARIABLE parm AS CHARACTER NO-UNDO.
+        
+        IF TRIM(TableName) NE "" AND TableName NE ? THEN
+        DO: 
+            ASSIGN parm = SUBSTITUTE("BUFFER &1",
+                                     TableName).
+        END.
+        
+        RETURN parm.
+    END METHOD.
 
 END CLASS.

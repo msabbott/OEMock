@@ -57,5 +57,19 @@ CLASS OEMock.Reflection.PrimitiveParameter INHERITS BaseParameter:
         END.
         RETURN parm.
     END METHOD.
+    
+    METHOD OVERRIDE PUBLIC CHARACTER Normalise():
+        DEFINE VARIABLE parm AS CHARACTER NO-UNDO.
+        
+        IF  TRIM(ParameterType) NE "" AND ParameterType NE ?
+        AND TRIM(DataType)      NE "" AND DataType      NE ? THEN
+        DO: 
+            ASSIGN parm = SUBSTITUTE("&1 &2",
+                                     ParameterType,
+                                     DataType).
+        END.
+        
+        RETURN parm.
+    END METHOD.
 
 END CLASS.

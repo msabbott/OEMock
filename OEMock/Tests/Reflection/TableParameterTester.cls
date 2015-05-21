@@ -160,5 +160,15 @@ CLASS OEMock.Tests.Reflection.TableParameterTester:
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID NormaliseReturnsExpectedParameter():
+        DEFINE VARIABLE parm AS TableParameter NO-UNDO.
+        
+        parm = NEW TableParameter('TableName').
+        Assert:AreEqual(parm:Normalise(), 'INPUT TABLE TableName').
+        
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+    END METHOD.
 
 END CLASS.

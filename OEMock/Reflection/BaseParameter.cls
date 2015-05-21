@@ -33,5 +33,9 @@ CLASS OEMock.Reflection.BaseParameter:
 	METHOD PUBLIC CHARACTER Generate():
 	    RETURN "".
 	END METHOD.
+	
+	METHOD PUBLIC CHARACTER Normalise():
+	    RETURN "".
+	END METHOD.
 
 END CLASS.

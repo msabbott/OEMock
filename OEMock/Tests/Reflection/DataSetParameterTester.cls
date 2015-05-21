@@ -160,5 +160,15 @@ CLASS OEMock.Tests.Reflection.DataSetParameterTester:
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID NormaliseReturnsExpectedValue():
+        DEFINE VARIABLE parm AS DataSetParameter NO-UNDO.
+        
+        parm = NEW DataSetParameter('DataSetName').
+        Assert:AreEqual(parm:Normalise(), 'INPUT DATASET DataSetName').
+        
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+    END METHOD.
 
 END CLASS.

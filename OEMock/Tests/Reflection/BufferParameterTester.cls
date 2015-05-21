@@ -134,5 +134,15 @@ CLASS OEMock.Tests.Reflection.BufferParameterTester:
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID NormaliseReturnsExpectedValue():
+        DEFINE VARIABLE parm AS BufferParameter NO-UNDO.
+        
+        parm = NEW BufferParameter('BufferName', 'TableName').
+        Assert:AreEqual(parm:Normalise(), 'BUFFER TableName').
+        
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+    END METHOD.
 
 END CLASS.

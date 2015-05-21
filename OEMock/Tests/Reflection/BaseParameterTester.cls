@@ -43,5 +43,16 @@ CLASS OEMock.Tests.Reflection.BaseParameterTester:
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID NormaliseReturnsBlank():
+        DEFINE VARIABLE parm AS BaseParameter NO-UNDO.
+        
+        parm = NEW BaseParameter('Parameter Name').
+        
+        Assert:AreEqual(parm:Normalise(), '').
+        
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+    END METHOD.
 
 END CLASS.

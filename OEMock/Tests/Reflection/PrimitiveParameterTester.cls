@@ -244,5 +244,15 @@ CLASS OEMock.Tests.Reflection.PrimitiveParameterTester:
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID NormaliseReturnsExpectedValue():
+        DEFINE VARIABLE parm AS PrimitiveParameter NO-UNDO.
+        
+        parm = NEW PrimitiveParameter('Parameter Name', 'CHARACTER').
+        Assert:AreEqual(parm:Normalise(), 'INPUT CHARACTER').
+        
+        IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
+    END METHOD.
 
 END CLASS.
