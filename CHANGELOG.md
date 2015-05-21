@@ -1,6 +1,14 @@
 OEMock ChangeLog
 ================
 
+v0.3-alpha - 2015/05/21
+-----------------------
+* Support for class events
+* Issues with failing unit tests resolved
+* Code generated now uses CHR(13) as a line ending, not CHR(10) + CHR(13)
+ * This should aid with debugging generated code, but should have no impact during use.
+* Introduction of CHANGELOG.md, and sections moved from readme.md.
+
 v0.2-alpha - 2015/04/22
 -----------------------
 * Support for DataSets.
