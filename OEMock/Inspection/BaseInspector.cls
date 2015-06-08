@@ -119,7 +119,7 @@ CLASS OEMock.Inspection.BaseInspector:
 	    DO:
 	        IF ParamType = "TABLE" THEN
             DO:
-                tableparm = NEW OEMock.Reflection.TableParameter(ParamType).
+                tableparm = NEW OEMock.Reflection.TableParameter(ParamName).
                 tableparm:ParameterType = ParamMode.
                 parm = tableparm.
             END.
