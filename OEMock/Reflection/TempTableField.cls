@@ -105,7 +105,7 @@ CLASS OEMock.Reflection.TempTableField:
                                     res).
 	    END.
         
-        IF TRIM(SerializeName) NE "" AND SerializeName NE ? THEN
+        IF TRIM(SerializeName) NE "" AND SerializeName NE ? AND SerializeName NE Name THEN /* Same as 'Name' by default */
         DO:
             ASSIGN res = SUBSTITUTE("&1 SERIALIZE-NAME ~"&2~"",
                                     res,
@@ -120,7 +120,7 @@ CLASS OEMock.Reflection.TempTableField:
         END.
         
 
-        IF TRIM(XMLNodeType) NE "" AND XMLNodeType NE ? THEN
+        IF TRIM(XMLNodeType) NE "" AND XMLNodeType NE ? AND TRIM(XMLNodeType) NE "ELEMENT" THEN /* "ELEMENT" is default */
         DO:
             ASSIGN res = SUBSTITUTE("&1 XML-NODE-TYPE ~"&2~"",
                                     res,
@@ -128,7 +128,7 @@ CLASS OEMock.Reflection.TempTableField:
         END.
         
         
-        IF TRIM(XMLNodeName) NE "" AND XMLNodeName NE ? THEN
+        IF TRIM(XMLNodeName) NE "" AND XMLNodeName NE ? AND XMLNodeName NE SerializeName THEN /* Same as 'SerializeName' by default */
         DO:
             ASSIGN res = SUBSTITUTE("&1 XML-NODE-NAME ~"&2~"",
                                     res,

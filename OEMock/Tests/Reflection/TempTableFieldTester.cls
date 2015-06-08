@@ -210,6 +210,19 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateObservesSerializeNameDefault():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
+        tfld:SerializeName = "FieldName".
+        
+        AssertString:DoesNotContain(tfld:Generate(), "SERIALIZE-NAME ~"FieldName~"").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID GenerateObservesXMLDataType():
         
         DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
@@ -221,10 +234,9 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
-
     
     @Test.
-    METHOD PUBLIC VOID GenerateObservesXMLNodeType ():
+    METHOD PUBLIC VOID GenerateObservesXMLNodeType():
         
         DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
         
@@ -235,8 +247,20 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
-
     
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesXMLNodeTypeDefault():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
+        tfld:XMLNodeType = "ELEMENT".
+        
+        AssertString:DoesNotContain(tfld:Generate(), "XML-NODE-TYPE ~"ELEMENT~"").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+
     @Test.
     METHOD PUBLIC VOID GenerateObservesXMLNodeName():
         
@@ -246,6 +270,20 @@ CLASS OEMock.Tests.Reflection.TempTableFieldTester:
         tfld:XMLNodeName = "XMLNodeName".
         
         AssertString:Contains(tfld:Generate(), "XML-NODE-NAME ~"XMLNodeName~"").
+        
+        IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
+    END METHOD.
+
+    @Test.
+    METHOD PUBLIC VOID GenerateObservesXMLNodeNameDefault():
+        
+        DEFINE VARIABLE tfld AS OEMock.Reflection.TempTableField NO-UNDO.
+        
+        tfld = NEW OEMock.Reflection.TempTableField("FieldName", "CHARACTER").
+        tfld:SerializeName = "SerializeName".
+        tfld:XMLNodeName = "SerializeName".
+        
+        AssertString:DoesNotContain(tfld:Generate(), "XML-NODE-NAME ~"SerializeName~"").
         
         IF VALID-OBJECT(tfld) THEN DELETE OBJECT tfld.
     END METHOD.
