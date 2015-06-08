@@ -47,7 +47,7 @@ CLASS OEMock.Reflection.TableParameter INHERITS BaseParameter:
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ? THEN
         DO: 
-            ASSIGN parm = SUBSTITUTE("&1&2 FOR TABLE &3,",
+            ASSIGN parm = SUBSTITUTE("&1&2 TABLE FOR &3,",
                                      CHR(13),
                                      ParameterType,
                                      Name).
