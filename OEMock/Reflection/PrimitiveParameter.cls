@@ -39,13 +39,9 @@ CLASS OEMock.Reflection.PrimitiveParameter INHERITS BaseParameter:
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ?
         AND TRIM(DataType)      NE "" AND DataType      NE ? THEN
-        DO: 
-            ASSIGN parm = SUBSTITUTE("&1DEFINE &2 PARAMETER &3 AS &4 &5.",
-                                     CHR(13),
-                                     ParameterType,
-                                     Name,
-                                     DataType,
-                                     (IF AddNoUndo THEN "NO-UNDO" ELSE "")).
+        DO:
+            ASSIGN parm = CHR(13)
+                        + "DEFINE " + ParameterType + " PARAMETER " + Name + " AS " + DataType + " " + (IF AddNoUndo THEN "NO-UNDO" ELSE "") + ".".
         END.
         RETURN parm.
     END METHOD.
@@ -57,11 +53,7 @@ CLASS OEMock.Reflection.PrimitiveParameter INHERITS BaseParameter:
         AND TRIM(ParameterType) NE "" AND ParameterType NE ?
         AND TRIM(DataType)      NE "" AND DataType      NE ? THEN
         DO: 
-            ASSIGN parm = SUBSTITUTE("&1&2 &3 AS &4,",
-                                     CHR(13),
-                                     ParameterType,
-                                     Name,
-                                     DataType).
+            ASSIGN parm = CHR(13) + ParameterType + " " + Name + " AS " + DataType + ",".
         END.
         RETURN parm.
     END METHOD.
