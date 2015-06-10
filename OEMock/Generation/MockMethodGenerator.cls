@@ -34,8 +34,10 @@ CLASS OEMock.Generation.MockMethodGenerator INHERITS MethodGenerator:
         /* Iterate through parameters and make call to log parameter value */    
         parm = Method:Parameters:MoveFirst().
         DO WHILE VALID-OBJECT(parm):
-            res = res 
-                + 'OEMockRegister:RegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
+            /* Only convert primitive parameter types */
+            IF(parm:GetClass():IsA("OEMock.Reflection.PrimitiveParameter")) THEN
+                res = res 
+                    + 'OEMockRegister:RegisterMethodCallParam(OEMockRegisterMethodCallNo, "' + parm:Name + '", STRING(' + parm:Name + ')).~n'.
             parm = Method:Parameters:MoveNext().
         END.
         
