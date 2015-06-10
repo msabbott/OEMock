@@ -53,12 +53,12 @@ CLASS OEMock.Reflection.Event:
 	METHOD PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    res = SUBSTITUTE("DEFINE PUBLIC &1&2EVENT &3 SIGNATURE VOID (&4).&5",
-                         (IF THIS-OBJECT:Abstract THEN "ABSTRACT " ELSE IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
-                         (IF THIS-OBJECT:Override THEN "OVERRIDE " ELSE ""),
-	                     Name,
-	                     GenerateParameters(),
-	                     CHR(13)).
+	    res = "DEFINE PUBLIC "
+            + (IF THIS-OBJECT:Abstract THEN "ABSTRACT " ELSE IF THIS-OBJECT:Static THEN "STATIC " ELSE "")
+            + (IF THIS-OBJECT:Override THEN "OVERRIDE " ELSE "")
+            + "EVENT " + Name
+            + " SIGNATURE VOID (" + GenerateParameters()
+            + ")." + CHR(13).
         
 	    RETURN res.
 	END METHOD.
