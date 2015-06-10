@@ -94,11 +94,9 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             DO WHILE VALID-OBJECT(parm):
                 IF ParameterOutputValues:HasValue(parm:Name) THEN
                 DO:
-                    res = SUBSTITUTE("&1&2&3 = &4",
-                                     res,
-                                     CHR(13),
-                                     parm:Name,
-                                     ParameterOutputValues:GetValue(parm:Name)).
+                    res = res + CHR(13)
+                        + parm:Name + " = "
+                        + (IF ParameterOutputValues:GetValue(parm:Name) = ? THEN "?" ELSE ParameterOutputValues:GetValue(parm:Name)).
                 END.
                 parm = THIS-OBJECT:BaseMethod:Parameters:MoveNext().
             END.
@@ -106,9 +104,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             ASSIGN res = TRIM(res).
             
             IF res NE ? AND res NE "" THEN
-                ASSIGN res = SUBSTITUTE("ASSIGN &1.&2",
-                                        res,
-                                        CHR(13)).
+                ASSIGN res = "ASSIGN " + res + CHR(13).
         END.
         
         /* Sanity check output */
@@ -119,19 +115,15 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
-        RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
-                               CHR(13),
-                               GenerateVariableDefinitions(),
-                               GenerateParameterAssignment(),
-                               GenerateAdditionalContents())).
+        RETURN TRIM(GenerateVariableDefinitions() + CHR(13)
+                  + GenerateParameterAssignment() + CHR(13)
+                  + GenerateAdditionalContents()).
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
-        RETURN TRIM(SUBSTITUTE("&2&1&3&1&4",
-                               CHR(13),
-                               GenerateVariableDefinitions(),
-                               GenerateParameterAssignment(),
-                               GenerateProceduralAdditionalContents())).
+        RETURN TRIM(GenerateVariableDefinitions() + CHR(13)
+                  + GenerateParameterAssignment() + CHR(13)
+                  + GenerateProceduralAdditionalContents()).
     END METHOD.
     
     METHOD PROTECTED LONGCHAR GenerateAdditionalContents():
