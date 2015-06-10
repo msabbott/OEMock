@@ -28,13 +28,8 @@ CLASS OEMock.Reflection.Constructor INHERITS BaseMethod:
         /* Name and return type must be set */
         IF TRIM(Name) NE "" AND Name NE ? THEN
         DO:
-            ASSIGN constr = SUBSTITUTE("CONSTRUCTOR &1 (&2):",
-                                       Name,
-                                       GenerateParameters()).
-                                     
-            ASSIGN constr = SUBSTITUTE("&1&2END CONSTRUCTOR.",
-                                       constr,
-                                       CHR(13)).
+            ASSIGN constr = "CONSTRUCTOR " + Name + " (" + GenerateParameters() + "):"
+                          + CHR(13) + "END CONSTRUCTOR.".
         END.
         
         RETURN constr.
