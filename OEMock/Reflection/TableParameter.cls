@@ -32,11 +32,8 @@ CLASS OEMock.Reflection.TableParameter INHERITS BaseParameter:
         
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ? THEN
-        DO: 
-            ASSIGN parm = SUBSTITUTE("&1DEFINE &2 PARAMETER TABLE FOR &3.",
-                                     CHR(13),
-                                     ParameterType,
-                                     Name).
+        DO:
+            ASSIGN parm = CHR(13) + "DEFINE " + ParameterType + " PARAMETER TABLE FOR " + Name + ".".
         END.
         RETURN parm.
     END METHOD.
@@ -46,11 +43,8 @@ CLASS OEMock.Reflection.TableParameter INHERITS BaseParameter:
         
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ? THEN
-        DO: 
-            ASSIGN parm = SUBSTITUTE("&1&2 TABLE FOR &3,",
-                                     CHR(13),
-                                     ParameterType,
-                                     Name).
+        DO:
+            ASSIGN parm = CHR(13) + ParameterType + " TABLE FOR " + Name + ",".
         END.
         RETURN parm.
     END METHOD.
