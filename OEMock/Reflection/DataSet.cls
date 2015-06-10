@@ -69,6 +69,14 @@ CLASS OEMock.Reflection.DataSet:
 	                     (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE ""),
                          (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE ""),
 	                     (IF THIS-OBJECT:Reference THEN "REFERENCE-ONLY " ELSE "")).
+        
+        res = "DEFINE " + (IF THIS-OBJECT:Static THEN "STATIC " ELSE "")
+            + "DATASET " + (IF Name = ? THEN "" ELSE Name)
+            + " FOR " + (IF Buffers = ? THEN "" ELSE Buffers)
+            + " "
+            + (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE "")
+            + (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "")
+            + (IF THIS-OBJECT:Reference THEN "REFERENCE-ONLY " ELSE "").
 	    
 	    /* Build list of data relations */
 	    rel = DataSetRelations:MoveFirst().
