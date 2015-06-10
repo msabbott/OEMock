@@ -29,10 +29,8 @@ CLASS OEMock.Reflection.BufferParameter INHERITS BaseParameter:
         IF  TRIM(Name)      NE "" AND Name      NE ?
         AND TRIM(TableName) NE "" AND TableName NE ? THEN
         DO: 
-            ASSIGN parm = SUBSTITUTE("&1DEFINE PARAMETER BUFFER &2 FOR &3.",
-                                     CHR(13),
-                                     Name,
-                                     TableName).
+            ASSIGN parm = CHR(13)
+                        + "DEFINE PARAMETER BUFFER " + Name + " FOR " + TableName + ".".
         END.
         RETURN parm.
     END METHOD.
@@ -42,11 +40,9 @@ CLASS OEMock.Reflection.BufferParameter INHERITS BaseParameter:
         
         IF  TRIM(Name)      NE "" AND Name      NE ?
         AND TRIM(TableName) NE "" AND TableName NE ? THEN
-        DO: 
-            ASSIGN parm = SUBSTITUTE("&1BUFFER &2 FOR &3,",
-                                     CHR(13),
-                                     Name,
-                                     TableName).
+        DO:
+            ASSIGN parm = CHR(13)
+                        + "BUFFER " + Name + " FOR " + TableName + ",".
         END.
         RETURN parm.
     END METHOD.
