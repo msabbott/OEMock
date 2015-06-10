@@ -60,6 +60,14 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "")).
+        ASSIGN res = CHR(13)
+                   + SUPER:Generate() + CHR(13)
+                   + (IF UseReturnValue THEN "ASSIGN res = " + (IF ReturnValue = ? THEN "?" ELSE ReturnValue) + "."  ELSE "") + CHR(13)
+                   + "RETURN "
+                   + (IF VALID-OBJECT(ReturningMethod) 
+                      AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
+                      AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
+                      AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "") + "." + CHR(13).
         
         IF res = ? THEN res = "".
         
@@ -85,7 +93,7 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
                 DO:
                     IF NOT (retval MATCHES ("'*'") OR retval MATCHES ('"*"')) AND retval NE ? THEN
                     DO:
-                        retval = SUBSTITUTE('"&1"', retval).
+                        retval = (IF retval = ? THEN "?" ELSE '"' + retval + '"').
                     END.
                 END.
             END CASE.
