@@ -64,13 +64,11 @@ CLASS OEMock.Reflection.TempTable:
         DEFINE VARIABLE fld AS TempTableField NO-UNDO.
         DEFINE VARIABLE idx AS TempTableIndex NO-UNDO.
         
-        res = SUBSTITUTE("DEFINE &2TEMP-TABLE &3&4&5&6&1",
-                         CHR(13),
-                         (IF THIS-OBJECT:Static THEN "STATIC " ELSE ""),
-                         NAME,
-                         (IF NoUndo THEN " NO-UNDO " ELSE ""),
-                         (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE ""),
-                         (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "")).
+        res = "DEFINE " + (IF THIS-OBJECT:Static THEN "STATIC " ELSE "") + "TEMP-TABLE "
+            + Name
+            + (IF NoUndo THEN " NO-UNDO " ELSE "")
+            + (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE "")
+            + (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "") + CHR(13).
 
         /* Build field list */
         fld = THIS-OBJECT:Fields:MoveFirst().
