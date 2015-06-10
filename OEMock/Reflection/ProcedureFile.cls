@@ -55,17 +55,16 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
-	    
-	    ASSIGN res = SUBSTITUTE("&1&2&1&3&1&4&1&5&1&6&1&7&1&8&1&9",
-	                            CHR(13),
-	                            GenerateUsing(),
-                                GenerateTempTables(),
-	                            GenerateDataSets(),
-	                            GenerateParameters(),
-	                            GenerateFunctionForwards(),
-	                            Generators:GenerateProcedural(),
-                                GenerateProcedures(),
-                                GenerateFunctions()).
+
+        ASSIGN res = CHR(13)
+                   + GenerateUsing() + CHR(13)
+                   + GenerateTempTables() + CHR(13)
+                   + GenerateDataSets() + CHR(13)
+                   + GenerateParameters() + CHR(13)
+                   + GenerateFunctionForwards() + CHR(13)
+                   + Generators:GenerateProcedural() + CHR(13)
+                   + GenerateProcedures() + CHR(13)
+                   + GenerateFunctions().
 
         RETURN res.
 	END METHOD.
