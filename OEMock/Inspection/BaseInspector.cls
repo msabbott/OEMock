@@ -85,7 +85,10 @@ CLASS OEMock.Inspection.BaseInspector:
 	    Warnings:Suppress().
 	    
 	    COMPILE VALUE(FileName)
-	       XREF-XML VALUE(XrefFile).
+	       XREF-XML VALUE(XrefFile) NO-ERROR.
+	       
+	    IF ERROR-STATUS:ERROR THEN
+	       RETURN ERROR NEW OEMock.Inspection.InspectionCompilationError().
 	       
 	    Warnings:Restore().
 	END.
