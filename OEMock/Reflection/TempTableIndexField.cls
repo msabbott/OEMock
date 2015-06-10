@@ -28,9 +28,8 @@ CLASS OEMock.Reflection.TempTableIndexField:
 	    
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("&1 &2",
-	                            Name,
-	                            (IF THIS-OBJECT:DESCENDING THEN "DESCENDING " ELSE "ASCENDING ")).
+	    IF Name NE ? AND Name NE "" THEN
+	       ASSIGN res = Name + " " + (IF THIS-OBJECT:DESCENDING THEN "DESCENDING " ELSE "ASCENDING ").
 	    
 	    RETURN res.
 	END METHOD.
