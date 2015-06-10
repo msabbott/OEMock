@@ -73,9 +73,7 @@ CLASS OEMock.Reflection.TempTableField:
 	    DEFINE VARIABLE res  AS LONGCHAR NO-UNDO.
 	    DEFINE VARIABLE init AS CHARACTER NO-UNDO.
 	    
-	    ASSIGN res = SUBSTITUTE("FIELD &1 AS &2",
-	                            Name,
-	                            DataType).
+        ASSIGN res = "FIELD " + Name + " AS " + DataType.
 	    
 	    IF Initial NE "" THEN
 	    DO:
@@ -84,55 +82,42 @@ CLASS OEMock.Reflection.TempTableField:
 	        /* Check for values that need to be formatted */
 	        IF (DataType = "CHARACTER" OR DataType = "LONGCHAR") AND Init NE ? THEN
 	        DO:
-	            ASSIGN Init = SUBSTITUTE('"&1"', Init).
+	            ASSIGN Init = '"' + Init + '"'.
 	        END.
 	        
-	        ASSIGN res = SUBSTITUTE("&1 INITIAL &2",
-	                                res,
-	                                Init).
+            ASSIGN res = res + "INITIAL " + (IF Init = ? THEN "?" ELSE Init).
 	    END.
 	    
 	    IF Extent GT 0 AND Extent NE ? THEN
 	    DO:
-	        ASSIGN res = SUBSTITUTE("&1 EXTENT &2",
-                                    res,
-                                    TRIM(STRING(THIS-OBJECT:Extent, ">>>>>>>>>>>>>>>>>>>9"))).
+            ASSIGN res = res + " EXTENT " + TRIM(STRING(THIS-OBJECT:Extent, ">>>>>>>>>>>>>>>>>>>9")).
 	    END.
 	    
 	    IF SerializeHidden EQ TRUE THEN
 	    DO:
-	        ASSIGN res = SUBSTITUTE("&1 SERIALIZE-HIDDEN",
-                                    res).
+	        ASSIGN res = res + "SERIALIZE-HIDDEN".
 	    END.
         
         IF TRIM(SerializeName) NE "" AND SerializeName NE ? AND SerializeName NE Name THEN /* Same as 'Name' by default */
         DO:
-            ASSIGN res = SUBSTITUTE("&1 SERIALIZE-NAME ~"&2~"",
-                                    res,
-                                    SerializeName).
+            ASSIGN res = res + " SERIALIZE-NAME ~"" + SerializeName + "~"".
         END.
         
         IF TRIM(XMLDataType) NE "" AND XMLDataType NE ? THEN
         DO:
-            ASSIGN res = SUBSTITUTE("&1 XML-DATA-TYPE ~"&2~"",
-                                    res,
-                                    XMLDataType).
+            ASSIGN res = res + " XML-DATA-TYPE ~"" + XMLDataType + "~"".
         END.
         
 
         IF TRIM(XMLNodeType) NE "" AND XMLNodeType NE ? AND TRIM(XMLNodeType) NE "ELEMENT" THEN /* "ELEMENT" is default */
         DO:
-            ASSIGN res = SUBSTITUTE("&1 XML-NODE-TYPE ~"&2~"",
-                                    res,
-                                    XMLNodeType).
+            ASSIGN res = res + " XML-NODE-TYPE ~"" + XMLNodeType + "~"".
         END.
         
         
         IF TRIM(XMLNodeName) NE "" AND XMLNodeName NE ? AND XMLNodeName NE SerializeName THEN /* Same as 'SerializeName' by default */
         DO:
-            ASSIGN res = SUBSTITUTE("&1 XML-NODE-NAME ~"&2~"",
-                                    res,
-                                    XMLNodeName).
+            ASSIGN res = res + " XML-NODE-NAME ~"" + XMLNodeName + "~"".
         END.
 	    
 	    /* Ensure appropriate spacing between this statement and the next */
