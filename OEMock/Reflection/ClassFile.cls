@@ -91,31 +91,17 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     
     METHOD PROTECTED LONGCHAR GenerateClass():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
-        
-        /* Substitute will take a maximum of 9 items to replace, therefore this
-         * has had to be split into separate statements.
-         */
-        ASSIGN res = SUBSTITUTE("CLASS &2 &3&4:"
-                              + "&1&5"
-                              + "&1&6"
-                              + "&1&7"
-                              + "&1&8"
-                              + "&1&9",
-                                CHR(13),
-                                IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName,
-                                (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE ""),
-                                GenerateInterfaces(),
-                                GenerateTempTables(),
-                                GenerateDataSets(),
-                                GenerateConstructors(),
-                                GenerateMethods(),
-                                Generators:Generate()).
-                                
-        ASSIGN res = SUBSTITUTE("&2&1&3"
-                              + "&1END CLASS.&1",
-                                CHR(13),
-                                res,
-                                GenerateEvents()).
+
+        ASSIGN res = "CLASS " + (IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName) + " "
+                   + (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE "")
+                   + GenerateInterfaces() + ":"
+                   + CHR(13) + GenerateTempTables()
+                   + CHR(13) + GenerateDataSets()
+                   + CHR(13) + GenerateConstructors()
+                   + CHR(13) + GenerateMethods()
+                   + CHR(13) + Generators:Generate()
+                   + CHR(13) + GenerateEvents()
+                   + CHR(13) + "END CLASS." + CHR(13).
                               
         RETURN res.
     END METHOD.
@@ -219,14 +205,11 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
             /* Loop through Procedures */
             intf = Interfaces:MoveFirst().
             DO WHILE (intf NE ? AND intf NE ""):
-                ASSIGN res  = SUBSTITUTE("&1, &2",
-                                         res,
-                                         intf).
+                ASSIGN res  = res + ", " + intf
                        intf = Interfaces:MoveNext().
             END.
             
-            ASSIGN res = SUBSTITUTE(" IMPLEMENTS &1",
-                                    TRIM(res, ", ")).
+            ASSIGN res = " IMPLEMENTS " + TRIM(res, ", ").
         END.
         
         /* Sanity check output */
@@ -238,10 +221,8 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = SUBSTITUTE("&2&1&3",
-                                CHR(13),
-                                GenerateUsing(),
-                                GenerateClass()).
+        ASSIGN res = GenerateUsing() + CHR(13)
+                   + GenerateClass().
 
         RETURN res.        
     END METHOD.
