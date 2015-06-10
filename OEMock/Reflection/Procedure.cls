@@ -28,22 +28,10 @@ CLASS OEMock.Reflection.Procedure INHERITS BaseMethod:
         /* Name and return type must be set */
         IF TRIM(Name) NE "" AND Name NE ? THEN
         DO:
-            ASSIGN proc = SUBSTITUTE("PROCEDURE &1 :",
-                                     Name).
-                                     
-            /* Generate parameter definitions */
-            ASSIGN proc = SUBSTITUTE("&1&2",
-                                     proc,
-                                     GenerateParameters()).
-                                     
-            ASSIGN proc = SUBSTITUTE("&1&2&3&2",
-                                     proc,
-                                     CHR(13),
-                                     Generators:Generate()).
-                                     
-            ASSIGN proc = SUBSTITUTE("&1&2END PROCEDURE.",
-                                     proc,
-                                     CHR(13)).
+            ASSIGN proc = "PROCEDURE " + Name + " :"
+                        + GenerateParameters() + CHR(13)
+                        + Generators:Generate() + CHR(13)
+                        + "END PROCEDURE." + CHR(13).
         END.
         
         RETURN proc.
