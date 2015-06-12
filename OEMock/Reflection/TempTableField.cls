@@ -85,7 +85,7 @@ CLASS OEMock.Reflection.TempTableField:
 	            ASSIGN Init = '"' + Init + '"'.
 	        END.
 	        
-            ASSIGN res = res + "INITIAL " + (IF Init = ? THEN "?" ELSE Init).
+            ASSIGN res = res + " INITIAL " + (IF Init = ? THEN "?" ELSE Init).
 	    END.
 	    
 	    IF Extent GT 0 AND Extent NE ? THEN
@@ -95,7 +95,7 @@ CLASS OEMock.Reflection.TempTableField:
 	    
 	    IF SerializeHidden EQ TRUE THEN
 	    DO:
-	        ASSIGN res = res + "SERIALIZE-HIDDEN".
+	        ASSIGN res = res + " SERIALIZE-HIDDEN".
 	    END.
         
         IF TRIM(SerializeName) NE "" AND SerializeName NE ? AND SerializeName NE Name THEN /* Same as 'Name' by default */
