@@ -170,6 +170,8 @@ CLASS OEMock.Tests.OEMockTester:
         DEFINE VARIABLE hProc AS HANDLE NO-UNDO.
         
         stb = OEMock:StubProcedure(procName).
+        stb:AddTempTable(TEMP-TABLE ttTempTable:HANDLE).
+        stb:AddTempTable(TEMP-TABLE ttChildTable:HANDLE).
         stb:Generate().
 
         RUN VALUE(procName) PERSISTENT SET hProc.
