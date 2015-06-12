@@ -53,21 +53,21 @@ CLASS OEMock.Generation.ReturningMethodGenerator INHERITS BaseMethodGenerator:
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
         ASSIGN res = SUBSTITUTE("&1&2&1&3&1RETURN &4.&1",
-                                CHR(13),
+                                "~n",
                                 SUPER:Generate(),
                                 (IF UseReturnValue THEN SUBSTITUTE("ASSIGN res = &1.", ReturnValue) ELSE ""),
                                 (IF VALID-OBJECT(ReturningMethod) 
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
                                  AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "")).
-        ASSIGN res = CHR(13)
-                   + SUPER:Generate() + CHR(13)
-                   + (IF UseReturnValue THEN "ASSIGN res = " + (IF ReturnValue = ? THEN "?" ELSE ReturnValue) + "."  ELSE "") + CHR(13)
+        ASSIGN res = "~n"
+                   + SUPER:Generate() + "~n"
+                   + (IF UseReturnValue THEN "ASSIGN res = " + (IF ReturnValue = ? THEN "?" ELSE ReturnValue) + "."  ELSE "") + "~n"
                    + "RETURN "
                    + (IF VALID-OBJECT(ReturningMethod) 
                       AND THIS-OBJECT:ReturningMethod:ReturnType NE ? 
                       AND THIS-OBJECT:ReturningMethod:ReturnType NE ""
-                      AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "") + "." + CHR(13).
+                      AND THIS-OBJECT:ReturningMethod:ReturnType NE "VOID" THEN "res" ELSE "") + "." + "~n".
         
         IF res = ? THEN res = "".
         

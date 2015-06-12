@@ -52,7 +52,7 @@ CLASS OEMock.Reflection.BaseFile:
             /* Loop through Procedures */
             ref = UsingList:MoveFirst().
             DO WHILE (ref NE ? AND ref NE ""):
-                ASSIGN res  = res + CHR(13)
+                ASSIGN res  = res + "~n"
                             + "USING " + (IF INDEX(ref, " ") > 0 THEN '"' + ref + '"' ELSE ref) + ".".
                        ref = UsingList:MoveNext().
             END.
@@ -67,7 +67,7 @@ CLASS OEMock.Reflection.BaseFile:
         IF  INDEX(res, "USING Progress.Lang.*.") = 0
         AND INDEX(res, "USING Progress.Lang.Object.") = 0 THEN
         DO:
-            ASSIGN res = "USING Progress.Lang.*." + CHR(13)
+            ASSIGN res = "USING Progress.Lang.*." + "~n"
                        + res.
         END.
         

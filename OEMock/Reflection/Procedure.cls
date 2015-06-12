@@ -29,9 +29,9 @@ CLASS OEMock.Reflection.Procedure INHERITS BaseMethod:
         IF TRIM(Name) NE "" AND Name NE ? THEN
         DO:
             ASSIGN proc = "PROCEDURE " + Name + " :"
-                        + GenerateParameters() + CHR(13)
-                        + Generators:Generate() + CHR(13)
-                        + "END PROCEDURE." + CHR(13).
+                        + GenerateParameters() + "~n"
+                        + Generators:Generate() + "~n"
+                        + "END PROCEDURE." + "~n".
         END.
         
         RETURN proc.

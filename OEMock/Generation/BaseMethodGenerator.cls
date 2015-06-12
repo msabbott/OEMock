@@ -94,7 +94,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             DO WHILE VALID-OBJECT(parm):
                 IF ParameterOutputValues:HasValue(parm:Name) THEN
                 DO:
-                    res = res + CHR(13)
+                    res = res + "~n"
                         + parm:Name + " = "
                         + (IF ParameterOutputValues:GetValue(parm:Name) = ? THEN "?" ELSE ParameterOutputValues:GetValue(parm:Name)).
                 END.
@@ -104,7 +104,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             ASSIGN res = TRIM(res).
             
             IF res NE ? AND res NE "" THEN
-                ASSIGN res = "ASSIGN " + res + CHR(13).
+                ASSIGN res = "ASSIGN " + res + "~n".
         END.
         
         /* Sanity check output */
@@ -115,14 +115,14 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
-        RETURN TRIM(GenerateVariableDefinitions() + CHR(13)
-                  + GenerateParameterAssignment() + CHR(13)
+        RETURN TRIM(GenerateVariableDefinitions() + "~n"
+                  + GenerateParameterAssignment() + "~n"
                   + GenerateAdditionalContents()).
     END METHOD.
     
     METHOD OVERRIDE PUBLIC LONGCHAR GenerateProcedural():
-        RETURN TRIM(GenerateVariableDefinitions() + CHR(13)
-                  + GenerateParameterAssignment() + CHR(13)
+        RETURN TRIM(GenerateVariableDefinitions() + "~n"
+                  + GenerateParameterAssignment() + "~n"
                   + GenerateProceduralAdditionalContents()).
     END METHOD.
     

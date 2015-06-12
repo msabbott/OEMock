@@ -58,7 +58,7 @@ CLASS OEMock.Reflection.Event:
             + (IF THIS-OBJECT:Override THEN "OVERRIDE " ELSE "")
             + "EVENT " + Name
             + " SIGNATURE VOID (" + GenerateParameters()
-            + ")." + CHR(13).
+            + ")." + "~n".
         
 	    RETURN res.
 	END METHOD.

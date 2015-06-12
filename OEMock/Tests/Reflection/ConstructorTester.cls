@@ -50,7 +50,7 @@ CLASS OEMock.Tests.Reflection.ConstructorTester:
         
         meth = NEW Constructor('ClassName').
         
-        Assert:AreEqual(meth:Generate(), 'CONSTRUCTOR ClassName ():' + CHR(13) + "END CONSTRUCTOR.").
+        Assert:AreEqual(meth:Generate(), 'CONSTRUCTOR ClassName ():' + "~n" + "END CONSTRUCTOR.").
         
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.
@@ -70,9 +70,9 @@ CLASS OEMock.Tests.Reflection.ConstructorTester:
         Assert:AreEqual(meth:Parameters:Count, 2).
         
         Assert:AreEqual(meth:Generate(), 'CONSTRUCTOR ClassName ('
-                                         + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                         + CHR(13) + "INPUT Param2 AS CHARACTER):"
-                                         + CHR(13) + "END CONSTRUCTOR.").
+                                         + "~n" + "INPUT Param1 AS CHARACTER,"
+                                         + "~n" + "INPUT Param2 AS CHARACTER):"
+                                         + "~n" + "END CONSTRUCTOR.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.
     END METHOD.

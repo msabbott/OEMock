@@ -129,8 +129,8 @@ CLASS OEMock.Tests.Reflection.EventTester:
         outp = evnt:Generate().
         
         AssertString:Contains(outp, 'DEFINE PUBLIC EVENT TestEvent SIGNATURE VOID ('
-                                    + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                    + CHR(13) + "INPUT Param2 AS CHARACTER).").
+                                    + "~n" + "INPUT Param1 AS CHARACTER,"
+                                    + "~n" + "INPUT Param2 AS CHARACTER).").
 
         IF VALID-OBJECT(evnt) THEN DELETE OBJECT evnt.
     END METHOD.

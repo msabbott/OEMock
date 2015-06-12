@@ -144,8 +144,8 @@ CLASS OEMock.Tests.Reflection.MethodTester:
         outp = meth:Generate().
         
         AssertString:Contains(outp, 'METHOD PUBLIC CHARACTER TestMethod ('
-                                    + CHR(13) + "INPUT Param1 AS CHARACTER,"
-                                    + CHR(13) + "INPUT Param2 AS CHARACTER):").
+                                    + "~n" + "INPUT Param1 AS CHARACTER,"
+                                    + "~n" + "INPUT Param2 AS CHARACTER):").
         AssertString:Contains(outp, "END METHOD.").
 
         IF VALID-OBJECT(meth) THEN DELETE OBJECT meth.

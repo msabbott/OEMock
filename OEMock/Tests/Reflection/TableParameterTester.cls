@@ -39,7 +39,7 @@ CLASS OEMock.Tests.Reflection.TableParameterTester:
         
         parm = NEW TableParameter('TableName').
         
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE INPUT PARAMETER TABLE FOR TableName.').
+        Assert:AreEqual(parm:GenerateDefinition(), "~n" + 'DEFINE INPUT PARAMETER TABLE FOR TableName.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -50,7 +50,7 @@ CLASS OEMock.Tests.Reflection.TableParameterTester:
         
         parm = NEW TableParameter('TableName').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE OUTPUT PARAMETER TABLE FOR TableName.').
+        Assert:AreEqual(parm:GenerateDefinition(), "~n" + 'DEFINE OUTPUT PARAMETER TABLE FOR TableName.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -103,7 +103,7 @@ CLASS OEMock.Tests.Reflection.TableParameterTester:
         
         parm = NEW TableParameter('TableName').
         
-        Assert:AreEqual(parm:Generate(), CHR(13) + 'INPUT TABLE FOR TableName,').
+        Assert:AreEqual(parm:Generate(), "~n" + 'INPUT TABLE FOR TableName,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -114,7 +114,7 @@ CLASS OEMock.Tests.Reflection.TableParameterTester:
         
         parm = NEW TableParameter('TableName').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:Generate(), CHR(13) + 'OUTPUT TABLE FOR TableName,').
+        Assert:AreEqual(parm:Generate(), "~n" + 'OUTPUT TABLE FOR TableName,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.

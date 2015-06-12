@@ -58,9 +58,9 @@ CLASS OEMock.Reflection.Method INHERITS ReturningMethod:
                         + (IF THIS-OBJECT:Final    THEN "FINAL "    ELSE "")
                         + (IF ReturnType = ? OR TRIM(ReturnType) EQ "" THEN "VOID " ELSE ReturnType + " ")
                         + Name + " ("
-                        + GenerateParameters() + "):" + CHR(13)
-                        + Generators:Generate() + CHR(13) 
-                        + "END METHOD." + CHR(13).              
+                        + GenerateParameters() + "):" + "~n"
+                        + Generators:Generate() + "~n" 
+                        + "END METHOD." + "~n".              
         END.
         
         RETURN meth.

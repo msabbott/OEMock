@@ -40,7 +40,7 @@ CLASS OEMock.Reflection.PrimitiveParameter INHERITS BaseParameter:
         AND TRIM(ParameterType) NE "" AND ParameterType NE ?
         AND TRIM(DataType)      NE "" AND DataType      NE ? THEN
         DO:
-            ASSIGN parm = CHR(13)
+            ASSIGN parm = "~n"
                         + "DEFINE " + ParameterType + " PARAMETER " + Name + " AS " + DataType + " " + (IF AddNoUndo THEN "NO-UNDO" ELSE "") + ".".
         END.
         RETURN parm.
@@ -53,7 +53,7 @@ CLASS OEMock.Reflection.PrimitiveParameter INHERITS BaseParameter:
         AND TRIM(ParameterType) NE "" AND ParameterType NE ?
         AND TRIM(DataType)      NE "" AND DataType      NE ? THEN
         DO: 
-            ASSIGN parm = CHR(13) + ParameterType + " " + Name + " AS " + DataType + ",".
+            ASSIGN parm = "~n" + ParameterType + " " + Name + " AS " + DataType + ",".
         END.
         RETURN parm.
     END METHOD.

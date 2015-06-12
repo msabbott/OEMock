@@ -56,14 +56,14 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
 	METHOD OVERRIDE PUBLIC LONGCHAR Generate():
 	    DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
 
-        ASSIGN res = CHR(13)
-                   + GenerateUsing() + CHR(13)
-                   + GenerateTempTables() + CHR(13)
-                   + GenerateDataSets() + CHR(13)
-                   + GenerateParameters() + CHR(13)
-                   + GenerateFunctionForwards() + CHR(13)
-                   + Generators:GenerateProcedural() + CHR(13)
-                   + GenerateProcedures() + CHR(13)
+        ASSIGN res = "~n"
+                   + GenerateUsing() + "~n"
+                   + GenerateTempTables() + "~n"
+                   + GenerateDataSets() + "~n"
+                   + GenerateParameters() + "~n"
+                   + GenerateFunctionForwards() + "~n"
+                   + Generators:GenerateProcedural() + "~n"
+                   + GenerateProcedures() + "~n"
                    + GenerateFunctions().
 
         RETURN res.
@@ -77,7 +77,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         ttab = TempTables:MoveFirst().
         DO WHILE VALID-OBJECT(ttab):
             ASSIGN res  = res + ttab:Generate()
-                        + CHR(13)
+                        + "~n"
                    ttab = TempTables:MoveNext().
         END.
         
@@ -95,7 +95,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         dset = DataSets:MoveFirst().
         DO WHILE VALID-OBJECT(dset):
             ASSIGN res  = res + dset:Generate()
-                        + CHR(13)
+                        + "~n"
                    dset = DataSets:MoveNext().
         END.
         
@@ -128,7 +128,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         DO WHILE VALID-OBJECT(meth):
             IF meth:RequireForward THEN
                 ASSIGN res = res + meth:GenerateForward()
-                           + CHR(13).
+                           + "~n".
             ASSIGN meth = Functions:MoveNext().
         END.
         
@@ -146,7 +146,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         meth = Procedures:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(13)
+                        + "~n"
                    meth = Procedures:MoveNext().
         END.
         
@@ -164,7 +164,7 @@ CLASS OEMock.Reflection.ProcedureFile INHERITS BaseFile:
         meth = Functions:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                              + CHR(13)
+                              + "~n"
                    meth = Functions:MoveNext().
         END.
         

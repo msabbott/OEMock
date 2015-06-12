@@ -27,9 +27,9 @@ CLASS OEMock.Reflection.Function INHERITS ReturningMethod:
         IF TRIM(Name)        NE "" AND Name       NE ?   
         AND TRIM(ReturnType) NE "" AND ReturnType NE ? THEN
         DO:
-            ASSIGN func = GenerateDeclaration() + ":" + CHR(13)
-                        + Generators:Generate() + CHR(13)
-                        + "END FUNCTION." + CHR(13).
+            ASSIGN func = GenerateDeclaration() + ":" + "~n"
+                        + Generators:Generate() + "~n"
+                        + "END FUNCTION." + "~n".
         END.
         
         RETURN func.

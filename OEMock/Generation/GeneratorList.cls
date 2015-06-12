@@ -56,7 +56,7 @@ CLASS OEMock.Generation.GeneratorList INHERITS BaseList:
         gen = MoveFirst().
         DO WHILE VALID-OBJECT(gen):
             ASSIGN res  = res + gen:Generate()
-                        + CHR(13)
+                        + "~n"
                    gen = MoveNext().
         END.
         
@@ -74,7 +74,7 @@ CLASS OEMock.Generation.GeneratorList INHERITS BaseList:
         gen = MoveFirst().
         DO WHILE VALID-OBJECT(gen):
             ASSIGN res  = res + gen:GenerateProcedural()
-                        + CHR(13)
+                        + "~n"
                    gen = MoveNext().
         END.
         

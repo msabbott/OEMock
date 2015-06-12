@@ -63,7 +63,7 @@ CLASS OEMock.Reflection.TempTableIndex:
             fld = THIS-OBJECT:Fields:MoveNext().
         END.
         
-        ASSIGN res = TRIM(res) + CHR(13).
+        ASSIGN res = TRIM(res) + "~n".
 	    
 	    RETURN res.
 

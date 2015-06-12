@@ -39,7 +39,7 @@ CLASS OEMock.Tests.Reflection.DataSetParameterTester:
         
         parm = NEW DataSetParameter('DataSetName').
         
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE INPUT PARAMETER DATASET FOR DataSetName.').
+        Assert:AreEqual(parm:GenerateDefinition(), "~n" + 'DEFINE INPUT PARAMETER DATASET FOR DataSetName.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -50,7 +50,7 @@ CLASS OEMock.Tests.Reflection.DataSetParameterTester:
         
         parm = NEW DataSetParameter('DataSetName').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:GenerateDefinition(), CHR(13) + 'DEFINE OUTPUT PARAMETER DATASET FOR DataSetName.').
+        Assert:AreEqual(parm:GenerateDefinition(), "~n" + 'DEFINE OUTPUT PARAMETER DATASET FOR DataSetName.').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -103,7 +103,7 @@ CLASS OEMock.Tests.Reflection.DataSetParameterTester:
         
         parm = NEW DataSetParameter('DataSetName').
         
-        Assert:AreEqual(parm:Generate(), CHR(13) + 'INPUT DATASET FOR DataSetName,').
+        Assert:AreEqual(parm:Generate(), "~n" + 'INPUT DATASET FOR DataSetName,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.
@@ -114,7 +114,7 @@ CLASS OEMock.Tests.Reflection.DataSetParameterTester:
         
         parm = NEW DataSetParameter('DataSetName').
         parm:ParameterType = "OUTPUT".
-        Assert:AreEqual(parm:Generate(), CHR(13) + 'OUTPUT DATASET FOR DataSetName,').
+        Assert:AreEqual(parm:Generate(), "~n" + 'OUTPUT DATASET FOR DataSetName,').
         
         IF VALID-OBJECT(parm) THEN DELETE OBJECT parm.
     END METHOD.

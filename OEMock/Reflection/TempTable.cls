@@ -68,7 +68,7 @@ CLASS OEMock.Reflection.TempTable:
             + Name
             + (IF NoUndo THEN " NO-UNDO " ELSE "")
             + (IF NamespacePrefix NE ? AND NamespacePrefix NE "" THEN "NAMESPACE-PREFIX ~"" + NamespacePrefix + "~" " ELSE "")
-            + (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "") + CHR(13).
+            + (IF NamespaceURI    NE ? AND NamespaceURI    NE "" THEN "NAMESPACE-URI ~""    + NamespaceURI    + "~" " ELSE "") + "~n".
 
         /* Build field list */
         fld = THIS-OBJECT:Fields:MoveFirst().

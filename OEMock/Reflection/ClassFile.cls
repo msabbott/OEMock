@@ -95,13 +95,13 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         ASSIGN res = "CLASS " + (IF INDEX(TypeName, " ") > 0 THEN '"' + TypeName + '"' ELSE TypeName) + " "
                    + (IF InheritsFrom NE ? AND TRIM(InheritsFrom) NE "" THEN "INHERITS " + TRIM(InheritsFrom) + " " ELSE "")
                    + GenerateInterfaces() + ":"
-                   + CHR(13) + GenerateTempTables()
-                   + CHR(13) + GenerateDataSets()
-                   + CHR(13) + GenerateConstructors()
-                   + CHR(13) + GenerateMethods()
-                   + CHR(13) + Generators:Generate()
-                   + CHR(13) + GenerateEvents()
-                   + CHR(13) + "END CLASS." + CHR(13).
+                   + "~n" + GenerateTempTables()
+                   + "~n" + GenerateDataSets()
+                   + "~n" + GenerateConstructors()
+                   + "~n" + GenerateMethods()
+                   + "~n" + Generators:Generate()
+                   + "~n" + GenerateEvents()
+                   + "~n" + "END CLASS." + "~n".
                               
         RETURN res.
     END METHOD.
@@ -114,7 +114,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         ttab = TempTables:MoveFirst().
         DO WHILE VALID-OBJECT(ttab):
             ASSIGN res  = res + ttab:Generate()
-                        + CHR(13)
+                        + "~n"
                    ttab = TempTables:MoveNext().
         END.
         
@@ -132,7 +132,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         dset = DataSets:MoveFirst().
         DO WHILE VALID-OBJECT(dset):
             ASSIGN res  = res + dset:Generate()
-                        + CHR(13)
+                        + "~n"
                    dset = DataSets:MoveNext().
         END.
         
@@ -150,7 +150,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         evnt = Events:MoveFirst().
         DO WHILE VALID-OBJECT(evnt):
             ASSIGN res  = res + evnt:Generate()
-                        + CHR(13)
+                        + "~n"
                    evnt = Events:MoveNext().
         END.
         
@@ -168,7 +168,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         meth = Constructors:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(13)
+                        + "~n"
                    meth = Constructors:MoveNext().
         END.
         
@@ -186,7 +186,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
         meth = Methods:MoveFirst().
         DO WHILE VALID-OBJECT(meth):
             ASSIGN res  = res + meth:Generate()
-                        + CHR(13)
+                        + "~n"
                    meth = Methods:MoveNext().
         END.
         
@@ -221,7 +221,7 @@ CLASS OEMock.Reflection.ClassFile INHERITS BaseFile:
     METHOD OVERRIDE PUBLIC LONGCHAR Generate():
         DEFINE VARIABLE res AS LONGCHAR NO-UNDO.
         
-        ASSIGN res = GenerateUsing() + CHR(13)
+        ASSIGN res = GenerateUsing() + "~n"
                    + GenerateClass().
 
         RETURN res.        

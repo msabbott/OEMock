@@ -29,7 +29,7 @@ CLASS OEMock.Reflection.DataSetParameter INHERITS BaseParameter:
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ? THEN
         DO: 
-            ASSIGN parm = CHR(13) + "DEFINE " + ParameterType + " PARAMETER DATASET FOR " + Name + ".".
+            ASSIGN parm = "~n" + "DEFINE " + ParameterType + " PARAMETER DATASET FOR " + Name + ".".
         END.
         RETURN parm.
     END METHOD.
@@ -40,7 +40,7 @@ CLASS OEMock.Reflection.DataSetParameter INHERITS BaseParameter:
         IF  TRIM(Name)          NE "" AND Name          NE ?
         AND TRIM(ParameterType) NE "" AND ParameterType NE ? THEN
         DO: 
-            ASSIGN parm = CHR(13) + ParameterType + " DATASET FOR " + Name + ",".
+            ASSIGN parm = "~n" + ParameterType + " DATASET FOR " + Name + ",".
         END.
         RETURN parm.
     END METHOD.
