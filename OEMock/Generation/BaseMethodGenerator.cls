@@ -104,7 +104,7 @@ CLASS OEMock.Generation.BaseMethodGenerator INHERITS BaseGenerator:
             ASSIGN res = TRIM(res).
             
             IF res NE ? AND res NE "" THEN
-                ASSIGN res = "ASSIGN " + res + "~n".
+                ASSIGN res = "ASSIGN " + res + ".~n".
         END.
         
         /* Sanity check output */
