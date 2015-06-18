@@ -18,6 +18,16 @@ CLASS OEMock.Tests.BaseDoubleTester:
     /* Basic temp-table used to pass to 'AddTempTable' */
     DEFINE PROTECTED TEMP-TABLE ttTestTable NO-UNDO
         FIELD CharField AS CHARACTER.
+        
+    DEFINE PROTECTED TEMP-TABLE ttTempTable NO-UNDO
+        FIELD KeyField AS INTEGER
+        INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING.
+        
+    DEFINE PROTECTED TEMP-TABLE ttChildTable NO-UNDO
+        FIELD KeyField AS INTEGER
+        FIELD ChildField AS CHARACTER
+        FIELD DataField  AS CHARACTER
+        INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING ChildField ASCENDING.
     
     @Test.
     METHOD PUBLIC VOID ConstructorSetsFile():
@@ -30,6 +40,20 @@ CLASS OEMock.Tests.BaseDoubleTester:
         Assert:IsTrue(VALID-OBJECT(dbl:File)).
         Assert:AreEqual(dbl:File, fil).
         
+        IF VALID-OBJECT(fil) THEN DELETE OBJECT(fil).
+        IF VALID-OBJECT(dbl) THEN DELETE OBJECT(dbl).
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID ConstructorSetsCompileOnGenerate():
+        DEFINE VARIABLE dbl AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE fil AS ClassFile  NO-UNDO.
+        
+        fil = NEW ClassFile('OEMock/Tests/Util/ListObject.cls', 'OEMock.Tests.Util.ListObject').
+        dbl = NEW BaseDouble(fil, TestDir).
+        
+        Assert:IsFalse(dbl:CompileOnGenerate).
+
         IF VALID-OBJECT(fil) THEN DELETE OBJECT(fil).
         IF VALID-OBJECT(dbl) THEN DELETE OBJECT(dbl).
     END METHOD.
@@ -83,6 +107,27 @@ CLASS OEMock.Tests.BaseDoubleTester:
     END METHOD.
     
     @Test.
+    METHOD PUBLIC VOID GenerateCompilesFile():
+        DEFINE VARIABLE dbl  AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        dbl:CompileOnGenerate = TRUE.
+        
+        dbl:AddTempTable(TEMP-TABLE ttTempTable:HANDLE).
+        dbl:AddTempTable(TEMP-TABLE ttChildTable:HANDLE).
+        
+        dbl:Generate().
+        
+        FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Inspection/TestProcedure.r".
+        Assert:AreEqual(FILE-INFO:FILE-TYPE, "FRW").
+
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl).
+    END METHOD.
+    
+    @Test.
     METHOD PUBLIC VOID DestructorDeletesFile():
         DEFINE VARIABLE dbl  AS BaseDouble NO-UNDO.
         DEFINE VARIABLE insp AS ClassInspector NO-UNDO.
@@ -96,6 +141,27 @@ CLASS OEMock.Tests.BaseDoubleTester:
         IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl).
         
         FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Util/ListObject.cls".
+        Assert:IsNull(FILE-INFO:FILE-TYPE).
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID DestructorDeletesCompiledFile():
+        DEFINE VARIABLE dbl  AS BaseDouble NO-UNDO.
+        DEFINE VARIABLE insp AS ProcedureInspector NO-UNDO.
+        
+        insp = NEW ProcedureInspector('OEMock/Tests/Inspection/TestProcedure.p').
+        dbl = NEW BaseDouble(insp:Inspect(), TestDir).
+        dbl:CompileOnGenerate = TRUE.
+        
+        dbl:AddTempTable(TEMP-TABLE ttTempTable:HANDLE).
+        dbl:AddTempTable(TEMP-TABLE ttChildTable:HANDLE).
+        
+        dbl:Generate().
+        
+        IF VALID-OBJECT(insp) THEN DELETE OBJECT(insp).
+        IF VALID-OBJECT(dbl)  THEN DELETE OBJECT(dbl).
+        
+        FILE-INFO:FILE-NAME = TestDir + "OEMock/Tests/Inspection/TestProcedure.r".
         Assert:IsNull(FILE-INFO:FILE-TYPE).
     END METHOD.
     

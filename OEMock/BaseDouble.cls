@@ -23,6 +23,10 @@ CLASS OEMock.BaseDouble:
     GET.
     SET.
     
+    DEFINE PUBLIC PROPERTY CompileOnGenerate AS LOGICAL NO-UNDO INITIAL FALSE
+    GET.
+    SET.
+    
     DEFINE PUBLIC PROPERTY DeleteOnDestruct AS LOGICAL NO-UNDO INITIAL TRUE
     GET.
     SET.
@@ -34,6 +38,10 @@ CLASS OEMock.BaseDouble:
 	DEFINE PROTECTED PROPERTY BaseDirectory AS CHARACTER NO-UNDO
 	GET.
 	PROTECTED SET.
+    
+    DEFINE PROTECTED PROPERTY OutputDirectory AS CHARACTER NO-UNDO
+    GET.
+    PROTECTED SET.
 	
 	DEFINE PROTECTED PROPERTY OutputFile AS CHARACTER NO-UNDO
 	GET.
@@ -43,9 +51,10 @@ CLASS OEMock.BaseDouble:
 	    SUPER().
 	    
 	    /* Assign values */
-	    ASSIGN File             = fil
-	           BaseDirectory    = basedir
-	           DeleteOnDestruct = TRUE.
+	    ASSIGN File              = fil
+	           BaseDirectory     = basedir
+	           DeleteOnDestruct  = TRUE
+	           CompileOnGenerate = FALSE.
         
         /* Construct objects */
         ASSIGN ProcedureGenerators = NEW NamedGeneratorList()
@@ -54,13 +63,25 @@ CLASS OEMock.BaseDouble:
 	END CONSTRUCTOR.
 	
 	DESTRUCTOR BaseDouble():
-	    IF DeleteOnDestruct THEN
+	    DEFINE VARIABLE compFile AS CHARACTER NO-UNDO.
+	    
+	    IF DeleteOnDestruct AND OutputFile NE ? AND OutputFile NE "" THEN
 	    DO:
     	    FILE-INFO:FILE-NAME = OutputFile.
     	    IF FILE-INFO:FILE-TYPE MATCHES "F*W*" THEN
     	    DO:
     	        OS-DELETE VALUE(OutputFile).
     	    END.
+    	    
+    	    /* Attempt to delete a matching .r file */
+    	    ASSIGN compFile = OutputFile 
+    	           ENTRY(NUM-ENTRIES(compFile,"."), compFile, ".") = "r". /* Replace last .* with .r */
+    	    
+            FILE-INFO:FILE-NAME = compFile.
+            IF FILE-INFO:FILE-TYPE MATCHES "F*W*" THEN
+            DO:
+                OS-DELETE VALUE(compFile).
+            END.
 	    END.
 	    
         IF VALID-OBJECT(ProcedureGenerators) THEN DELETE OBJECT ProcedureGenerators.
@@ -95,6 +116,10 @@ CLASS OEMock.BaseDouble:
 	    
 	    /* Save to file */
 	    COPY-LOB OBJECT File:Generate() TO FILE OutputFile.
+	    
+	    /* Compile if required */
+	    IF CompileOnGenerate = TRUE THEN
+	       THIS-OBJECT:Compile().
 	END METHOD.
 	
 	METHOD PROTECTED VOID CreateDirectory():
@@ -126,6 +151,8 @@ CLASS OEMock.BaseDouble:
         
         IF tmpDir NE ? AND tmpDir NE "" THEN
         DO:
+            ASSIGN OutputDirectory = tmpDir.
+            
             DO loop = 1 TO NUM-ENTRIES(tmpDir, "/"):
                 tmpPath = tmpPath
                         + ENTRY(loop, tmpDir, "/")
@@ -133,6 +160,14 @@ CLASS OEMock.BaseDouble:
                 OS-CREATE-DIR VALUE(tmpPath).
             END.
         END.
+	END METHOD.
+	
+	METHOD PROTECTED VOID Compile():
+	    IF  TRIM(OutputFile)      NE "" AND OutputFile      NE ?
+	    AND TRIM(OutputDirectory) NE "" AND OutputDirectory NE ? THEN
+	    DO:
+	       COMPILE VALUE(SEARCH(OutputFile)) SAVE INTO VALUE(OutputDirectory).
+	    END.
 	END METHOD.
 	
 	METHOD PROTECTED VOID AddProcedureParameter(INPUT parm AS OEMock.Reflection.BaseParameter):
