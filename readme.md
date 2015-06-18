@@ -33,7 +33,20 @@ Documentation for OEMock can be found in the project's [Wiki pages](../../wiki).
 
 Change Log
 ----------
-A full changelog is maintained in [CHANGELOG.md](CHANGELOG.md) for this project, the list below are the most recent releases.
+A full changelog is maintained in [CHANGELOG.md](CHANGELOG.md) for this project. The list below is of the most recent releases.
+
+**v0.4-alpha** - 2015/06/18
+* Add functionality to automatically compile a test double after it is generated
+* Raise a more meaningful error when a syntax error is found in a file being stubbed/mocked.
+* Fix error when recording BUFFER, TABLE and DATASET parameter values in a mocked file.
+ * These values are no longer recorded and expectations should not be raised on these parameters
+ * This will be resolved in a later release (see issue #30)
+* Resolve issue when producing a test double on a large source file with the SUBSTITUTE command (error 11311)
+* Fix issue with table parameters not being regenerated correctly
+* Reduce the amount of options output on a temp-table in a test double to prevent creating a statement longer than maximum allowed value.
+* Code generated now uses "~n" as a line ending, rather than CHR(13)
+ * This should aid with debugging generated code, but should have no impact during use.
+* Missing temp-table definitions in unit tests for OEMock have been added.
 
 **v0.3-alpha** - 2015/05/21
 * Support for class events
@@ -53,8 +66,3 @@ A full changelog is maintained in [CHANGELOG.md](CHANGELOG.md) for this project,
 * Table Parameters are correctly identified in class methods, functions and procedures
 * Ability to define expected parameter values for use in Expectations
 * Documentation has been moved into OEMock Wiki
-
-**v0.1-alpha** - 2015/03/20
-* Initial release.
- * Functional, but does not provide many features.
- * See release notes for list of known issues and limitations.
