@@ -20,6 +20,27 @@ CLASS OEMock.Tests.OEMockTester:
         FIELD ChildField AS CHARACTER
         FIELD DataField  AS CHARACTER
         INDEX PriKey IS PRIMARY UNIQUE KeyField ASCENDING ChildField ASCENDING.
+
+    // MethodCall, MethodCallParam and MethodCalls all used for testing OEMock:CleanUp
+    DEFINE TEMP-TABLE MethodCall NO-UNDO
+        FIELD CallNumber      AS INTEGER
+        FIELD MethodReference AS CHARACTER
+        FIELD NumCalls        AS INTEGER
+            INDEX PriKey  IS PRIMARY UNIQUE CallNumber      ASCENDING
+            INDEX MethKey                   MethodReference ASCENDING.
+            
+    DEFINE TEMP-TABLE MethodCallParam NO-UNDO
+        FIELD CallNumber AS INTEGER
+        FIELD ParamName  AS CHARACTER
+        FIELD ParamValue AS CHARACTER
+            INDEX PriKey IS PRIMARY UNIQUE CallNumber ASCENDING ParamName ASCENDING
+            INDEX ValKey                   CallNumber ASCENDING ParamName ASCENDING ParamValue.
+            
+    DEFINE DATASET MethodCalls
+        FOR MethodCall, MethodCallParam
+        DATA-RELATION callparams 
+                  FOR MethodCall, MethodCallParam
+                      RELATION-FIELDS (CallNumber,CallNumber).        
     
     @Before.
     METHOD PUBLIC VOID ResetDebugMode():
@@ -73,6 +94,37 @@ CLASS OEMock.Tests.OEMockTester:
         Assert:AreEqual(LOOKUP(PROPATH, tmpDir), 0).
         
         IF VALID-OBJECT(stb) THEN DELETE OBJECT stb.
+        
+    END.
+    
+    METHOD PRIVATE INTEGER CountMethodCalls(INPUT methRef AS CHARACTER):
+        
+        DEFINE VARIABLE counter AS INTEGER NO-UNDO INITIAL 0.
+        
+        FOR EACH MethodCall NO-LOCK
+           WHERE MethodCall.MethodReference = methRef:
+        
+            ASSIGN counter = counter + 1.      
+         
+        END.
+        
+        RETURN counter.
+        
+    END METHOD.
+    
+    @Test.
+    METHOD PUBLIC VOID CleanUpClearsOEMockCallRegister():
+        
+        OEMockRegister:ClearMethodCallRegister().
+        OEMockRegister:RegisterMethodCall("test method").
+        
+        OEMockRegister:ReceiveMethodCallRegister(OUTPUT DATASET MethodCalls).
+        Assert:AreEqual(CountMethodCalls("test method"), 1).
+        
+        OEMock:CleanUp().
+        
+        OEMockRegister:ReceiveMethodCallRegister(OUTPUT DATASET MethodCalls).
+        Assert:AreEqual(CountMethodCalls("test method"), 0).
         
     END.
     
