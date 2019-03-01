@@ -47,6 +47,7 @@ CLASS OEMock.OEMock:
             OS-DELETE VALUE(OutputDir) RECURSIVE.
         RemoveFromProPath().
         OutputDir = ?.
+        OEMockRegister:ClearMethodCallRegister().
     END METHOD.
     
     METHOD PUBLIC STATIC OEMock.Stub StubClass(INPUT fname AS CHARACTER):
